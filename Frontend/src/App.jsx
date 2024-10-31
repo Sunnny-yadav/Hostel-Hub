@@ -26,31 +26,31 @@ const router = createBrowserRouter(
       <Route path='/RaiseComplaint' element={<RaiseComplaint_Form />} />
       <Route path='/MyComplaints' element={<MyComplaints />} />
       <Route path="/StudentProfile" element={<StuProfile />} />
-      <Route path='/warden_dashboard' element={<WarDash/>}  />
-        <Route path='/Meal-Poll' element={<Meal_Poll />} />
-        <Route path="/Login_signIn" element={<Login_signIn />}>
-          <Route path="/Login_signIn/" element={<Login />} />
-          <Route path="/Login_signIn/SignIn" element={<SignIn />} />
-        </Route>
-        <Route path='/Warden_Login_SignIn' element={<Warden_Login_SignIn />}>
-          <Route path='/Warden_Login_SignIn/' element={<Warden_Login />} />
-          <Route path='/Warden_Login_SignIn/warden_signIn' element={<Warden_SignIn />} />
-        </Route>
+      <Route path='/warden_dashboard' element={<WarDash />} />
+      <Route path='/Meal-Poll' element={<Meal_Poll />} />
+      <Route path="/Login_signIn" element={<Login_signIn />}>
+        <Route path="/Login_signIn/" element={<Login />} />
+        <Route path="/Login_signIn/SignIn" element={<SignIn />} />
+      </Route>
+      <Route path='/Warden_Login_SignIn' element={<Warden_Login_SignIn />}>
+        <Route path='/Warden_Login_SignIn/' element={<Warden_Login />} />
+        <Route path='/Warden_Login_SignIn/warden_signIn' element={<Warden_SignIn />} />
+      </Route>
 
-      </>
-      )
-      )
+    </>
+  )
+)
 
 
 
-      function App() {
+function App() {
   return (
-      <>
-        <Provider store={store}>
-          <RouterProvider router={router} />
-        </Provider>
-      </>
-      )
+    <>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </>
+  )
 }
 
-      export default App
+export default App
