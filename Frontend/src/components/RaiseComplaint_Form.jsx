@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const RaiseComplaint = () => {
+const RaiseComplaint_Form = () => {
 
   const [Complaint_Data, setComplaint_Data] = useState({
     Room: "",
@@ -196,4 +196,4 @@ const RaiseComplaint = () => {
   );
 };
 
-export default RaiseComplaint;
+export default RaiseComplaint_Form;

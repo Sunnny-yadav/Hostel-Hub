@@ -8,6 +8,7 @@ function Warden_SignIn() {
         userName: "",
         email: "",
         password: "",
+        WardenImage: "",
         city: "",
         State: "",
         pincode: "",
@@ -48,9 +49,9 @@ function Warden_SignIn() {
     return (
         <>
             <div className='flex justify-center items-center md:gap-9 md:justify-around'>
-                {/* image  */}
+                {/* WardenImage  */}
                 <div>
-                    <img src={warden_signIn} className='hidden sm:block sm:w-[400px] md:w-[500px] lg:w-[600px] ' alt="Warden_SignIn image" />
+                    <img src={warden_signIn} className='hidden sm:block sm:w-[400px] md:w-[500px] lg:w-[600px] ' alt="Warden_SignIn WardenImage" />
                 </div>
 
                 {/* form container  */}
@@ -95,6 +96,23 @@ function Warden_SignIn() {
                                         name='email'
                                         id='email'
                                         value={Warden_RegistrationData.email}
+                                        onChange={handelWarden_RegistrationData}
+                                        className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* user profile photo  */}
+                            <div className="relative flex items-center border-b border-gray-400 pb-1">
+                                <div className="relative ml-2 w-full">
+                                    <span className="material-symbols-outlined absolute text-gray-400 top-2">
+                                    image
+                                    </span>
+                                    <input
+                                        required
+                                        type='file'
+                                        name='WardenImage'
+                                        id='WardenImage'
                                         onChange={handelWarden_RegistrationData}
                                         className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
                                     />

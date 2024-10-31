@@ -1,0 +1,21 @@
+{
+  "name": "gravience-updated-system",
+  "version": "1.0.0",
+  "description": "the web application for hostel students",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongoDB"
+  ],
+  "author": "sunny yadav",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
+  }
+}
