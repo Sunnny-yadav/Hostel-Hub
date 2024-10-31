@@ -12,6 +12,13 @@ function StuProfile() {
   const Show_Previous_Complaints = () => {
     navigate('/MyComplaints')
   }
+
+  
+  const Show_Meal_Poll = ()=>{
+    navigate('/Meal-Poll')
+  }
+
+  
   return (
     <div className="h-[100vh] bg-center bg-cover" style={{ backgroundImage: `url(${studentProfile_Bg})` }}>
       <nav className="bg-gray-900 shadow-lg rounded-md py-3">
@@ -21,7 +28,7 @@ function StuProfile() {
             {/* Meal Poll button  */}
             <button
               className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-2 px-4 rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
-              // onClick={Show_Meal_Poll}
+              onClick={Show_Meal_Poll}
             >
               Meal Poll
             </button>
