@@ -38,7 +38,8 @@ const Index = () => {
             </li>
           </ul>
           <Link to='/features' >
-            <button className="mr-5 sm:px-5 sm:py-2 px-3 py-1  bg-[#292F5C]  text-white border-none rounded cursor-pointer text-base flex items-center">
+            <button className="mr-5 fixed top-3 right-2 sm:px-5 sm:py-2 px-3 py-1  bg-[#292F5C]  text-white border-none rounded cursor-pointer text-base flex items-center">
+
               Get Started <i className="fa-solid fa-arrow-right ml-2"></i>
             </button>
           </Link>
