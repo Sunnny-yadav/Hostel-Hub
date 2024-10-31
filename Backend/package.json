@@ -1,0 +1,16 @@
+{
+  "name": "gravience-updated-system",
+  "version": "1.0.0",
+  "description": "the web application for hostel students",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongoDB"
+  ],
+  "author": "sunny yadav",
+  "license": "ISC"
+}
