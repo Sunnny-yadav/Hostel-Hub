@@ -25,7 +25,7 @@ function Warden_Login() {
       email: "",
       password: ""
     });
-    navigate('/warden_dashboard')
+    navigate('/warden_dashboard');
   }
 
   return (
