@@ -4,31 +4,60 @@ import { useNavigate } from 'react-router-dom'
 
 function SignIn() {
     const [RegistrationData, setRegistrationData] = useState({
-        userName: "",
-        branch: "",
+        fullName: "",
+        branchName: "",
         currentYear: "",
         email: "",
-        avatar:"",
+        avatar: null,
         password: ""
     });
 
     const navigate = useNavigate();
 
     const handelRegistrationData = (e) => {
-        const { name, value } = e.target;
+        const { name, value, files } = e.target;
         setRegistrationData((prev) => (
             {
                 ...prev,
-                [name]: value
+                [name]: name === "avatar" ? files[0] : value
             }
         ))
     };
 
-    const onSubmitRegistrationData = (e) => {
+    const onSubmitRegistrationData = async (e) => {
         e.preventDefault();
-        console.log(RegistrationData)
-        navigate('/Login_signIn')
-    }
+
+        const formData = new FormData();
+        formData.append("fullName", RegistrationData.fullName);
+        formData.append("branchName", RegistrationData.branchName);
+        formData.append("currentYear", RegistrationData.currentYear);
+        formData.append("email", RegistrationData.email);
+        formData.append("password", RegistrationData.password);
+        formData.append("avatar", RegistrationData.avatar); // Add file input
+
+        try {
+            const response = await fetch("http://localhost:8000/api/v1/users/register", {
+                method: "POST",
+                body: formData, // Use FormData instead of JSON
+            });
+
+            if (response.success) {
+                setRegistrationData({
+                    fullName: "",
+                    branchName: "",
+                    currentYear: "",
+                    email: "",
+                    avatar: null,
+                    password: ""
+                })
+            };
+            navigate('/Login_signIn')
+        } catch (error) {
+            console.log("Error:", error.message);
+        }
+    };
+
+
     const BackToLogin = () => {
         navigate('/Login_signIn')
     }
@@ -51,16 +80,16 @@ function SignIn() {
                             <input
                                 type="text"
                                 placeholder="Enter Your Name"
-                                name='userName'
-                                id='userName'
-                                value={RegistrationData.userName}
+                                name='fullName'
+                                id='fullName'
+                                value={RegistrationData.fullName}
                                 onChange={handelRegistrationData}
                                 className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
                             />
                         </div>
                     </div>
 
-                    {/* Branch filed  */}
+                    {/* branchName filed  */}
                     <div className="relative flex items-center border-b border-gray-400 pb-1">
                         <div className="relative ml-2 w-full">
                             <span className="material-symbols-outlined absolute text-gray-400 top-2">
@@ -68,10 +97,10 @@ function SignIn() {
                             </span>
                             <input
                                 type="text"
-                                placeholder="Enter Your Branch"
-                                name='branch'
-                                id='branch'
-                                value={RegistrationData.branch}
+                                placeholder="Enter Your branchName"
+                                name='branchName'
+                                id='branchName'
+                                value={RegistrationData.branchName}
                                 onChange={handelRegistrationData}
                                 className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
                             />
@@ -152,26 +181,26 @@ function SignIn() {
 
 
                 <div className='flex flex-col sm:flex-col justify-around items-center sm:items-stretch'>
-                            {/* Register Button */}
-                            <div className="w-full lg:w-full"> {/* Full width on all screens */}
-                                <button
-                                    className="w-full font-semibold lg:py-2 md:py-1 py-1 px-3 text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300"
-                                >
-                                    Register
-                                </button>
-                            </div>
+                    {/* Register Button */}
+                    <div className="w-full lg:w-full"> {/* Full width on all screens */}
+                        <button
+                            className="w-full font-semibold lg:py-2 md:py-1 py-1 px-3 text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300"
+                        >
+                            Register
+                        </button>
+                    </div>
 
-                            {/* Back to login */}
-                            <div className='flex flex-col justify-center items-center w-full lg:mt-4 mt-2'> {/* Flex column on small screens and full width */}
-                                <p className="text-center font-bold lg:text-lg md:text-sm hidden lg:block hover:underline">Already have an Account?</p>
-                                <button
-                                    onClick={BackToLogin}
-                                    className="w-full font-semibold lg:py-2 md:py-1 py-1 px-3 text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300"
-                                >
-                                    Back To Login
-                                </button>
-                            </div>
-                        </div>
+                    {/* Back to login */}
+                    <div className='flex flex-col justify-center items-center w-full lg:mt-4 mt-2'> {/* Flex column on small screens and full width */}
+                        <p className="text-center font-bold lg:text-lg md:text-sm hidden lg:block hover:underline">Already have an Account?</p>
+                        <button
+                            onClick={BackToLogin}
+                            className="w-full font-semibold lg:py-2 md:py-1 py-1 px-3 text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300"
+                        >
+                            Back To Login
+                        </button>
+                    </div>
+                </div>
             </form>
         </>
     )

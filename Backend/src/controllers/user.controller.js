@@ -36,6 +36,7 @@ const register_User = AsyncHandeller(async (req, res) => {
   }
 
   const avatarLocalPath = req.file?.path;
+  console.log(avatarLocalPath);
   if (!avatarLocalPath) {
     return res.status(400).json({
       Error: "The avatarLocalPath is not defined",
