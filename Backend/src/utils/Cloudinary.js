@@ -8,7 +8,7 @@ cloudinary.config({
 });
 
 
-export const upload_On_Cloudinary = async (localfilepath)=>{
+ const upload_On_Cloudinary = async (localfilepath)=>{
     try {
         const response = await cloudinary.uploader.upload(localfilepath,{
             resource_type:"auto"
@@ -21,3 +21,5 @@ export const upload_On_Cloudinary = async (localfilepath)=>{
         console.log("Cloudinary.js :: Error Occured While File Uploading on Cloudinary",error )
     }
 };
+
+export {upload_On_Cloudinary}
