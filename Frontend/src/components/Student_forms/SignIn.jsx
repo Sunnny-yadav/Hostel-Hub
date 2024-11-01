@@ -8,6 +8,7 @@ function SignIn() {
         branch: "",
         currentYear: "",
         email: "",
+        avatar:"",
         password: ""
     });
 
@@ -23,7 +24,7 @@ function SignIn() {
         ))
     };
 
-    const onSubmitRegistrationData =(e)=>{
+    const onSubmitRegistrationData = (e) => {
         e.preventDefault();
         console.log(RegistrationData)
         navigate('/Login_signIn')
@@ -71,7 +72,7 @@ function SignIn() {
                                 name='branch'
                                 id='branch'
                                 value={RegistrationData.branch}
-                                onChange= {handelRegistrationData}
+                                onChange={handelRegistrationData}
                                 className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
                             />
                         </div>
@@ -89,7 +90,7 @@ function SignIn() {
                                 name='currentYear'
                                 id='currentYear'
                                 value={RegistrationData.currentYear}
-                                onChange= {handelRegistrationData}
+                                onChange={handelRegistrationData}
                                 className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
                             />
                         </div>
@@ -106,7 +107,24 @@ function SignIn() {
                                 name='email'
                                 id='email'
                                 value={RegistrationData.email}
-                                onChange= {handelRegistrationData}
+                                onChange={handelRegistrationData}
+                                className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
+                            />
+                        </div>
+                    </div>
+
+                    {/* user profile photo  */}
+                    <div className="relative flex items-center border-b border-gray-400 pb-1">
+                        <div className="relative ml-2 w-full">
+                            <span className="material-symbols-outlined absolute text-gray-400 top-2">
+                                image
+                            </span>
+                            <input
+                                required
+                                type='file'
+                                name='avatar'
+                                id='avatar'
+                                onChange={handelRegistrationData}
                                 className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
                             />
                         </div>
@@ -125,7 +143,7 @@ function SignIn() {
                                 name='password'
                                 id='password'
                                 value={RegistrationData.password}
-                                onChange= {handelRegistrationData}
+                                onChange={handelRegistrationData}
                                 className="w-full h-full placeholder:pl-5 bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
                             />
                         </div>
@@ -133,22 +151,27 @@ function SignIn() {
                 </div>
 
 
-                {/* Register Button */}
-                <button
-                    className="w-full font-semibold py-4 text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300"
-                >
-                    Register
-                </button>
+                <div className='flex flex-col sm:flex-col justify-around items-center sm:items-stretch'>
+                            {/* Register Button */}
+                            <div className="w-full lg:w-full"> {/* Full width on all screens */}
+                                <button
+                                    className="w-full font-semibold lg:py-2 md:py-1 py-1 px-3 text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300"
+                                >
+                                    Register
+                                </button>
+                            </div>
 
-
-                {/* back to login  */}
-                <p className="text-center text-lg font-bold  mb-4 hover:underline">Already have an Account?</p>
-                <button
-                    onClick={BackToLogin}
-                    className="w-full py-4 font-semibold text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300"
-                >
-                    Back To Login
-                </button>
+                            {/* Back to login */}
+                            <div className='flex flex-col justify-center items-center w-full lg:mt-4 mt-2'> {/* Flex column on small screens and full width */}
+                                <p className="text-center font-bold lg:text-lg md:text-sm hidden lg:block hover:underline">Already have an Account?</p>
+                                <button
+                                    onClick={BackToLogin}
+                                    className="w-full font-semibold lg:py-2 md:py-1 py-1 px-3 text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300"
+                                >
+                                    Back To Login
+                                </button>
+                            </div>
+                        </div>
             </form>
         </>
     )

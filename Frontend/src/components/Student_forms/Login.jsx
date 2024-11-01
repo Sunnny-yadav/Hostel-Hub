@@ -6,7 +6,6 @@ function Login() {
     email: "",
     password: "",
     hostelId: "",
-    userImage: ""
   });
 
   const navigate = useNavigate(); // Hook for programmatic navigation
@@ -74,22 +73,7 @@ function Login() {
             </div>
           </div>
 
-          {/* user profile photo  */}
-          <div className="relative flex items-center border-b border-gray-400 pb-1">
-            <div className="relative ml-2 w-full">
-              <span className="material-symbols-outlined absolute text-gray-400 top-2">
-                image
-              </span>
-              <input
-                required
-                type='file'
-                name='userImage'
-                id='userImage'
-                onChange={handelLoginData}
-                className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
-              />
-            </div>
-          </div>
+          
 
 
           {/* Hostel ID Field */}
