@@ -1,5 +1,4 @@
 import { ApiResponse } from "../utils/ApiResponse.js";
-
 import { AsyncHandeller } from "../utils/AsyncHandeller.js";
 import { User } from "../Models/user.model.js";
 import { upload_On_Cloudinary } from "../utils/Cloudinary.js";
@@ -67,4 +66,51 @@ const register_User = AsyncHandeller(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "Registration succesfull"));
 });
 
-export { register_User };
+const login_User = AsyncHandeller(async (req, res) => {
+  //get the user data
+  //validate data and check the password
+  //find the user in database
+  //generate the JWT  token and send it as response
+
+  const { email, password } = req.body;
+
+  if (!email) {
+    return res.status(400).json({
+      Error: "email and password fields are requried for login",
+    });
+  }
+
+  const user = await User.findOne({
+    email,
+  });
+
+  if (!user) {
+    return res.status(400).json({
+      Error: "User not found",
+    });
+  }
+
+  const password_Status = await user.isPasswordCorrect(password);
+
+  if (!password_Status) {
+    return res.status(400).json({
+      Error: "Login password not matched",
+    });
+  }
+
+  const token = await user.generateAccessToken();
+
+  if (!token) {
+    return res.status(400).json({
+      Error: "Access Token not generated",
+    });
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { AccessToken: token }, "User Login Successfull"),
+    );
+});
+
+export { register_User, login_User };
