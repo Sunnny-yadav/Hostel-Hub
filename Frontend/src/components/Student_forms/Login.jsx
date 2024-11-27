@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 
 function Login() {
+  console.log("i am login")
   const [loginData, setloginData] = useState({
     email: "",
     password: ""
@@ -32,7 +33,9 @@ function Login() {
       });
 
       const res = await login_Response.json();
+
       if(res.success){
+  
         navigate("/StudentProfile");
       }else{
         alert("login unsuccessfull");
