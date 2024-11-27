@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
+
 function Login() {
   const [loginData, setloginData] = useState({
     email: "",
-    password: "",
-    hostelId: "",
-    userImage: ""
+    password: ""
   });
 
   const navigate = useNavigate(); // Hook for programmatic navigation
@@ -21,14 +20,29 @@ function Login() {
     }));
   };
 
-  const onSubmitHandelLogin = (e) => {
+  const onSubmitHandelLogin = async (e) => {
     e.preventDefault();
-    console.log(loginData);
+    try {
+      const login_Response = await fetch("http://localhost:8000/api/v1/users/login",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify(loginData)
+      });
 
-    // Perform validation or API call here
-    // If login is successful, navigate to the next page
-    navigate('/StudentProfile');
-  }
+      const res = await login_Response.json();
+      if(res.success){
+        navigate("/StudentProfile");
+      }else{
+        alert("login unsuccessfull");
+      }
+      
+    
+    } catch (error) {
+      console.log("Error in performing login::login.jsx")
+    }
+  };
 
   return (
     <>
@@ -74,41 +88,7 @@ function Login() {
             </div>
           </div>
 
-          {/* user profile photo  */}
-          <div className="relative flex items-center border-b border-gray-400 pb-1">
-            <div className="relative ml-2 w-full">
-              <span className="material-symbols-outlined absolute text-gray-400 top-2">
-                image
-              </span>
-              <input
-                required
-                type='file'
-                name='userImage'
-                id='userImage'
-                onChange={handelLoginData}
-                className="w-full placeholder:pl-5 h-full bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
-              />
-            </div>
-          </div>
 
-
-          {/* Hostel ID Field */}
-          <div className="relative flex items-center border-b border-gray-400 pb-1">
-            <div className="relative ml-2 w-full">
-              <span className="material-symbols-outlined absolute text-gray-400 top-2">
-                badge
-              </span>
-              <input
-                type="text"
-                placeholder="Hostel Id"
-                name='hostelId'
-                id='hostelId'
-                value={loginData.hostelId}
-                onChange={handelLoginData}
-                className="w-full h-full placeholder:pl-5 bg-transparent border-none outline-none p-2 pl-8 text-lg text-blue-500 focus:ring-0"
-              />
-            </div>
-          </div>
         </div>
         {/* Login Button */}
         <button type='submit' className="w-full font-semibold py-4 text-lg bg-blue-900 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition-all duration-300">
