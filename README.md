@@ -45,9 +45,9 @@
 - **Meal Poll**:
   ![Meal Poll](./Frontend/public/StudentUI/meal_poll.png)
 
-- For more screenshots of the common pages UI, check out the [UI Screenshots folder](./Frontend/public/CommonPagesUI).
-- For more screenshots of the Student pages UI, check out the [UI Screenshots folder](./Frontend/public/StudentUI).
-- For more screenshots of the Warden pages UI, check out the [UI Screenshots folder](./Frontend/public/WardenUI).
+- For more screenshots of the common pages UI, check out the [CommonPage UI Screenshots folder](./Frontend/public/CommonPagesUI).
+- For more screenshots of the Student pages UI, check out the [Student UI Screenshots folder](./Frontend/public/StudentUI).
+- For more screenshots of the Warden pages UI, check out the [Warden UI Screenshots folder](./Frontend/public/WardenUI).
 
 
 
