@@ -37,15 +37,17 @@
 ### **Key UI Screenshots**:
 
 - **Intro Page**:
-  ![Intro Page](./Frontend/public/CommonPagesUI/intro.png)
+  ![Intro Page](./Frontend/public/CommonPagesUI/intopage.png)
 
 - **Complaint Submission**:
-  ![Complaint Page](./assets/images/complaint-page.png)
+  ![Complaint Page](./Frontend/public/StudentUI/Raisecomplaint.png)
 
 - **Meal Poll**:
-  ![Meal Poll](./assets/images/meal-poll.png)
+  ![Meal Poll](./Frontend/public/StudentUI/meal_poll.png)
 
-For more screenshots of the UI, check out the [UI Screenshots folder](./assets/images/).
+- For more screenshots of the common pages UI, check out the [CommonPage UI Screenshots folder](./Frontend/public/CommonPagesUI).
+- For more screenshots of the Student pages UI, check out the [Student UI Screenshots folder](./Frontend/public/StudentUI).
+- For more screenshots of the Warden pages UI, check out the [Warden UI Screenshots folder](./Frontend/public/WardenUI).
 
 
 
