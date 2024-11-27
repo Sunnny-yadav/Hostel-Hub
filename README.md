@@ -36,8 +36,8 @@
 
 ### **Key UI Screenshots**:
 
-- **Login Page**:
-  ![Login Page](./assets/images/login-page.png)
+- **Intro Page**:
+  ![Intro Page](./Frontend/public/CommonPagesUI/intro.png)
 
 - **Complaint Submission**:
   ![Complaint Page](./assets/images/complaint-page.png)
