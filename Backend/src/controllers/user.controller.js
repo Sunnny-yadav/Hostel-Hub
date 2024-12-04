@@ -43,7 +43,7 @@ const register_User = AsyncHandeller(async (req, res) => {
   }
 
   const avatar = await upload_On_Cloudinary(avatarLocalPath);
-
+  console.log(avatar)
   if (!avatar) {
     return res.status(400).json({
       Error: "url not fetched from cloudinary",
@@ -59,6 +59,12 @@ const register_User = AsyncHandeller(async (req, res) => {
     email,
   });
 
+  if(!user){
+    return res.status(500).json({
+      Error : "error occured while creating a user"
+    })
+  }
+  
   const createdUser = await User.findById(user._id).select("-password");
 
   return res
