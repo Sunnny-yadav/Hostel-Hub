@@ -122,7 +122,7 @@ const login_User = AsyncHandeller(async (req, res) => {
 const getLogedInUserData = AsyncHandeller(async (req, res) => {
   return res
     .status(200)
-    .json(new ApiResponse(200, res.userData, "user data fetched successfully"));
+    .json(new ApiResponse(200, req.userData, "user data fetched successfully"));
 });
 
 export { register_User, login_User, getLogedInUserData };
