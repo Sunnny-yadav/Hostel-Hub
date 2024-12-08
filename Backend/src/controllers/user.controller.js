@@ -43,7 +43,7 @@ const register_User = AsyncHandeller(async (req, res) => {
   }
 
   const avatar = await upload_On_Cloudinary(avatarLocalPath);
-  console.log(avatar)
+  console.log(avatar);
   if (!avatar) {
     return res.status(400).json({
       Error: "url not fetched from cloudinary",
@@ -59,12 +59,12 @@ const register_User = AsyncHandeller(async (req, res) => {
     email,
   });
 
-  if(!user){
+  if (!user) {
     return res.status(500).json({
-      Error : "error occured while creating a user"
-    })
+      Error: "error occured while creating a user",
+    });
   }
-  
+
   const createdUser = await User.findById(user._id).select("-password");
 
   return res
@@ -119,4 +119,10 @@ const login_User = AsyncHandeller(async (req, res) => {
     );
 });
 
-export { register_User, login_User };
+const getLogedInUserData = AsyncHandeller(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, res.userData, "user data fetched successfully"));
+});
+
+export { register_User, login_User, getLogedInUserData };
