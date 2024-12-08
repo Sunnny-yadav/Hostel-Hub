@@ -12,8 +12,11 @@ export const verifyJWT = AsyncHandeller(async (req, res, next) => {
 
   const decodedToken = jwt.verify(Token, process.env.ACCESS_TOKEN_SECRET_KEY);
 
-  const user = await User.findOne(decodedToken?._id).select("-password");
+  console.log(decodedToken)
+  // const user = await User.findOne({email : decodedToken.email}).select("-password");
+  const user = await User.findOne({ _id: decodedToken?.id }).select("-password");
 
+  console.log(user)
   if (!user) {
     res.status(400).json({
       Error: "Invalid user Token",
