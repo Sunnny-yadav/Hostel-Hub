@@ -108,7 +108,7 @@ function Contact() {
                         {/* submit Button */}
                         <button className='flex bg-blue-600 hover:bg-blue-400 hover:text-black text-white font-serif py-2 px-4  rounded-full mt-2 w-fit font-semibold items-center'>
                             Submit
-                            <span class="material-symbols-outlined">
+                            <span className="material-symbols-outlined">
                                 arrow_right_alt
                             </span>
                         </button>
