@@ -20,6 +20,6 @@ export const verifyJWT = AsyncHandeller(async (req, res, next) => {
     });
   }
 
-  req.user = user;
+  req.userData = user;
   next();
 });
