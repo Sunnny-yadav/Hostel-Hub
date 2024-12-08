@@ -2,9 +2,11 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import studentProfile_Bg from '../../../assets/StudentProfile_Bg.jpg'
 import StuComplaints from './StuComplaints'
+import { UserContext } from '../../../ContextApi/UserContext';
 
 function MyComplaints() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const {userData} = UserContext()
     const Back_To_Profile =()=>{
         navigate('/studentProfile')
     }
@@ -23,6 +25,10 @@ function MyComplaints() {
         </div>
       </nav>
         <main>
+
+          <div className='flex justify-center items-center'>
+            <img className='rounded-full w-52' src={userData.avatar} alt="" />
+          </div>
             {/* complaints will be displayed here using loop  */}
             {/* <StuComplaints/>
             <StuComplaints/> */}
