@@ -4,3 +4,10 @@ export const AsyncHandeller = (requestHandeller) => {
     }
 };
 
+// export const AsyncHandeller = (requesthandeller) => async (req,res, next)=>{
+//     try {
+//         await requesthandeller(req,res,next)
+//     } catch (error) {
+//         console.log("errror is asynchandeller")
+//     }
+// }

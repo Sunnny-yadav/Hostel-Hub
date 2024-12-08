@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
+import { UserContext } from '../../ContextApi/UserContext'
 
 function Login() {
-  console.log("i am login")
+
   const [loginData, setloginData] = useState({
     email: "",
     password: ""
   });
 
   const navigate = useNavigate(); // Hook for programmatic navigation
+  const { SetTokenInLocalStorage } = UserContext()
 
   const handelLoginData = (e) => {
     const name = e.target.name;
@@ -24,24 +25,23 @@ function Login() {
   const onSubmitHandelLogin = async (e) => {
     e.preventDefault();
     try {
-      const login_Response = await fetch("http://localhost:8000/api/v1/users/login",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
+      const login_Response = await fetch("http://localhost:8000/api/v1/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
         },
-        body:JSON.stringify(loginData)
+        body: JSON.stringify(loginData)
       });
 
-      const res = await login_Response.json();
-
-      if(res.success){
-  
+      if (login_Response.ok) {
+        const res = await login_Response.json();
+        SetTokenInLocalStorage(res.data.AccessToken)
         navigate("/StudentProfile");
-      }else{
+      } else {
         alert("login unsuccessfull");
       }
-      
-    
+
+
     } catch (error) {
       console.log("Error in performing login::login.jsx")
     }

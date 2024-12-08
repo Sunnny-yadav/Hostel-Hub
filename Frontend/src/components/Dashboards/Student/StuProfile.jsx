@@ -2,21 +2,26 @@ import React from 'react';
 import StuComplaints from './StuComplaints';
 import { useNavigate } from 'react-router-dom'
 import studentProfile_Bg from '../../../assets/StudentProfile_Bg.jpg'
+import { UserContext } from '../../../ContextApi/UserContext';
 
 function StuProfile() {
 
+  const {userData, Logout} = UserContext();
   const navigate = useNavigate();
   const Raise_New_Complaint = () => {
     navigate('/RaiseComplaint')
-  }
+  };
   const Show_Previous_Complaints = () => {
     navigate('/MyComplaints')
-  }
+  };
 
-  
+  const performLogout = ()=>{
+    Logout();
+    navigate('/Login_signIn')
+  }
   const Show_Meal_Poll = ()=>{
     navigate('/Meal-Poll')
-  }
+  };
 
   
   return (
@@ -50,7 +55,9 @@ function StuProfile() {
 
             {/* Logout Button */}
             <button
-              className="bg-gradient-to-r from-red-500 to-red-600 text-white font-medium py-2 px-4 rounded-lg shadow-lg hover:from-red-600 hover:to-red-700 transition duration-300 ease-in-out transform hover:scale-105">
+              className="bg-gradient-to-r from-red-500 to-red-600 text-white font-medium py-2 px-4 rounded-lg shadow-lg hover:from-red-600 hover:to-red-700 transition duration-300 ease-in-out transform hover:scale-105"
+              onClick={performLogout}
+              >
               Logout
             </button>
           </div>
@@ -63,12 +70,12 @@ function StuProfile() {
           <div className="border-b pb-4 mb-4">
             <div className="flex justify-between items-center p-3 bg-gray-700 rounded-lg transition duration-200 hover:bg-gray-600">
               <span className="text-gray-300 font-medium text-lg">Name:</span>
-              <span className="text-white font-semibold text-lg">Chinmay Ankolekar</span>
+              <span className="text-white font-semibold text-lg">{userData.fullName}</span>
             </div>
           </div>
           <div className="flex justify-between items-center p-3 bg-gray-700 rounded-lg transition duration-200 hover:bg-gray-600">
-            <span className="text-gray-300 font-medium text-lg">Hostel ID:</span>
-            <span className="text-white font-semibold text-lg">12345</span>
+            <span className="text-gray-300 font-medium text-lg">Mail:</span>
+            <span className="text-white font-semibold text-lg">{userData.email}</span>
           </div>
         </div>
       </main>
