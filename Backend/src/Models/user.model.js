@@ -76,6 +76,13 @@ const userSchema = new mongoose.Schema(
       },
     },
 
+    roomNumber:{
+      type:String,
+      required:function () {
+        return this.role === "student";
+      }
+    },
+
     hobbies: {
       type: [String],
       default: [],

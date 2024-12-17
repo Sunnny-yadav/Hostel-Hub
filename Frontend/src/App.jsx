@@ -3,15 +3,12 @@ import './App.css'
 import TermsPage from './components/TermsConditionPage/TermsPage'
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router-dom'
 import { store } from './Redux/Store'
-import Login_signIn from './components/Student_forms/Login_signIn'
-import Login from './components/Student_forms/Login'
-import SignIn from './components/Student_forms/SignIn'
 import Features from './components/featuresPage/Features'
 import RaiseComplaint_Form from './components/RaiseComplaint_Form'
 import Index from './components/IntroPage/Index'
-import Warden_SignIn from './components/Warden_Forms/Warden_SignIn'
-import Warden_Login_SignIn from './components/Warden_Forms/Warden_Login_SignIn'
-import Warden_Login from './components/Warden_Forms/Warden_Login'
+import Registration from './components/User_Forms/Registration'
+import Login_SignIn_Layout from './components/User_Forms/Login_SignIn_Layout'
+import Login from './components/User_Forms/Login'
 import StuProfile from './components/Dashboards/Student/StuProfile'
 import MyComplaints from './components/Dashboards/Student/MyComplaints'
 import Meal_Poll from './components/Dashboards/Student/Meal_Poll'
@@ -28,13 +25,13 @@ const router = createBrowserRouter(
       <Route path="/StudentProfile" element={<StuProfile />} />
       <Route path='/warden_dashboard' element={<WarDash />} />
       <Route path='/Meal-Poll' element={<Meal_Poll />} />
-      <Route path="/Login_signIn" element={<Login_signIn />}>
+      {/* <Route path="/Login_signIn" element={<Login_signIn />}>
         <Route path="/Login_signIn/" element={<Login />} />
         <Route path="/Login_signIn/SignIn" element={<SignIn />} />
-      </Route>
-      <Route path='/Warden_Login_SignIn' element={<Warden_Login_SignIn />}>
-        <Route path='/Warden_Login_SignIn/' element={<Warden_Login />} />
-        <Route path='/Warden_Login_SignIn/warden_signIn' element={<Warden_SignIn />} />
+      </Route> */}
+      <Route path='/Login_SignIn' element={<Login_SignIn_Layout />}>
+        <Route path='/Login_SignIn/' element={<Registration />} />
+        <Route path='/Login_SignIn/login' element={<Login />} />
       </Route>
 
     </>
