@@ -12,19 +12,6 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
 
-    branchName: {
-      type: String,
-      required: true,
-      lowercase: true,
-      trim: true,
-    },
-
-    currentYear: {
-      type: Number,
-      required: true,
-      trim: true,
-    },
-
     email: {
       type: String,
       required: true,
@@ -32,15 +19,66 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
 
+    password: {
+      type: String,
+      required: [true, "password is required"],
+      trim: true,
+    },
+
+    gender: {
+      type: String,
+      enum: {
+        values: ["M", "F", "O"],
+        message: "{VALUE} is not supported. Please choose 'M' or 'F' or 'O'.",
+      },
+      trim: true,
+      required: [true , "user.model:: gender not selected"],
+    },
+
+    phone: {
+      type: String,
+      match: [
+        /^[1-9][0-9]{9}$/,
+        "Phone number must be 10 digits and cannot start with 0.",
+      ],
+      required: true,
+    },
+
+    role: {
+      type: String,
+      lowercase: true,
+      enum: ["student", "warden"],
+      trim: true,
+      required: true,
+    },
+
     avatar: {
       type: String, //url from cloudinary
       required: true,
     },
 
-    password: {
+    // on the basis of role below attributes will be in use
+
+    branchName: {
       type: String,
-      required: [true, "password is required"],
+      lowercase: true,
       trim: true,
+      required: function () {
+        return this.role === "student";
+      },
+    },
+
+    currentYear: {
+      type: Number,
+      trim: true,
+      required: function () {
+        return this.role === "student";
+      },
+    },
+
+    hobbies: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true },
@@ -55,7 +93,7 @@ userSchema.pre("save", async function (next) {
 
 userSchema.methods.isPasswordCorrect = async function (password) {
   const value = await bcrypt.compare(password, this.password);
-  return value
+  return value;
 };
 
 userSchema.methods.generateAccessToken = function () {
