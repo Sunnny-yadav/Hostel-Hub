@@ -21,7 +21,7 @@ function UsersBtn() {
                     onClick={showUpdate}
                     disabled={checkboxValue ? false : true}
                 >
-                    Sign In
+                    <Link to="/Login_SignIn">Sign In</Link>
 
                 </button>
                 {
@@ -32,7 +32,7 @@ function UsersBtn() {
                     </div>
                 }
             </div>
-            <div className={`absolute  right-32 md:top-24 md:right-2 flex bg-blue-300 rounded-full p-1.5 md:p-3 duration-200 ${showUser && checkboxValue ? "visible" : "hidden"}`}>
+            {/* <div className={`absolute  right-32 md:top-24 md:right-2 flex bg-blue-300 rounded-full p-1.5 md:p-3 duration-200 ${showUser && checkboxValue ? "visible" : "hidden"}`}>
                 <div className="bg-gray-500 m-1 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full shadow-lg">
                     <Link to="/Login_signIn" className="block text-center">
                         Student
@@ -46,7 +46,7 @@ function UsersBtn() {
                     </button>
                 </div>
 
-            </div>
+            </div> */}
         </>
     )
 }
