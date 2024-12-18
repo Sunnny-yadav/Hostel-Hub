@@ -6,9 +6,11 @@ import { upload_On_Cloudinary } from "../utils/Cloudinary.js";
 const register_User = AsyncHandeller(async (req, res) => {
 
   let { fullName, branchName, currentYear, email, password, gender, phone, role, hobbies,roomNumber } = req.body;
-  
-  if (typeof hobbies === 'string') {
-    hobbies = hobbies.split(",")
+  console.log(typeof hobbies)
+
+  if (hobbies && typeof hobbies === 'string') {
+    // hobbies = JSON.parse(hobbies) this is working when we are using postman , but from forntend the data is pure string and not as array of string so, below one is used
+    hobbies =  hobbies.split(",")
   }
   
   const existedUser = await User.findOne({
