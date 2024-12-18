@@ -1,16 +1,21 @@
 import { z } from "zod";
 
-export const RegistrationSchema = z
-  .object({
+export const loginSchema = z.object({
+  email: z.string().trim().min(1,{message:"Email is required"}).email({ message: "Invalid email format" }),
+  password: z.string().trim().min(1, { message: "Password is required" }),
+});
+
+
+
+export const RegistrationSchema = loginSchema
+  .extend({
     fullName: z
       .string()
       .trim()
       .toLowerCase()
       .min(1, { message: "Fullname is required" }),
 
-    email: z.string().trim().email({ message: "Invalid email format" }),
 
-    password: z.string().trim().min(1, { message: "Password is required" }),
 
     gender: z.enum(["M", "F", "O"], {
       errorMap: (issue, ctx) => ({
@@ -47,7 +52,10 @@ export const RegistrationSchema = z
           message: "Branch name is required for students.",
         });
       }
-      if (data.currentYear === undefined) {
+
+      //  (!data.currentYear) ya fir (data.currentYear == "") both can be used in if statement 
+      
+      if (!data.currentYear) {
         ctx.addIssue({
           path: ["currentYear"],
           message: "Current year is required for students.",
