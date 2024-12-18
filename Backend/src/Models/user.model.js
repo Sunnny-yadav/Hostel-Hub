@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
         message: "{VALUE} is not supported. Please choose 'M' or 'F' or 'O'.",
       },
       trim: true,
-      required: [true , "user.model:: gender not selected"],
+      required: [true, "user.model:: gender not selected"],
     },
 
     phone: {
@@ -76,21 +76,31 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-    roomNumber:{
-      type:String,
-      required:function () {
+    roomNumber: {
+      type: String,
+      required: function () {
         return this.role === "student";
-      }
+      },
     },
 
     hobbies: {
       type: [String],
-      default: [],
     },
   },
   { timestamps: true },
 );
 
+userSchema.pre("save", function (next) {
+  const fieldsToCheck = ["branchName", "currentYear", "roomNumber", "hobbies"];
+
+  fieldsToCheck.forEach((field) => {
+    if (this[field] === "" || this[field] === null || this[field][0] === "") {
+      this[field] = undefined;
+    }
+  });
+
+  next();
+});
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
