@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 import { ConnectDB } from './db/index.js';
 import app  from './app.js';
-
+import { ErrorHandeller } from "./utils/ErrorHandeller.js";
 
 dotenv.config({
     path:'../.env'
 });
 
-
+app.use(ErrorHandeller)
 const PORT = process.env.PORT || 4000 ;
 
 ConnectDB()

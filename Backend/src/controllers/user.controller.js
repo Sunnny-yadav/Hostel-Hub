@@ -18,8 +18,13 @@ const register_User = AsyncHandeller(async (req, res) => {
   });
 
   if (existedUser) {
+    let message = ""
+    if(existedUser.fullName === fullName) message=`${fullName} already exist`
+    if(existedUser.email === email) message=`${email} already exist`
+    if(existedUser.phone === phone) message=`${phone} contact already exist`
+
     return res.status(400).json({
-      Error: "The user already exist ! choose another name, email or phone",
+      message
     });
   }
 
@@ -27,7 +32,7 @@ const register_User = AsyncHandeller(async (req, res) => {
     const count = await User.countDocuments({ role: "warden" });
     if (count >= 2) {
       return res.status(400).json({
-        Error: "warden already exist ! no other can be registered"
+        message: "warden already exist ! Registration rejected"
       })
     }
   }
@@ -38,7 +43,7 @@ const register_User = AsyncHandeller(async (req, res) => {
 
   if (!avatarLocalPath) {
     return res.status(400).json({
-      Error: "The avatarLocalPath is not defined",
+      message: "The avatarLocalPath is not defined",
     });
   }
 
@@ -46,7 +51,7 @@ const register_User = AsyncHandeller(async (req, res) => {
  
   if (!avatar) {
     return res.status(400).json({
-      Error: "url not fetched from cloudinary",
+      message: "url not fetched from cloudinary",
     });
   }
 
@@ -67,7 +72,7 @@ const register_User = AsyncHandeller(async (req, res) => {
 
   if (!user) {
     return res.status(500).json({
-      Error: "error occured while creating a user",
+      message: "error occured while creating a user",
     });
   } 
   const createdUser = await User.findById(user._id).select("-password");
@@ -89,7 +94,7 @@ const login_User = AsyncHandeller(async (req, res) => {
  
   if (!email) {
     return res.status(400).json({
-      Error: "email and password fields are requried for login",
+      message: "email and password fields are requried for login",
     });
   }
 
@@ -100,7 +105,7 @@ const login_User = AsyncHandeller(async (req, res) => {
  
   if (!user) {
     return res.status(400).json({
-      Error: "User not found",
+      message: "User not found",
     });
   }
 
@@ -108,7 +113,7 @@ const login_User = AsyncHandeller(async (req, res) => {
 
   if (!password_Status) {
     return res.status(400).json({
-      Error: "Login password not matched",
+      message: "Login password not matched",
     });
   }
   const role_Value = user.role;
@@ -116,7 +121,7 @@ const login_User = AsyncHandeller(async (req, res) => {
 
   if (!AccessToken) {
     return res.status(400).json({
-      Error: "Access Token not generated",
+      message: "Access Token not generated",
     });
   }
 

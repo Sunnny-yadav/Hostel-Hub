@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import SignIn from "../../assets/SignIn.jpg";
 import { UserContext } from "../../ContextApi/userContext";
+import { toast } from "react-toastify";
 function Registration() {
     const { SetTokenInLocalStorage } = UserContext()
     const [registrationData, setRegistrationData] = useState({
@@ -69,10 +70,10 @@ function Registration() {
                 method: "POST",
                 body: formData
             })
-
+            const responseValue = await respose.json();
+            
             if (respose.ok) {
-                const { data } = await respose.json();
-                SetTokenInLocalStorage(data.AccessToken);
+                SetTokenInLocalStorage(responseValue.data.AccessToken);
                 setRegistrationData({
                     fullName: "",
                     email: "",
@@ -86,9 +87,11 @@ function Registration() {
                     roomNumber: "",
                     hobbies: [],
                 });
+                (responseValue.data.role_Value === "student") ? navigate("/student-dashboard") : navigate("/warden-dashboard");
+                 toast.success(responseValue.message)
 
-                (data.role_Value === "student") ? navigate("/student-dashboard") : navigate("/warden-dashboard");
-
+            }else{
+                toast.error(responseValue.message)
             }
 
         } catch (error) {
@@ -118,7 +121,7 @@ function Registration() {
                             {/* Name Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
-                                    required
+                                    
                                     type="text"
                                     placeholder="Enter Your Full Name"
                                     name="fullName"
@@ -134,7 +137,7 @@ function Registration() {
                             {/* Email Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
-                                    required
+                                    
                                     type="email"
                                     placeholder="Enter Your Email"
                                     name="email"
@@ -164,7 +167,7 @@ function Registration() {
                             {/* Password Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
-                                    required
+                                    
                                     type="password"
                                     placeholder="Enter Your Password"
                                     name="password"
@@ -180,7 +183,7 @@ function Registration() {
                             {/* Phone Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
-                                    required
+                                    
                                     type="tel"
                                     name="phone"
                                     placeholder="Enter Your Phone Number"

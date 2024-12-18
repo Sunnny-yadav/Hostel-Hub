@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginImg from "../../assets/Login.jpg";
 import { UserContext } from "../../ContextApi/userContext";
+import {toast} from 'react-toastify'
+
 
 function Login() {
   const navigate = useNavigate();
@@ -30,15 +32,19 @@ function Login() {
         body: JSON.stringify(loginData),
       });
 
+      const responseValue = await response.json();
+      
       if (response.ok) {
-        const { data } = await response.json();
-        SetTokenInLocalStorage(data.AccessToken);
+        SetTokenInLocalStorage(responseValue.data.AccessToken);
         setLoginData({
           email: "",
           password: "",
         });
-        (data.role_Value === "student") ? navigate("/student-dashboard") : navigate("/warden-dashboard");
-
+        (responseValue.data.role_Value === "student") ? navigate("/student-dashboard") : navigate("/warden-dashboard");
+        toast.success(responseValue.message)
+       
+      }else{
+        toast.error(responseValue.message)
       }
     } catch (error) {
       console.error(error);
@@ -69,7 +75,6 @@ function Login() {
                 placeholder="Enter Your Email"
                 value={loginData.email}
                 onChange={handleLoginData}
-                required
                 className="w-full py-2 pl-12 text-lg text-blue-600 focus:outline-none bg-transparent placeholder:text-gray-500"
               />
               <span className="material-symbols-outlined absolute left-3 top-2 text-gray-400">
@@ -85,7 +90,6 @@ function Login() {
                 placeholder="Enter Your Password"
                 value={loginData.password}
                 onChange={handleLoginData}
-                required
                 className="w-full py-2 pl-12 text-lg text-blue-600 focus:outline-none bg-transparent placeholder:text-gray-500"
               />
               <span className="material-symbols-outlined absolute left-3 top-2 text-gray-400">
