@@ -70,10 +70,11 @@ const register_User = AsyncHandeller(async (req, res) => {
   } 
   const createdUser = await User.findById(user._id).select("-password");
   const AccessToken = createdUser.generateAccessToken()
+  const role_Value = createdUser.role
 
   return res
     .status(200)
-    .json(new ApiResponse(200, {AccessToken}, "Registration succesfull"));
+    .json(new ApiResponse(200, {AccessToken, role_Value}, "Registration succesfull"));
 });
 
 const login_User = AsyncHandeller(async (req, res) => {
@@ -83,7 +84,7 @@ const login_User = AsyncHandeller(async (req, res) => {
   //generate the JWT  token and send it as response
 
   const { email, password } = req.body;
-
+ 
   if (!email) {
     return res.status(400).json({
       Error: "email and password fields are requried for login",
@@ -94,6 +95,7 @@ const login_User = AsyncHandeller(async (req, res) => {
     email,
   });
 
+ 
   if (!user) {
     return res.status(400).json({
       Error: "User not found",
@@ -107,10 +109,10 @@ const login_User = AsyncHandeller(async (req, res) => {
       Error: "Login password not matched",
     });
   }
+  const role_Value = user.role;
+  const AccessToken = await user.generateAccessToken();
 
-  const token = await user.generateAccessToken();
-
-  if (!token) {
+  if (!AccessToken) {
     return res.status(400).json({
       Error: "Access Token not generated",
     });
@@ -119,7 +121,7 @@ const login_User = AsyncHandeller(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { AccessToken: token }, "User Login Successfull"),
+      new ApiResponse(200, { AccessToken,role_Value  }, "User Login Successfull"),
     );
 });
 
