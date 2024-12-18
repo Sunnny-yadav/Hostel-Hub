@@ -9,7 +9,7 @@ import Index from './components/IntroPage/Index'
 import Registration from './components/User_Forms/Registration'
 import Login_SignIn_Layout from './components/User_Forms/Login_SignIn_Layout'
 import Login from './components/User_Forms/Login'
-import StuProfile from './components/Dashboards/Student/StuProfile'
+import StudentDashboard from './components/Dashboards/Student/StudentDashboard'
 import MyComplaints from './components/Dashboards/Student/MyComplaints'
 import Meal_Poll from './components/Dashboards/Student/Meal_Poll'
 import WarDash from './components/Dashboards/Warden/WarDash'
@@ -22,8 +22,8 @@ const router = createBrowserRouter(
       <Route path="/features/TermsPage" element={<TermsPage />} />
       <Route path='/RaiseComplaint' element={<RaiseComplaint_Form />} />
       <Route path='/MyComplaints' element={<MyComplaints />} />
-      <Route path="/StudentProfile" element={<StuProfile />} />
-      <Route path='/warden_dashboard' element={<WarDash />} />
+      <Route path="/student-dashboard" element={<StudentDashboard />} />
+      <Route path='/warden-dashboard' element={<WarDash />} />
       <Route path='/Meal-Poll' element={<Meal_Poll />} />
       {/* <Route path="/Login_signIn" element={<Login_signIn />}>
         <Route path="/Login_signIn/" element={<Login />} />
