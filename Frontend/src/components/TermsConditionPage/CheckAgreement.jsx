@@ -22,15 +22,15 @@ function CheckAgreement(
       < div className='flex flex-col sm:flex-row sm:justify-between sm:items-center items-center '>
         <div className='checkbox flex gap-2 text-2xl font-bold ml-10'>
           <div>
-            <input
+            <label className='text-slate-900' ><input
               ref={checkboxRef}
               type="checkbox"
               onChange={checkboxValue}
               className="w-6 h-6 "
 
-            />
+            />{" "}I agree terms & conditions</label>
           </div>
-          <div className='text-slate-900 '> I agree terms & conditions</div>
+         
         </div>
         <div className='flex justify-center items-center gap-2'>
           <button
