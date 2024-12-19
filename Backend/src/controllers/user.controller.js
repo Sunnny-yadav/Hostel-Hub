@@ -2,6 +2,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { AsyncHandeller } from "../utils/AsyncHandeller.js";
 import { User } from "../Models/user.model.js";
 import { upload_On_Cloudinary } from "../utils/Cloudinary.js";
+import mongoose  from "mongoose";
 
 const register_User = AsyncHandeller(async (req, res) => {
 
@@ -133,9 +134,37 @@ const login_User = AsyncHandeller(async (req, res) => {
 });
 
 const getLogedInUserData = AsyncHandeller(async (req, res) => {
+
+  const {_id} = req.userData;
+  const finalData =await User.aggregate([
+    {
+      $match:{
+       _id: new mongoose.Types.ObjectId(_id)
+      }
+    },
+    {
+      $lookup: {
+        from: "raisecomplaints",
+        localField: "complaints",
+        foreignField: "_id",
+        as: "complaints",
+        pipeline:[
+          {
+            $lookup:{
+              from:"comments",
+              localField:"comments",
+              foreignField:"_id",
+              as:"comments"
+            }
+          }
+        ]
+      }
+    }
+  ])
+
   return res
     .status(200)
-    .json(new ApiResponse(200, req.userData, "user data fetched successfully"));
+    .json(new ApiResponse(200, finalData[0], "user data fetched successfully"));
 });
 
 export { register_User, login_User, getLogedInUserData };
