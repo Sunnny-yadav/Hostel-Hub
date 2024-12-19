@@ -17,7 +17,9 @@ app.use(cors(corsOption))
 // importing routes here 
 
 import userRoute from './Routers/user.Router.js'
+import complaintRoute from './Routers/complain.Router.js'
 
 app.use("/api/v1/users",userRoute)
+app.use("/api/v1/complaints",complaintRoute)
 
 export default app;
