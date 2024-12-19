@@ -1,5 +1,6 @@
 import { Comment } from "../Models/comment.model.js";
 import { RaiseComplaint } from "../Models/complaint.model.js";
+import { User } from "../Models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { AsyncHandeller } from "../utils/AsyncHandeller.js";
 import {
@@ -50,12 +51,14 @@ const register_Complaint = AsyncHandeller(async (req, res) => {
     });
   }
 
+  const updatedUserDocument = await User.findByIdAndUpdate(_id,{$push:{complaints:createdComplain._id}},{new:true})
+
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        createdComplain,
+       {createdComplain,updatedUserDocument},
         "Complain Registration Successfull",
       ),
     );
@@ -212,11 +215,14 @@ const edit_Complaint_State = AsyncHandeller(async (req, res) => {
   }
 });
 
+const get_Complaints = AsyncHandeller(async (req, res)=>{
 
+})
 
 export {
   register_Complaint,
   insert_comment,
   edit_Complaint,
   edit_Complaint_State,
+  get_Complaints
 };
