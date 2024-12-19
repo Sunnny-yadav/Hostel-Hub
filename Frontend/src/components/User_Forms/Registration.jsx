@@ -71,7 +71,7 @@ function Registration() {
                 body: formData
             })
             const responseValue = await respose.json();
-            
+
             if (respose.ok) {
                 SetTokenInLocalStorage(responseValue.data.AccessToken);
                 setRegistrationData({
@@ -88,9 +88,9 @@ function Registration() {
                     hobbies: [],
                 });
                 (responseValue.data.role_Value === "student") ? navigate("/student-dashboard") : navigate("/warden-dashboard");
-                 toast.success(responseValue.message)
+                toast.success(responseValue.message)
 
-            }else{
+            } else {
                 toast.error(responseValue.message)
             }
 
@@ -121,7 +121,8 @@ function Registration() {
                             {/* Name Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
-                                    
+
+                                    autoComplete="off"
                                     type="text"
                                     placeholder="Enter Your Full Name"
                                     name="fullName"
@@ -137,7 +138,8 @@ function Registration() {
                             {/* Email Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
-                                    
+                                    autoComplete="off"
+
                                     type="email"
                                     placeholder="Enter Your Email"
                                     name="email"
@@ -153,6 +155,7 @@ function Registration() {
                             {/* Profile Image Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
+                                    autoComplete="off"
                                     required
                                     type="file"
                                     name="avatar"
@@ -167,7 +170,8 @@ function Registration() {
                             {/* Password Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
-                                    
+                                    autoComplete="off"
+
                                     type="password"
                                     placeholder="Enter Your Password"
                                     name="password"
@@ -183,7 +187,8 @@ function Registration() {
                             {/* Phone Field */}
                             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                 <input
-                                    
+                                    autoComplete="off"
+
                                     type="tel"
                                     name="phone"
                                     placeholder="Enter Your Phone Number"
@@ -203,6 +208,7 @@ function Registration() {
                                 <div className="flex gap-4">
                                     <label className="text-gray-500">
                                         <input
+                                            autoComplete="off"
                                             type="radio"
                                             name="gender"
                                             value="M"
@@ -213,6 +219,7 @@ function Registration() {
                                     </label>
                                     <label className="text-gray-500">
                                         <input
+                                            autoComplete="off"
                                             type="radio"
                                             name="gender"
                                             value="F"
@@ -223,6 +230,7 @@ function Registration() {
                                     </label>
                                     <label className="text-gray-500">
                                         <input
+                                            autoComplete="off"
                                             type="radio"
                                             name="gender"
                                             value="O"
@@ -240,6 +248,7 @@ function Registration() {
                                 <div className="flex gap-4">
                                     <label className="text-gray-500">
                                         <input
+                                            autoComplete="off"
                                             type="radio"
                                             name="role"
                                             value="student"
@@ -250,6 +259,7 @@ function Registration() {
                                     </label>
                                     <label className="text-gray-500">
                                         <input
+                                            autoComplete="off"
                                             type="radio"
                                             name="role"
                                             value="warden"
@@ -267,6 +277,7 @@ function Registration() {
                                     <div className="space-y-4">
                                         <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                             <input
+                                                autoComplete="off"
                                                 type="text"
                                                 name="branchName"
                                                 placeholder="Branch Name"
@@ -281,6 +292,7 @@ function Registration() {
 
                                         <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                             <input
+                                                autoComplete="off"
                                                 type="text"
                                                 name="currentYear"
                                                 placeholder="Current Year"
@@ -295,6 +307,7 @@ function Registration() {
 
                                         <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                             <input
+                                                autoComplete="off"
                                                 type="text"
                                                 name="roomNumber"
                                                 placeholder="Room Number"
@@ -309,6 +322,7 @@ function Registration() {
 
                                         <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
                                             <input
+                                                autoComplete="off"
                                                 type="text"
                                                 name="hobbies"
                                                 placeholder="Hobbies (comma-separated)"
