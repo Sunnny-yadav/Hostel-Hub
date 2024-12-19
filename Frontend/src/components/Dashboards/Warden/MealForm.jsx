@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { hideAddMealForm, ShowToastMsg } from '../../../Redux/slices/TermsConditionSlice'
+import { hideAddMealForm } from '../../../Redux/slices/TermsConditionSlice'
 import { SubmitMeal } from '../../../Redux/slices/MealSlice'
 
 const MealForm = () => {
@@ -38,11 +38,6 @@ const MealForm = () => {
 
         dispatch(hideAddMealForm());
 
-        dispatch(ShowToastMsg());
-
-        setTimeout(() => {
-            dispatch(ShowToastMsg())
-        }, 2500);
     };
 
     return (
