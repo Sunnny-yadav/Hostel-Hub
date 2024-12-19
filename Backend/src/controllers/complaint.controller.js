@@ -2,7 +2,10 @@ import { Comment } from "../Models/comment.model.js";
 import { RaiseComplaint } from "../Models/complaint.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { AsyncHandeller } from "../utils/AsyncHandeller.js";
-import { delete_from_Cloudinary, upload_On_Cloudinary } from "../utils/Cloudinary.js";
+import {
+  delete_from_Cloudinary,
+  upload_On_Cloudinary,
+} from "../utils/Cloudinary.js";
 
 const register_Complaint = AsyncHandeller(async (req, res) => {
   //get all the data from frontend
@@ -109,7 +112,7 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
   const updatedData = req.body;
   const { complaintId } = req.params;
   const imgPath = req.file?.path;
-  let imgUrl = ""
+  let imgUrl = "";
 
   const complaintData = await RaiseComplaint.findById(complaintId);
 
@@ -127,13 +130,12 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
     }
   }
 
-  if(imgPath){
+  if (imgPath) {
     imgUrl = await upload_On_Cloudinary(imgPath);
     fieldsToBeUpdated["image"] = imgUrl;
-    await delete_from_Cloudinary(complaintData.image)
-
-  }else{
-    imgUrl = undefined
+    await delete_from_Cloudinary(complaintData.image);
+  } else {
+    imgUrl = undefined;
   }
 
   if (Object.keys(fieldsToBeUpdated).length === 0) {
@@ -142,11 +144,10 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
     });
   }
 
-
   try {
     const updatedComplaintDocument = await RaiseComplaint.findByIdAndUpdate(
       complaintId,
-      { $set: fieldsToBeUpdated  },
+      { $set: fieldsToBeUpdated },
       { new: true, runValidators: true },
     );
 
@@ -159,7 +160,6 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
           "Complaint updated Successfully",
         ),
       );
-
   } catch (error) {
     if (error.name === "ValidationError") {
       return res.status(400).json({
@@ -172,4 +172,51 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
     }
   }
 });
-export { register_Complaint, insert_comment, edit_Complaint };
+
+const edit_Complaint_State = AsyncHandeller(async (req, res) => {
+  // fetched the complaint id whose status is to be updated
+  // fetched the updated value of state from body
+  // find the complaint
+  // update
+
+  const { state } = req.body;
+  const { complaintId } = req.params;
+
+  try {
+    const updatedComplaintStateDocument =
+      await RaiseComplaint.findByIdAndUpdate(
+        complaintId,
+        { $set: { state } },
+        { new: true, runValidators: true },
+      );
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          updatedComplaintStateDocument,
+          "state updated Successfully",
+        ),
+      );
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: error.message,
+      });
+    } else {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+  }
+});
+
+
+
+export {
+  register_Complaint,
+  insert_comment,
+  edit_Complaint,
+  edit_Complaint_State,
+};
