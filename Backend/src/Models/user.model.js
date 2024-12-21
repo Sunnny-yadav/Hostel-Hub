@@ -57,12 +57,6 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    complaints:[
-      {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"RaiseComplaint"
-      }
-    ],
     // on the basis of role below attributes will be in use
 
     branchName: {
