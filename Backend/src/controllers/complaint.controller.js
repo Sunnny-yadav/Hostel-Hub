@@ -1,3 +1,4 @@
+import { request } from "express";
 import { Comment } from "../Models/comment.model.js";
 import { RaiseComplaint } from "../Models/complaint.model.js";
 import { User } from "../Models/user.model.js";
@@ -51,14 +52,18 @@ const register_Complaint = AsyncHandeller(async (req, res) => {
     });
   }
 
-  const updatedUserDocument = await User.findByIdAndUpdate(_id,{$push:{complaints:createdComplain._id}},{new:true})
+  const updatedUserDocument = await User.findByIdAndUpdate(
+    _id,
+    { $push: { complaints: createdComplain._id } },
+    { new: true },
+  );
 
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-       {createdComplain,updatedUserDocument},
+        { createdComplain, updatedUserDocument },
         "Complain Registration Successfull",
       ),
     );
@@ -215,14 +220,61 @@ const edit_Complaint_State = AsyncHandeller(async (req, res) => {
   }
 });
 
-const get_Complaints = AsyncHandeller(async (req, res)=>{
+const get_Complaints_By_Id_State = AsyncHandeller(async (req, res) => {
+  //get the state of complaint that need is been accessed
+  //get id of student whose complaint need to be fetched
+  //give the response
 
-})
+  const { _id } = req.userData;
+  const { state } = req.params;
+
+  if (!["Pending", "Inprogress", "Resolved"].includes(state)) {
+    return res.status(400).json({
+      message: "Invalid State value",
+    });
+  }
+
+  const requested_Complaints = await RaiseComplaint.aggregate([
+    {
+      $match: {
+        studentId:_id,
+        state,
+      },
+    },
+    {
+      $project: {
+        comments: 0,
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+  ]);
+
+  if (requested_Complaints.length === 0) {
+    return res.status(400).json({
+      message: `No ${state} complaints`,
+    });
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        requested_Complaints,
+        "complaint fetched successfully",
+      ),
+    );
+});
+
 
 export {
   register_Complaint,
   insert_comment,
   edit_Complaint,
   edit_Complaint_State,
-  get_Complaints
+  get_Complaints_By_Id_State,
 };
