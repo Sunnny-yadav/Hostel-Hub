@@ -6,7 +6,7 @@ export const verifyJWT = AsyncHandeller(async (req, res, next) => {
   const Token = req.header("Authorization")?.replace("Bearer ", "");
   if (!Token) {
     res.status(400).json({
-      Error: "Token not avilable :: unauthorized user",
+      message : "Token not avilable :: unauthorized user",
     });
   }
 
@@ -19,7 +19,7 @@ export const verifyJWT = AsyncHandeller(async (req, res, next) => {
   console.log(user)
   if (!user) {
     res.status(400).json({
-      Error: "Invalid user Token",
+      message: "Invalid user Token",
     });
   }
 
