@@ -2,8 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   checkBoxState: false,
-  ViewMealForm: false,
-  ToastMsg :false
+  ViewMealForm: false
 };
 
 export const termConditionslice = createSlice({
@@ -13,6 +12,7 @@ export const termConditionslice = createSlice({
     UpdateCheckboxState: (state, action) => {
       console.log("check");
       state.checkBoxState = !state.checkBoxState;
+      console.log(state.checkBoxState)
     },
 
     ShowMealForm: (state, action) => {
@@ -22,15 +22,13 @@ export const termConditionslice = createSlice({
     hideAddMealForm: (state, action) => {
         state.ViewMealForm = false;
       },
-      ShowToastMsg: (state, action) =>{
-        state.ToastMsg = !state.ToastMsg;
-      }
+     
     
   },
 
 
 });
 
-export const { UpdateCheckboxState, ShowMealForm, hideAddMealForm , ShowToastMsg} =
+export const { UpdateCheckboxState, ShowMealForm, hideAddMealForm } =
   termConditionslice.actions;
 export default termConditionslice.reducer;

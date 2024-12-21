@@ -70,6 +70,7 @@ function Login() {
             {/* Email field */}
             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
               <input
+              autoComplete="off"
                 type="email"
                 name="email"
                 placeholder="Enter Your Email"
@@ -85,6 +86,7 @@ function Login() {
             {/* Password field */}
             <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
               <input
+              autoComplete="off"
                 type="password"
                 name="password"
                 placeholder="Enter Your Password"

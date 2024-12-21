@@ -56,6 +56,12 @@ const userSchema = new mongoose.Schema(
       type: String, //url from cloudinary
       required: true,
     },
+    complaints:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"RaiseComplaint"
+      }
+    ],
 
     // on the basis of role below attributes will be in use
 

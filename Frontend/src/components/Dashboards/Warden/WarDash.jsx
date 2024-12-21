@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import MealForm from './MealForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { ShowMealForm } from '../../../Redux/slices/TermsConditionSlice';
-import ToastMessage from '../../ToastMessage';
 import { loaditems } from '../../../Redux/slices/MealSlice'
 
 
@@ -11,7 +10,7 @@ function WarDash() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isAddMealClicked = useSelector((state) => state.TermCondition.ViewMealForm);
-  const ToastMsg = useSelector((state) => state.TermCondition.ToastMsg);
+
   const FoodItems = useSelector((state) => state.Meal.FoodArray || []);
 
 
@@ -87,7 +86,7 @@ function WarDash() {
             </div>
           </div>
         </div>
-        {ToastMsg && <ToastMessage ToastMessage={"Meal Added Successfully"} />}
+       
         {
           isAddMealClicked ?
             <div>

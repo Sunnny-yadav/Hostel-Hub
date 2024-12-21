@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import email from '../../assets/Intopage/email.jpg'
 import emailjs from '@emailjs/browser'
-import ToastMessage from '../ToastMessage';
+
 
 
 function Contact() {
@@ -10,7 +10,6 @@ function Contact() {
         user_email: "",
         message: ""
     });
-    const [emailSendSuccessfully, setemailSendSuccessfully] = useState(false);
 
     const form = useRef();
 
@@ -37,10 +36,6 @@ function Contact() {
                         user_email: "",
                         message: ""
                     });
-                    setemailSendSuccessfully((value) => !value);
-                    setTimeout(() => {
-                        setemailSendSuccessfully((value) => !value);
-                    }, 2500);
                 },
                 (error) => {
                     console.log("failed")
@@ -50,9 +45,7 @@ function Contact() {
 
     return (
         <>
-            <div>
-                {emailSendSuccessfully && <ToastMessage ToastMessage={"Sent Successfully"} />}
-            </div>
+            
 
             <div className='flex justify-around items-center relative '>
                 <div>
