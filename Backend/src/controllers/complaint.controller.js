@@ -1,4 +1,4 @@
-import { request } from "express";
+
 import { Comment } from "../Models/comment.model.js";
 import { RaiseComplaint } from "../Models/complaint.model.js";
 import { User } from "../Models/user.model.js";
@@ -220,6 +220,7 @@ const edit_Complaint_State = AsyncHandeller(async (req, res) => {
   }
 });
 
+// this below controller is used by student and warden both depending on situation and requirement
 const get_Complaints_By_Id_State = AsyncHandeller(async (req, res) => {
   //get the state of complaint that need is been accessed
   //get id of student whose complaint need to be fetched
@@ -264,11 +265,46 @@ const get_Complaints_By_Id_State = AsyncHandeller(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        requested_Complaints,
+        {complaints:requested_Complaints, count:requested_Complaints.length},
         "complaint fetched successfully",
       ),
     );
 });
+
+// only used by warden
+const get_Complaints_By_State = AsyncHandeller(async (req, res)=>{
+const {state} = req.params;
+
+if (!["Pending", "Inprogress", "Resolved"].includes(state)) {
+  return res.status(400).json({
+    message: "Invalid State value",
+  });
+}
+
+const complaints_by_state = await RaiseComplaint.find({
+  state 
+}).select("-comments");
+
+if (complaints_by_state.length === 0) {
+  return res.status(400).json({
+    message: `No ${state} complaints`,
+  });
+}
+
+return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      {complaints:complaints_by_state,count:complaints_by_state.length},
+      "complaints fetched successfully",
+    ),
+  );
+
+});
+
+
+
 
 
 export {
@@ -277,4 +313,5 @@ export {
   edit_Complaint,
   edit_Complaint_State,
   get_Complaints_By_Id_State,
+  get_Complaints_By_State
 };
