@@ -26,7 +26,11 @@ export default {
         'big': 'var(--big-font-size)',
         'normal': 'var(--normal-font-size)',
       },
+      screens:{
+        xs:'500px'
+      }
     },
+    
   },
   plugins: [],
 };
