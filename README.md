@@ -56,5 +56,5 @@
 ---
 
 *Feel free to contact me for any further questions or improvements.*
-- **Email** : yadavsunnyry@gmail.com
+- **Email** : sunnyyadav.developer@gmail.com
 - **LinkedIn** : [Sunny Yadav](https://linkedin.com/in/sunny-yadav-31b27325b)
