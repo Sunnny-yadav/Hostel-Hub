@@ -13,6 +13,7 @@ import StudentDashboard from './components/Dashboards/Student/StudentDashboard'
 import MyComplaints from './components/Dashboards/Student/MyComplaints'
 import Meal_Poll from './components/Dashboards/Student/Meal_Poll'
 import WarDash from './components/Dashboards/Warden/WarDash'
+import Dashboard from './components/Dashboards/Student/Dashboard'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,18 +21,15 @@ const router = createBrowserRouter(
       <Route path="/" element={<Index />} />
       <Route path="/features" element={<Features />} />
       <Route path="/features/TermsPage" element={<TermsPage />} />
-      <Route path='/RaiseComplaint' element={<RaiseComplaint_Form />} />
-      <Route path='/MyComplaints' element={<MyComplaints />} />
-      <Route path="/student-dashboard" element={<StudentDashboard />} />
       <Route path='/warden-dashboard' element={<WarDash />} />
-      <Route path='/Meal-Poll' element={<Meal_Poll />} />
-      {/* <Route path="/Login_signIn" element={<Login_signIn />}>
-        <Route path="/Login_signIn/" element={<Login />} />
-        <Route path="/Login_signIn/SignIn" element={<SignIn />} />
-      </Route> */}
       <Route path='/Login_SignIn' element={<Login_SignIn_Layout />}>
         <Route path='/Login_SignIn/' element={<Registration />} />
         <Route path='/Login_SignIn/login' element={<Login />} />
+      </Route>
+      <Route path="/student-dashboard" element={<StudentDashboard />}>
+        <Route path='/student-dashboard/' element={<Dashboard/>}/>
+        <Route path='/student-dashboard/raise-complaint' element={<RaiseComplaint_Form/>}/>
+        <Route path='/student-dashboard/vote' element={<Meal_Poll/>}/>
       </Route>
 
     </>
