@@ -9,6 +9,7 @@ function StudentDashboard() {
   const [isHovered, setIsHovered] = useState(false);
   const [showSideBarAtResponsivePhase, setshowSideBarAtResponsivePhase] =
     useState(false);
+  const [showComplaintoption, setshowComplaintOption] = useState(false)
 
   const handleSidebarToggle = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
@@ -22,13 +23,11 @@ function StudentDashboard() {
     <div className="flex bg-gray-100 min-h-screen relative">
       {/* Left Sidebar */}
       <div
-        className={`${
-          showSideBarAtResponsivePhase ? "block absolute z-50" : "hidden"
-        } lg:block bg-gradient-to-b from-blue-600 to-blue-400 text-white  flex-col h-screen transition-all duration-500 ease-in-out ${
-          isSidebarExpanded || isHovered
+        className={`${showSideBarAtResponsivePhase ? "block absolute z-50" : "hidden"
+          } lg:block bg-gradient-to-b from-blue-600 to-blue-400 text-white  flex-col h-screen transition-all duration-500 ease-in-out ${isSidebarExpanded || isHovered
             ? "md:w-64 md:p-5 w-44 p-2.5"
             : "md:w-16 md:p-2"
-        }`}
+          }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -36,17 +35,15 @@ function StudentDashboard() {
         <div className="flex items-center gap-4 ">
           <img
             src={logo}
-            className={`${
-              isSidebarExpanded || isHovered
-                ? "md:w-14 md:h-14 w-10 h-10"
-                : "md:w-12 md:h-12 w-10 h-10"
-            } rounded-full shadow-lg`}
+            className={`${isSidebarExpanded || isHovered
+              ? "md:w-14 md:h-14 w-10 h-10"
+              : "md:w-12 md:h-12 w-10 h-10"
+              } rounded-full shadow-lg`}
             alt="clg logo"
           />
           <div
-            className={`flex items-center justify-between w-full ${
-              isSidebarExpanded || isHovered ? "" : "hidden"
-            }`}
+            className={`flex items-center justify-between w-full ${isSidebarExpanded || isHovered ? "" : "hidden"
+              } `}
           >
             <h2 className="font-serif font-bold text-md md:text-lg lg:text-xl tracking-wide">
               PHCET
@@ -67,8 +64,17 @@ function StudentDashboard() {
               { icon: "dashboard", label: "Dashboard", link: "" },
               {
                 icon: "back_hand",
-                label: "Raise Complaints",
-                link: "/student-dashboard/raise-complaint",
+                label: "Complaint",
+                subItems: [
+                  {
+                    label: "Raise Complaint",
+                    link: "/student-dashboard/raise-complaint",
+                  },
+                  {
+                    label: "Review Complaints",
+                    link: "/student-dashboard/review-complaints",
+                  },
+                ],
               },
               {
                 icon: "restaurant",
@@ -82,35 +88,74 @@ function StudentDashboard() {
               },
             ].map((item, index) => (
               <li key={index}>
-                <NavLink
-                  to={item.link}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover hover:shadow-md"
-                      : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md"
-                  }
-                >
-                  <span
-                    className={`material-symbols-outlined text-lg ${
-                      isSidebarExpanded || isHovered
+                {item.subItems ? (
+                  <div>
+                    <div onMouseEnter={() => setshowComplaintOption(!showComplaintoption)} className="flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md">
+                      <span
+                        className={`material-symbols-outlined text-lg ${isSidebarExpanded || isHovered
+                          ? "text-sm sm:text-md md:text-lg lg:text-2xl"
+                          : ""
+                          }`}
+                      >
+                        {item.icon}
+                      </span>
+                      <span
+                        className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"
+                          }`}
+                      >
+                        {item.label}
+                      </span>
+                    </div>
+                    <ul onMouseLeave={() => setshowComplaintOption(!showComplaintoption)} className={`pl-6 mt-2 ${showComplaintoption ? "" : "hidden"}`}>
+                      {/* <ul className={`pl-6 mt-2 hidden`}> */}
+                      {item.subItems.map((subItem, subIndex) => (
+                        <li key={subIndex}>
+                          <NavLink
+                            to={subItem.link}
+                            className={({ isActive }) =>
+                              isActive
+                                ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:shadow-md"
+                                : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md"
+                            }
+                          >
+                            <span className="font-serif text-xs sm:text-base">
+                              {subItem.label}
+                            </span>
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <NavLink
+                    to={item.link}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:shadow-md"
+                        : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md"
+                    }
+                  >
+                    <span
+                      className={`material-symbols-outlined text-lg ${isSidebarExpanded || isHovered
                         ? "text-sm sm:text-md md:text-lg lg:text-2xl"
                         : ""
-                    }`}
-                  >
-                    {item.icon}
-                  </span>
-                  <span
-                    className={`font-serif text-sm md:text-lg tracking-wide ${
-                      isSidebarExpanded || isHovered ? "" : "hidden"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                </NavLink>
+                        }`}
+                    >
+                      {item.icon}
+                    </span>
+                    <span
+                      className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"
+                        }`}
+                    >
+                      {item.label}
+                    </span>
+                  </NavLink>
+                )}
               </li>
             ))}
           </ul>
         </div>
+
       </div>
 
       {/* Main Content Area */}

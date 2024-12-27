@@ -5,6 +5,7 @@ import pending from '../../../assets/dashboard/pending.png'
 import resolved from '../../../assets/dashboard/resolved.png'
 import inprogress from '../../../assets/dashboard/inprogress.png'
 import { UserContext } from '../../../ContextApi/userContext';
+import {Link} from 'react-router-dom'
 
 
 const Card = ({ logo, title, description }) => (
@@ -54,21 +55,26 @@ function Dashboard() {
                                 </div>
                             </div>
                             <div className="xs:pt-3 pt-2 md:pt-4 lg:pt-6 xl:pt-8 grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3  gap-4 ">
+                                <Link to="/student-dashboard/raise-complaint">
                                 <Card
                                     logo={complaint}
                                     title="Raise Complaint"
                                     description="Quick resolution for issues."
                                 />
+                                </Link>
+                                <Link to="/student-dashboard/vote">
                                 <Card
                                     logo={meal}
                                     title=" Meal Poll"
                                     description=" Tailor meals to your needs"
                                 />
+                                </Link>
+                                <Link to="/student-dashboard/find-match">
                                 <Card
                                     logo={match}
                                     title="  Partner Suggestions"
                                     description=" Find your perfect match easily"
-                                />
+                                /></Link>
                             </div>
                         </section>
 

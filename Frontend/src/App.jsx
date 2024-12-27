@@ -4,7 +4,7 @@ import TermsPage from './components/TermsConditionPage/TermsPage'
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from 'react-router-dom'
 import { store } from './Redux/Store'
 import Features from './components/featuresPage/Features'
-import RaiseComplaint_Form from './components/RaiseComplaint_Form'
+import RaiseComplaint_Form from './components/Dashboards/Student/RaiseComplaint_Form'
 import Index from './components/IntroPage/Index'
 import Registration from './components/User_Forms/Registration'
 import Login_SignIn_Layout from './components/User_Forms/Login_SignIn_Layout'
@@ -14,6 +14,7 @@ import MyComplaints from './components/Dashboards/Student/MyComplaints'
 import Meal_Poll from './components/Dashboards/Student/Meal_Poll'
 import WarDash from './components/Dashboards/Warden/WarDash'
 import Dashboard from './components/Dashboards/Student/Dashboard'
+import MatchPartner from './components/Dashboards/Student/MatchPartner'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,8 @@ const router = createBrowserRouter(
         <Route path='/student-dashboard/' element={<Dashboard/>}/>
         <Route path='/student-dashboard/raise-complaint' element={<RaiseComplaint_Form/>}/>
         <Route path='/student-dashboard/vote' element={<Meal_Poll/>}/>
+        <Route path='/student-dashboard/find-match' element={<MatchPartner/>}/>
+        <Route path="/student-dashboard/review-complaints" element={<MyComplaints/>}/>
       </Route>
 
     </>

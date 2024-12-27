@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-
+import {useNavigate} from 'react-router-dom'
 const RaiseComplaint_Form = () => {
-
+  const navigate = useNavigate()
   const [complaintData, setComplaintData] = useState({
     Title: "",
     Type: "",
@@ -23,6 +23,7 @@ const RaiseComplaint_Form = () => {
   const onComplaintSubmit = (e) => {
     e.preventDefault();
     console.log(complaintData)
+    navigate("/student-dashboard/review-complaints")
   }
 
 
