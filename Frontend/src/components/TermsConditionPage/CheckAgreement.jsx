@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { UpdateCheckboxState } from '../../Redux/slices/TermsConditionSlice';
+import { UpdateCheckboxState } from '../../store/slices/TermsConditionSlice';
 import { useDispatch } from 'react-redux';
 
 function CheckAgreement(
