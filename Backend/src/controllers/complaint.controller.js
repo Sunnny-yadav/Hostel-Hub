@@ -31,7 +31,6 @@ const register_Complaint = AsyncHandeller(async (req, res) => {
     studentId: _id,
   });
   
-  console.log(redundentComplaint);
 
   if (redundentComplaint) {
     return res.status(200).json({
@@ -96,7 +95,7 @@ const insert_comment = AsyncHandeller(async (req, res) => {
     text,
   });
 
-  console.log(created_Comment);
+
   if (!created_Comment) {
     return res.status(200).json({
       message: "Something went wrong while creating comment",
