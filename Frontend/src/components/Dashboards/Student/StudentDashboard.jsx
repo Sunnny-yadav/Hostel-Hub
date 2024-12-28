@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import logo from "../../../assets/Intopage/logo.png";
-import { UserContext } from "../../../ContextApi/userContext";
+import { UserContext } from "../../../Context/userContext";
 
 function StudentDashboard() {
   const { userData } = UserContext();

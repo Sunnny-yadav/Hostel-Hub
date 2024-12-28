@@ -4,7 +4,7 @@ import match from '../../../assets/dashboard/match_logo.jpg'
 import pending from '../../../assets/dashboard/pending.png'
 import resolved from '../../../assets/dashboard/resolved.png'
 import inprogress from '../../../assets/dashboard/inprogress.png'
-import { UserContext } from '../../../ContextApi/userContext';
+import { UserContext } from '../../../Context/userContext';
 import {Link} from 'react-router-dom'
 
 
