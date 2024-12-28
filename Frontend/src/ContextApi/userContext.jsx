@@ -5,7 +5,7 @@ export const User_context = createContext();
 export const UserContextProvider = ({ children }) => {
     const [AccessToken, setAccessToken] = useState(JSON.parse(localStorage.getItem("AccessToken")) || null);
     const [userData, setuserData] = useState("");
-    
+    const Token = `Bearer ${AccessToken}`
     
     //fetch loged in user data
     const fetchUserData = async () => {
@@ -13,7 +13,7 @@ export const UserContextProvider = ({ children }) => {
             let response = await fetch("http://localhost:8000/api/v1/users/getUserData", {
                 method: "GET",
                 headers: {
-                    "Authorization": `Bearer ${AccessToken}`
+                    "Authorization": Token
                 }
             });
             if (response.ok) {
@@ -48,7 +48,7 @@ export const UserContextProvider = ({ children }) => {
 
 
     return (
-        <User_context.Provider value={{ SetTokenInLocalStorage , userData, Logout}}>
+        <User_context.Provider value={{ SetTokenInLocalStorage , userData, Logout, Token}}>
             {children}
         </User_context.Provider>
     )
