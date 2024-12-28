@@ -30,6 +30,7 @@ const register_Complaint = AsyncHandeller(async (req, res) => {
     Title,
     studentId: _id,
   });
+  
   console.log(redundentComplaint);
 
   if (redundentComplaint) {
@@ -63,10 +64,19 @@ const register_Complaint = AsyncHandeller(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { createdComplain, updatedUserDocument },
+        createdComplain,
         "Complain Registration Successfull",
       ),
     );
+  // return res
+  //   .status(200)
+  //   .json(
+  //     new ApiResponse(
+  //       200,
+  //       { createdComplain, updatedUserDocument },
+  //       "Complain Registration Successfull",
+  //     ),
+  //   );
 });
 
 const insert_comment = AsyncHandeller(async (req, res) => {
