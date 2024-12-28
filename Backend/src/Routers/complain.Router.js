@@ -2,6 +2,7 @@ import Router from "express";
 import {
   edit_Complaint,
   edit_Complaint_State,
+  get_Complaints_By_Id,
   get_Complaints_By_Id_State,
   get_Complaints_By_State,
   insert_comment,
@@ -44,6 +45,9 @@ router
 router
   .route("/:state/get-complaints-by-state")
   .get(verifyJWT, get_Complaints_By_State);
+
+router
+  .route("/get-complaint-by-id").get(verifyJWT, get_Complaints_By_Id);
   
 
 export default router;
