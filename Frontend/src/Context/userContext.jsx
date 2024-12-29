@@ -5,7 +5,8 @@ export const User_context = createContext();
 export const UserContextProvider = ({ children }) => {
     const [AccessToken, setAccessToken] = useState(JSON.parse(localStorage.getItem("AccessToken")) || null);
     const [userData, setuserData] = useState("");
-    const Token = `Bearer ${AccessToken}`
+    const Token = `Bearer ${AccessToken}`;
+ 
     
     //fetch loged in user data
     const fetchUserData = async () => {
@@ -18,7 +19,6 @@ export const UserContextProvider = ({ children }) => {
             });
             if (response.ok) {
                 let fetchedData = await response.json();
-                console.log(fetchedData.data)
                 setuserData(fetchedData.data);
             } else {
                 throw new Error("User Data not fetched successfully")
@@ -48,7 +48,7 @@ export const UserContextProvider = ({ children }) => {
 
 
     return (
-        <User_context.Provider value={{ SetTokenInLocalStorage , userData, Logout, Token}}>
+        <User_context.Provider value={{ SetTokenInLocalStorage , userData, Logout, Token, AccessToken}}>
             {children}
         </User_context.Provider>
     )
