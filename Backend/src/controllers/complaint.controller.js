@@ -226,18 +226,18 @@ const edit_Complaint_State = AsyncHandeller(async (req, res) => {
   }
 });
 
-// this below controller is used by student and warden both depending on situation and requirement
-const get_Complaints_By_Id_State = AsyncHandeller(async (req, res) => {
+// used by student as well as warden to see the complaints for the specific user 
+const get_Complaints_By_Id_Type = AsyncHandeller(async (req, res) => {
   //get the state of complaint that need is been accessed
   //get id of student whose complaint need to be fetched
   //give the response
 
   const { _id } = req.userData;
-  const { state } = req.params;
+  const { Type } = req.params;
 
-  if (!["Pending", "Inprogress", "Resolved"].includes(state)) {
+  if (!["personal", "public"].includes(Type)) {
     return res.status(400).json({
-      message: "Invalid State value",
+      message: "Invalid Type value",
     });
   }
 
@@ -245,7 +245,7 @@ const get_Complaints_By_Id_State = AsyncHandeller(async (req, res) => {
     {
       $match: {
         studentId: _id,
-        state,
+        Type,
       },
     },
     {
@@ -262,7 +262,7 @@ const get_Complaints_By_Id_State = AsyncHandeller(async (req, res) => {
 
   if (requested_Complaints.length === 0) {
     return res.status(400).json({
-      message: `No ${state} complaints`,
+      message: `No ${Type} complaints`,
     });
   }
 
@@ -273,28 +273,29 @@ const get_Complaints_By_Id_State = AsyncHandeller(async (req, res) => {
         complaints: requested_Complaints,
         count: requested_Complaints.length,
       },
-      "complaint fetched successfully",
+      `${Type} complaint fetched successfully`
     ),
   );
 });
 
-// only used by warden
-const get_Complaints_By_State = AsyncHandeller(async (req, res) => {
-  const { state } = req.params;
 
-  if (!["Pending", "Inprogress", "Resolved"].includes(state)) {
+// only used by warden to see all complaints depending on type
+const get_Complaints_By_Type = AsyncHandeller(async (req, res) => {
+  const { Type } = req.params;
+
+  if (!["personal","public"].includes(Type)) {
     return res.status(400).json({
-      message: "Invalid State value",
+      message: "Invalid Type value",
     });
   }
 
-  const complaints_by_state = await RaiseComplaint.find({
-    state,
+  const complaints_by_Type = await RaiseComplaint.find({
+    Type,
   }).select("-comments");
 
-  if (complaints_by_state.length === 0) {
+  if (complaints_by_Type.length === 0) {
     return res.status(400).json({
-      message: `No ${state} complaints`,
+      message: `No ${Type} complaints`,
     });
   }
 
@@ -303,12 +304,13 @@ const get_Complaints_By_State = AsyncHandeller(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { complaints: complaints_by_state, count: complaints_by_state.length },
+        { complaints: complaints_by_Type, count: complaints_by_Type.length },
         "complaints fetched successfully",
       ),
     );
 });
 
+// this is used to fetch complaint on student dashboard 
 const get_Complaints_By_Id = AsyncHandeller(async (req, res) => {
   const { _id } = req.userData;
 
@@ -335,7 +337,17 @@ export {
   insert_comment,
   edit_Complaint,
   edit_Complaint_State,
-  get_Complaints_By_Id_State,
-  get_Complaints_By_State,
+  get_Complaints_By_Id_Type,
+  get_Complaints_By_Type,
   get_Complaints_By_Id,
 };
+
+
+
+
+
+
+
+
+
+
