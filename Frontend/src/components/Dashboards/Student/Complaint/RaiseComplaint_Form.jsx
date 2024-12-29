@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useUserContext } from "../../../../Context/userContext";
+import { toast } from "react-toastify";
+import { useComplaintContext } from "../../../../Context/complaintContext";
+
+
 const RaiseComplaint_Form = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { Token } = useUserContext();
+  const { addNewComplaintInComplaintArray } = useComplaintContext();
   const [complaintData, setComplaintData] = useState({
     Title: "",
     Type: "",
@@ -20,10 +27,37 @@ const RaiseComplaint_Form = () => {
     ))
   };
 
-  const onComplaintSubmit = (e) => {
+  const onComplaintSubmit = async (e) => {
     e.preventDefault();
-    console.log(complaintData)
-    navigate("/student-dashboard/review-complaints")
+    const formdata = new FormData()
+
+    for (const key in complaintData) {
+      if (key) {
+        formdata.append(key, complaintData[key])
+      }
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/complaints/register-complaint", {
+        method: "POST",
+        headers: {
+          Authorization: Token
+        },
+        body: formdata
+      })
+
+      const parsedData = await response.json();
+      if (response.ok) {
+        addNewComplaintInComplaintArray(parsedData.data)
+        toast.success(parsedData.message)
+        navigate("/student-dashboard/review-complaints")
+      } else {
+        toast.error(parsedData.message)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 

@@ -2,8 +2,9 @@ import Router from "express";
 import {
   edit_Complaint,
   edit_Complaint_State,
-  get_Complaints_By_Id_State,
-  get_Complaints_By_State,
+  get_Complaints_By_Id,
+  get_Complaints_By_Id_Type,
+  get_Complaints_By_Type,
   insert_comment,
   register_Complaint,
 } from "../controllers/complaint.controller.js";
@@ -38,12 +39,15 @@ router
   .patch(verifyJWT, edit_Complaint_State);
   
 router
-  .route("/:state/get-complaints-by-id-state")
-  .get(verifyJWT, get_Complaints_By_Id_State);
+  .route("/:Type/get-complaints-by-id-type")
+  .get(verifyJWT, get_Complaints_By_Id_Type);
   
 router
-  .route("/:state/get-complaints-by-state")
-  .get(verifyJWT, get_Complaints_By_State);
+  .route("/:Type/get-complaints-by-type")
+  .get(verifyJWT, get_Complaints_By_Type);
+
+router
+  .route("/get-complaint-by-id").get(verifyJWT, get_Complaints_By_Id);
   
 
 export default router;

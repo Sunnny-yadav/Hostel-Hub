@@ -7,7 +7,6 @@ import mongoose  from "mongoose";
 const register_User = AsyncHandeller(async (req, res) => {
 
   let { fullName, branchName, currentYear, email, password, gender, phone, role, hobbies,roomNumber } = req.body;
-  console.log(typeof hobbies)
 
   if (hobbies && typeof hobbies === 'string') {
     // hobbies = JSON.parse(hobbies) this is working when we are using postman , but from forntend the data is pure string and not as array of string so, below one is used

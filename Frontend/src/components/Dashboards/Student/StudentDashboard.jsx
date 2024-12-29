@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import logo from "../../../assets/Intopage/logo.png";
-import { UserContext } from "../../../ContextApi/userContext";
+import { useUserContext } from "../../../Context/userContext";
 
 function StudentDashboard() {
-  const { userData } = UserContext();
+  const { userData } = useUserContext();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [showSideBarAtResponsivePhase, setshowSideBarAtResponsivePhase] =

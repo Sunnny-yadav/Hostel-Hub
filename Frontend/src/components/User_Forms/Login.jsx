@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginImg from "../../assets/Login.jpg";
-import { UserContext } from "../../ContextApi/userContext";
+import { useUserContext } from "../../Context/userContext";
 import {toast} from 'react-toastify'
 
 
 function Login() {
   const navigate = useNavigate();
-  const { SetTokenInLocalStorage } = UserContext();
+  const { SetTokenInLocalStorage } = useUserContext();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
