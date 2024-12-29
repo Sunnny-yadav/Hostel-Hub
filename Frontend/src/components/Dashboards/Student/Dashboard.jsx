@@ -5,7 +5,8 @@ import pending from '../../../assets/dashboard/pending.png'
 import resolved from '../../../assets/dashboard/resolved.png'
 import inprogress from '../../../assets/dashboard/inprogress.png'
 import { useUserContext } from '../../../Context/userContext';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useComplaintContext } from '../../../Context/complaintContext'
 
 
 const Card = ({ logo, title, description }) => (
@@ -20,6 +21,8 @@ const Card = ({ logo, title, description }) => (
 
 function Dashboard() {
     const { userData } = useUserContext();
+    const { FetchedComplaints } = useComplaintContext();
+    console.log(FetchedComplaints)
     return (
         <>
             <div className='font-serif'>
@@ -56,25 +59,25 @@ function Dashboard() {
                             </div>
                             <div className="xs:pt-3 pt-2 md:pt-4 lg:pt-6 xl:pt-8 grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3  gap-4 ">
                                 <Link to="/student-dashboard/raise-complaint">
-                                <Card
-                                    logo={complaint}
-                                    title="Raise Complaint"
-                                    description="Quick resolution for issues."
-                                />
+                                    <Card
+                                        logo={complaint}
+                                        title="Raise Complaint"
+                                        description="Quick resolution for issues."
+                                    />
                                 </Link>
                                 <Link to="/student-dashboard/vote">
-                                <Card
-                                    logo={meal}
-                                    title=" Meal Poll"
-                                    description=" Tailor meals to your needs"
-                                />
+                                    <Card
+                                        logo={meal}
+                                        title=" Meal Poll"
+                                        description=" Tailor meals to your needs"
+                                    />
                                 </Link>
                                 <Link to="/student-dashboard/find-match">
-                                <Card
-                                    logo={match}
-                                    title="  Partner Suggestions"
-                                    description=" Find your perfect match easily"
-                                /></Link>
+                                    <Card
+                                        logo={match}
+                                        title="  Partner Suggestions"
+                                        description=" Find your perfect match easily"
+                                    /></Link>
                             </div>
                         </section>
 
@@ -176,26 +179,31 @@ function Dashboard() {
                             <div className="overflow-y-auto max-h-[24vh]">
                                 <table className="w-full bg-white">
                                     <tbody className="divide-y text-xs sm:text-sm sm:text-md divide-gray-400">
-                                        {/* Row 1 */}
-                                        <tr className="hover:bg-gray-100 transition duration-200 ">
-                                            <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate max-w-[50px] sm:max-w-[100px]">
-                                                Fan not Working
-                                            </td>
-                                            <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-600 truncate  max-w-[100px] sm:max-w-[210px]" >
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                            </td>
-                                            <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate ">
-                                                12:10:24
-                                            </td>
-                                            <td className="sm:px-4 sm:py-4 px-2 py-1  font-semibold text-yellow-600 truncate text-center ">
-                                                Pending
-                                            </td>
-                                        </tr>
-                                     
+
+                                        {
+                                            (FetchedComplaints.length !== 0) &&
+                                            FetchedComplaints.map((data) => (
+                                                <tr key={data._id} className="hover:bg-gray-100 transition duration-200 ">
+                                                    <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate max-w-[50px] sm:max-w-[100px]">
+                                                        {data.Title}
+                                                    </td>
+                                                    <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-600 truncate  max-w-[100px] sm:max-w-[210px]" >
+                                                        {data.Description}
+                                                    </td>
+                                                    <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate ">
+                                                        {data.createdAt.split("T")[0]}
+                                                    </td>
+                                                    <td className={`sm:px-4 sm:py-4 px-2 py-1  font-semibold ${data.state === "Pending" ? "text-yellow-600" : ""}  ${data.state === "Inprogress" ? "text-blue-600" : ""}  ${data.state === "Resolved" ? "text-green-600" : ""}  truncate text-center `}>
+                                                        {data.state}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        }
+
                                     </tbody>
                                 </table>
                             </div>
-                        </div> 
+                        </div>
 
                     </div>
                 </div>
