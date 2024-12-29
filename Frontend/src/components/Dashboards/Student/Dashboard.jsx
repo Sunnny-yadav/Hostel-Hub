@@ -21,8 +21,8 @@ const Card = ({ logo, title, description }) => (
 
 function Dashboard() {
     const { userData } = useUserContext();
-    const { FetchedComplaints } = useComplaintContext();
-    console.log(FetchedComplaints)
+    const { FetchedComplaintsById } = useComplaintContext();
+    
     return (
         <>
             <div className='font-serif'>
@@ -181,8 +181,8 @@ function Dashboard() {
                                     <tbody className="divide-y text-xs sm:text-sm sm:text-md divide-gray-400">
 
                                         {
-                                            (FetchedComplaints.length !== 0) &&
-                                            FetchedComplaints.map((data) => (
+                                            (FetchedComplaintsById.length !== 0) &&
+                                            FetchedComplaintsById.map((data) => (
                                                 <tr key={data._id} className="hover:bg-gray-100 transition duration-200 ">
                                                     <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate max-w-[50px] sm:max-w-[100px]">
                                                         {data.Title}
