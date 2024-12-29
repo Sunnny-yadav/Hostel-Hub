@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import {useNavigate} from 'react-router-dom'
 import { useUserContext } from "../../../../Context/userContext";
 import { toast } from "react-toastify";
+import { useComplaintContext } from "../../../../Context/complaintContext";
 
 
 const RaiseComplaint_Form = () => {
-  const navigate = useNavigate()
-  const {Token} = useUserContext()
+  const navigate = useNavigate();
+  const {Token} = useUserContext();
+  const {addNewComplaintInComplaintArray} = useComplaintContext();
   const [complaintData, setComplaintData] = useState({
     Title: "",
     Type: "",
@@ -47,6 +49,7 @@ const RaiseComplaint_Form = () => {
       const parsedData = await response.json();
       console.log(parsedData)
       if(response.ok){
+        addNewComplaintInComplaintArray(parsedData.data)
         toast.success(parsedData.message)
         navigate("/student-dashboard/review-complaints")
       }
