@@ -4,7 +4,7 @@ import match from '../../../assets/dashboard/match_logo.jpg'
 import pending from '../../../assets/dashboard/pending.png'
 import resolved from '../../../assets/dashboard/resolved.png'
 import inprogress from '../../../assets/dashboard/inprogress.png'
-import { UserContext } from '../../../Context/userContext';
+import { useUserContext } from '../../../Context/userContext';
 import {Link} from 'react-router-dom'
 
 
@@ -19,7 +19,7 @@ const Card = ({ logo, title, description }) => (
 );
 
 function Dashboard() {
-    const { userData } = UserContext();
+    const { userData } = useUserContext();
     return (
         <>
             <div className='font-serif'>

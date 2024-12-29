@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import SignIn from "../../assets/SignIn.jpg";
-import { UserContext } from "../../Context/userContext";
+import { useUserContext } from "../../Context/userContext";
 import { toast } from "react-toastify";
 function Registration() {
-    const { SetTokenInLocalStorage } = UserContext()
+    const { SetTokenInLocalStorage } = useUserContext()
     const [registrationData, setRegistrationData] = useState({
         fullName: "",
         email: "",
