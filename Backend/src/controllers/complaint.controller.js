@@ -145,15 +145,12 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
   }
 
   if (imgPath) {
-    
     imgUrl = await upload_On_Cloudinary(imgPath);
     fieldsToBeUpdated["image"] = imgUrl;
     await delete_from_Cloudinary(complaintData.image); // delete the old image if there's a new one
-} else {
-    
-    imgUrl = complaintData.image; 
-}
-
+  } else {
+    imgUrl = complaintData.image;
+  }
 
   if (Object.keys(fieldsToBeUpdated).length === 0) {
     return res.status(400).json({
@@ -334,6 +331,24 @@ const get_Complaints_By_Id = AsyncHandeller(async (req, res) => {
     );
 });
 
+const delete_complaint = AsyncHandeller(async (req, res) => {
+  const { complaintId } = req.params;
+
+  const deletedComplaint = await RaiseComplaint.findByIdAndDelete({
+    _id: complaintId,
+  });
+
+  if (!deletedComplaint) {
+    return res.status(400).json({
+      message: "complaint do not exist",
+    });
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, deletedComplaint, "Delete Successfull"));
+});
+
 export {
   register_Complaint,
   insert_comment,
@@ -342,4 +357,5 @@ export {
   get_Complaints_By_Id_Type,
   get_Complaints_By_Type,
   get_Complaints_By_Id,
+  delete_complaint,
 };
