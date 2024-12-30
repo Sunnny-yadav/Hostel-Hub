@@ -6,8 +6,10 @@ import noComplaint from '../../../../assets/dashboard/noComplaint.png'
 const MyComplaints = () => {
   const navigate = useNavigate();
   const [complaintType, setComplaintType] = useState("personal");
-  const { getComplaintsByIdAndType, complaintsToBeDisplayed, filterFetchedComplaints } = useComplaintContext();
-  const [loading, setLoading] = useState(true);  // Create loading state
+  const { getComplaintsByIdAndType, complaintsToBeDisplayed, filterFetchedComplaints, deleteComplaint, complaintsnotPresent } = useComplaintContext();
+  const [loading, setLoading] = useState(true);
+  const [showDeleteBox, setshowDeleteBox] = useState(false)
+  const [complaintId, setcomplaintId] = useState(null)
 
   const getTime = (UTC_time) => {
     let date = new Date(UTC_time);
@@ -21,7 +23,7 @@ const MyComplaints = () => {
     return time;
   };
 
-  const GoToEditPage = (complaintId)=>{
+  const GoToEditPage = (complaintId) => {
     navigate(`/student-dashboard/${complaintId}/edit-complaint`);
   }
 
@@ -35,6 +37,12 @@ const MyComplaints = () => {
       setLoading(false);  // Data is loaded, set loading to false
     }
   }, [complaintsToBeDisplayed]);
+
+  useEffect(()=>{
+    if(complaintsnotPresent){
+      setLoading(false)
+    }
+  },[complaintsnotPresent])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-50 py-10">
@@ -103,7 +111,7 @@ const MyComplaints = () => {
                 </div>
               </div>
             ) :
-              complaintsToBeDisplayed.complaints.map((complaint) => (
+              complaintsToBeDisplayed?.complaints?.map((complaint) => (
                 <div
                   key={complaint._id}
                   className="flex flex-col justify-between bg-purple-200 rounded-lg shadow p-3 sm:p-4 border hover:shadow-lg transition-all">
@@ -138,11 +146,14 @@ const MyComplaints = () => {
                   <div className="flex justify-between items-center mt-3 sm:mt-4">
                     <div className="flex gap-2">
                       <button
-                        onClick={()=>GoToEditPage(complaint._id)}
+                        onClick={() => GoToEditPage(complaint._id)}
                         className="bg-green-500 text-white font-medium py-1 px-2 sm:py-2 sm:px-3 text-xs sm:text-sm md:text-base rounded-md hover:bg-green-600 transition-all">
                         Edit
                       </button>
-                      <button className="bg-red-500 text-white font-medium py-1 px-2 sm:py-2 sm:px-3 text-xs sm:text-sm md:text-base rounded-md hover:bg-red-600 transition-all">
+                      <button onClick={() => {
+                        setshowDeleteBox(!showDeleteBox);
+                        setcomplaintId(complaint._id)
+                      }} className="bg-red-500 text-white font-medium py-1 px-2 sm:py-2 sm:px-3 text-xs sm:text-sm md:text-base rounded-md hover:bg-red-600 transition-all">
                         Delete
                       </button>
                     </div>
@@ -150,7 +161,7 @@ const MyComplaints = () => {
                       <span
                         onClick={() => navigate("/student-dashboard/comments")}
                         className="material-symbols-outlined">
-                        comment
+                        comment 
                       </span>
                     </div>
                   </div>
@@ -159,6 +170,32 @@ const MyComplaints = () => {
           </div>
         </div>
       )}
+
+      <div className={`${showDeleteBox ? "fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50 " : "hidden"}`}>
+        <div className="bg-white p-4 sm:p-6 md:p-8 lg:p-10 rounded-lg shadow-xl max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg w-full mx-4 sm:mx-8 md:mx-12 text-center">
+          <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-blue-800 mb-3 sm:mb-4">
+            Are you sure you want to delete this complaint?
+          </h2>
+          <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
+            <button
+              onClick={() => {
+                deleteComplaint(complaintId)
+                setshowDeleteBox(false)
+              }}
+              className="bg-red-500 text-white py-1.5 px-4 sm:py-2 sm:px-6 rounded-md hover:bg-red-600 transition-all text-sm sm:text-base">
+              Yes, Delete
+            </button>
+            <button
+              onClick={() => setshowDeleteBox(false)}
+              className="bg-gray-500 text-white py-1.5 px-4 sm:py-2 sm:px-6 rounded-md hover:bg-gray-600 transition-all text-sm sm:text-base">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+
 
     </div>
   );
