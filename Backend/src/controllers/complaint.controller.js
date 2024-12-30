@@ -126,7 +126,7 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
   const updatedData = req.body;
   const { complaintId } = req.params;
   const imgPath = req.file?.path;
-  let imgUrl = "";
+  let imgUrl;
 
   const complaintData = await RaiseComplaint.findById(complaintId);
 
@@ -147,9 +147,9 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
   if (imgPath) {
     imgUrl = await upload_On_Cloudinary(imgPath);
     fieldsToBeUpdated["image"] = imgUrl;
-    await delete_from_Cloudinary(complaintData.image);
+    await delete_from_Cloudinary(complaintData.image); // delete the old image if there's a new one
   } else {
-    imgUrl = undefined;
+    imgUrl = complaintData.image;
   }
 
   if (Object.keys(fieldsToBeUpdated).length === 0) {
@@ -226,7 +226,7 @@ const edit_Complaint_State = AsyncHandeller(async (req, res) => {
   }
 });
 
-// used by student as well as warden to see the complaints for the specific user 
+// used by student as well as warden to see the complaints for the specific user
 const get_Complaints_By_Id_Type = AsyncHandeller(async (req, res) => {
   //get the state of complaint that need is been accessed
   //get id of student whose complaint need to be fetched
@@ -273,17 +273,16 @@ const get_Complaints_By_Id_Type = AsyncHandeller(async (req, res) => {
         complaints: requested_Complaints,
         count: requested_Complaints.length,
       },
-      `${Type} complaint fetched successfully`
+      `${Type} complaint fetched successfully`,
     ),
   );
 });
-
 
 // only used by warden to see all complaints depending on type
 const get_Complaints_By_Type = AsyncHandeller(async (req, res) => {
   const { Type } = req.params;
 
-  if (!["personal","public"].includes(Type)) {
+  if (!["personal", "public"].includes(Type)) {
     return res.status(400).json({
       message: "Invalid Type value",
     });
@@ -310,14 +309,14 @@ const get_Complaints_By_Type = AsyncHandeller(async (req, res) => {
     );
 });
 
-// this is used to fetch complaint on student dashboard 
+// this is used to fetch complaint on student dashboard
 const get_Complaints_By_Id = AsyncHandeller(async (req, res) => {
   const { _id } = req.userData;
 
   const AllComplaints = await RaiseComplaint.find(
     { studentId: _id },
     { studentId: 0, updatedAt: 0, Type: 0, comments: 0 },
-  ).sort({createdAt:-1});
+  ).sort({ createdAt: -1 });
 
   if (!AllComplaints || AllComplaints.length === 0) {
     return res.status(400).json({
@@ -332,6 +331,24 @@ const get_Complaints_By_Id = AsyncHandeller(async (req, res) => {
     );
 });
 
+const delete_complaint = AsyncHandeller(async (req, res) => {
+  const { complaintId } = req.params;
+
+  const deletedComplaint = await RaiseComplaint.findByIdAndDelete({
+    _id: complaintId,
+  });
+
+  if (!deletedComplaint) {
+    return res.status(400).json({
+      message: "complaint do not exist",
+    });
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, deletedComplaint, "Delete Successfull"));
+});
+
 export {
   register_Complaint,
   insert_comment,
@@ -340,14 +357,5 @@ export {
   get_Complaints_By_Id_Type,
   get_Complaints_By_Type,
   get_Complaints_By_Id,
+  delete_complaint,
 };
-
-
-
-
-
-
-
-
-
-

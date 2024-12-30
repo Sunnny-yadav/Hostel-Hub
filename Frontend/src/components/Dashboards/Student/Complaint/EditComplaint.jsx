@@ -1,13 +1,55 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
+import { useComplaintContext } from "../../../../Context/complaintContext";
+import { toast } from "react-toastify";
 
 const EditComplaint = () => {
+  const { complaintId } = useParams();
+  const { getComplaintToBeEdited, ComplaintToBeEdited, getComplaintsByIdAndType, complaintsToBeDisplayed, Token } = useComplaintContext();
+  const [localStorageType, setLocalStorageType] = useState(JSON.parse(localStorage.getItem("ComplaintType")) || null);
   const [updatedComplaintData, setUpdatedComplaintData] = useState({
     Title: "Existing Complaint Title",
     image: null,
     Type: "personal",
     Description: "Existing complaint description...",
   });
+  const navigate = useNavigate();
+  
+  const getTypeFromLocalStorage = (localStorageType) => {
+    if (localStorageType) {
+      getComplaintsByIdAndType(localStorageType); // Fetch complaints by type
+    }
+  }
+  useEffect(() => {
+    localStorageType && getTypeFromLocalStorage(localStorageType)
+
+  }, [localStorageType]);
+
+
+  useEffect(() => {
+    // Fetch complaint by ID when `complaintId` is available
+    if (complaintId) {
+      getComplaintToBeEdited(complaintId);
+    }
+  }, [complaintId, complaintsToBeDisplayed]);
+
+  useEffect(() => {
+
+    if (ComplaintToBeEdited) {
+      setUpdatedComplaintData((prev) => ({
+        ...prev,
+        Title: ComplaintToBeEdited.Title || "Default Title",
+        Type: ComplaintToBeEdited.Type || "personal",
+        Description: ComplaintToBeEdited.Description || "Default Description",
+      }));
+
+      // Only update local storage if `Type` exists
+      if (ComplaintToBeEdited.Type) {
+        localStorage.setItem("ComplaintType", JSON.stringify(ComplaintToBeEdited.Type));
+      }
+    }
+  }, [ComplaintToBeEdited]);
+
 
   const updateComplaintData = (event) => {
     const { name, value, files } = event.target;
@@ -17,10 +59,32 @@ const EditComplaint = () => {
     }));
   };
 
-  const onComplaintEditSubmit = (event) => {
+  const onComplaintEditSubmit = async (event) => {
     event.preventDefault();
-    console.log("Edited Complaint Data:", updatedComplaintData);
-    // Add logic to send data to the server
+    
+    const formdata = new FormData()
+    for (const key in updatedComplaintData) {
+     formdata.append(key, updatedComplaintData[key])
+    }
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/complaints/${complaintId}/edit-complaint`,{
+        method:"PATCH",
+        headers:{
+          Authorization:Token
+        },
+        body:formdata
+      });
+
+      const responseData = await response.json();
+      if(response.ok){
+        toast.success(responseData.message)
+        navigate("/student-dashboard/review-complaints")
+      }else{
+        toast.error(responseData.message)
+      }
+    } catch (error) {
+      toast.error(responseData.message)
+    }
   };
 
   return (

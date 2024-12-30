@@ -35,7 +35,7 @@ const router = createBrowserRouter(
         <Route path='/student-dashboard/vote' element={<Meal_Poll/>}/>
         <Route path='/student-dashboard/find-match' element={<MatchPartner/>}/>
         <Route path="/student-dashboard/review-complaints" element={<MyComplaints/>}/>
-        <Route path="/student-dashboard/edit-complaint" element={<EditComplaint/>}/>
+        <Route path="/student-dashboard/:complaintId/edit-complaint" element={<EditComplaint/>}/>
         <Route path="/student-dashboard/comments" element={<Comments/>}/>
       </Route>
 
