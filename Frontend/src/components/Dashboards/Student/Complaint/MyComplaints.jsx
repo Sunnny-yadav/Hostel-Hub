@@ -21,6 +21,10 @@ const MyComplaints = () => {
     return time;
   };
 
+  const GoToEditPage = (complaintId)=>{
+    navigate(`/student-dashboard/${complaintId}/edit-complaint`);
+  }
+
   useEffect(() => {
     setLoading(true);  // Set loading to true when starting to fetch
     getComplaintsByIdAndType(complaintType);  // Fetch complaints
@@ -134,7 +138,7 @@ const MyComplaints = () => {
                   <div className="flex justify-between items-center mt-3 sm:mt-4">
                     <div className="flex gap-2">
                       <button
-                        onClick={() => navigate("/student-dashboard/edit-complaint")}
+                        onClick={()=>GoToEditPage(complaint._id)}
                         className="bg-green-500 text-white font-medium py-1 px-2 sm:py-2 sm:px-3 text-xs sm:text-sm md:text-base rounded-md hover:bg-green-600 transition-all">
                         Edit
                       </button>
