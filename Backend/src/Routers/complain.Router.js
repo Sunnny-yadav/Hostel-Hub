@@ -32,7 +32,7 @@ router
   
 router
   .route("/:complaintId/edit-complaint")
-  .patch(verifyJWT, upload.single("image"), edit_Complaint);
+  .patch(verifyJWT, upload.single("image"),validateShema(raiseComplaintSchema), edit_Complaint);
   
 router
   .route("/:complaintId/edit-complaint-state")
