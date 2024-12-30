@@ -1,5 +1,6 @@
 import Router from "express";
 import {
+  delete_complaint,
   edit_Complaint,
   edit_Complaint_State,
   get_Complaints_By_Id,
@@ -47,7 +48,11 @@ router
   .get(verifyJWT, get_Complaints_By_Type);
 
 router
-  .route("/get-complaint-by-id").get(verifyJWT, get_Complaints_By_Id);
+  .route("/get-complaint-by-id")
+  .get(verifyJWT, get_Complaints_By_Id);
+router
+  .route("/:complaintId/delete-complaint")
+  .delete(verifyJWT, delete_complaint);
   
 
 export default router;
