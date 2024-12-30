@@ -14,7 +14,7 @@ const EditComplaint = () => {
     Description: "Existing complaint description...",
   });
   const navigate = useNavigate();
-
+  
   const getTypeFromLocalStorage = (localStorageType) => {
     if (localStorageType) {
       getComplaintsByIdAndType(localStorageType); // Fetch complaints by type
