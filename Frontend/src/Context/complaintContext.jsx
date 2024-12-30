@@ -9,6 +9,8 @@ export const ComplaintContextProvider = ({ children }) => {
     const [FetchedComplaintsByIdAndType, setFetchComplaintsByIdAndType] = useState({});
     const { Token, AccessToken } = useUserContext();
     const [complaintsToBeDisplayed, setcomplaintsToBeDisplayed] = useState(FetchedComplaintsByIdAndType);
+    const [ComplaintToBeEdited, setComplaintToBeEdited] = useState({});
+    
 
     const getUserComplaintsById = async () => {
         try {
@@ -41,7 +43,6 @@ export const ComplaintContextProvider = ({ children }) => {
             });
 
             const responseData = await response.json();
-            console.log(responseData);
             if (response.ok) {
                 setFetchComplaintsByIdAndType(responseData.data);
                 setcomplaintsToBeDisplayed(responseData.data);
@@ -52,11 +53,11 @@ export const ComplaintContextProvider = ({ children }) => {
         } catch (error) {
             console.error("complaintContext.jsx :: getcomplaintsByidAndType() ->", error.message)
         }
-    }
+    };
 
     const addNewComplaintInComplaintArray = (newComplaint) => {
         setFetchComplaintsById((prev) => [newComplaint, ...prev]);
-    }
+    };
 
     const filterFetchedComplaints = (state)=>{
         const complaints = FetchedComplaintsByIdAndType?.complaints.filter((complaint)=> complaint.state === state);
@@ -65,7 +66,15 @@ export const ComplaintContextProvider = ({ children }) => {
             complaints,
             count
         });
-    }
+    };
+
+    const getComplaintToBeEdited = (complaintId)=>{
+        
+        const FoundComplaint = complaintsToBeDisplayed?.complaints?.find((complaint)=>complaint._id === complaintId );
+        if(FoundComplaint){
+            setComplaintToBeEdited(FoundComplaint);
+        }
+    };
 
     useEffect(() => {
         AccessToken && getUserComplaintsById();
@@ -81,7 +90,10 @@ export const ComplaintContextProvider = ({ children }) => {
                     addNewComplaintInComplaintArray,
                     getComplaintsByIdAndType,
                     complaintsToBeDisplayed,
-                    filterFetchedComplaints
+                    filterFetchedComplaints,
+                    getComplaintToBeEdited,
+                    ComplaintToBeEdited,
+                    Token
                 }
             }>
             {children}
