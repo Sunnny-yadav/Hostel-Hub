@@ -5,13 +5,16 @@ import { toast } from 'react-toastify'
 const complaintContext = createContext();
 
 export const ComplaintContextProvider = ({ children }) => {
-    // const [complaintsMap, setComplaintsMap] = useState(new Map())
+    // complaint state
     const [complaintsnotPresent, setcomplaintnotPresent] = useState(false)
     const [FetchedComplaintsById, setFetchComplaintsById] = useState([])
     const [FetchedComplaintsByIdAndType, setFetchComplaintsByIdAndType] = useState({});
     const { Token, AccessToken } = useUserContext();
     const [complaintsToBeDisplayed, setcomplaintsToBeDisplayed] = useState(FetchedComplaintsByIdAndType);
     const [ComplaintToBeEdited, setComplaintToBeEdited] = useState({});
+
+    // comments states
+    const [comments, setComments] = useState([])
 
 
     const getUserComplaintsById = async () => {
@@ -51,8 +54,8 @@ export const ComplaintContextProvider = ({ children }) => {
                 setcomplaintnotPresent(false)
             } else {
                 setcomplaintnotPresent(true);
-                setcomplaintsToBeDisplayed({complaits:[], count:0})
-                setFetchComplaintsByIdAndType({complaits:[], count:0})
+                setcomplaintsToBeDisplayed({ complaits: [], count: 0 })
+                setFetchComplaintsByIdAndType({ complaits: [], count: 0 })
                 toast.error(responseData.message)
             };
 
@@ -82,6 +85,11 @@ export const ComplaintContextProvider = ({ children }) => {
         }
     };
 
+    const FilterDashboardComplaintAfterComplaintDelete = (complaintId)=>{
+        const updatedComplaints = FetchedComplaintsById.filter(complaint => complaint._id !== complaintId);
+        setFetchComplaintsById(updatedComplaints);
+    };
+
     const deleteComplaint = async (complaintId) => {
         console.log(complaintId)
         try {
@@ -96,10 +104,11 @@ export const ComplaintContextProvider = ({ children }) => {
             console.log(responseData)
             if (response.ok) {
                 const updatedComplaints = complaintsToBeDisplayed.complaints.filter(complaint => complaint._id !== complaintId);
+                FilterDashboardComplaintAfterComplaintDelete(complaintId)
                 setcomplaintsToBeDisplayed({
-                    complaints:updatedComplaints,
-                    count:updatedComplaints.length
-                })
+                    complaints: updatedComplaints,
+                    count: updatedComplaints.length
+                });
                 toast.success(responseData.message);
             } else {
                 toast.error(responseData.message)
@@ -112,30 +121,7 @@ export const ComplaintContextProvider = ({ children }) => {
         }
     };
 
-    
-
-    // useEffect(()=>{
-    //     if(complaintsMapstate){
-    //         console.log("i am complaintstate",complaintsMapstate)
-    //         const complaintsArray = Array.from(complaintsMap.values());
-    //         console.log(complaintsArray)
-    //         setcomplaintsToBeDisplayed({
-    //                 complaints:complaintsArray,
-    //                 count: complaintsArray.length
-    //             });
-    //     }
-    // },[complaintsMapstate])
-
-    // useEffect(() => {
-        
-    //     if (complaintsToBeDisplayed?.complaints?.length > 0) {
-    //         const complaintArray = complaintsToBeDisplayed.complaints
-    //         console.log(complaintArray)
-    //         const complaintsMap = new Map(complaintArray.map((complaint) => [complaint._id, complaint]));
-    //         setComplaintsMap(complaintsMap);
-           
-    //     }
-    // }, [complaintsToBeDisplayed]);
+    //---> useEffect of complaints <---
 
     useEffect(() => {
         AccessToken && getUserComplaintsById();
@@ -143,10 +129,64 @@ export const ComplaintContextProvider = ({ children }) => {
 
 
 
+
+
+    //---> context functions of comments are below this <-----
+
+    const getComments = async (complaintId)=>{
+        setComments([])
+        try {
+            const response = await fetch(`http://localhost:8000/api/v1/comments/${complaintId}/get-comments`,{
+                method:"GET",
+                headers:{
+                    Authorization : Token
+                }
+            });
+
+            const responseData = await response.json();
+            if(response.ok){
+                setComments(responseData.data)
+            }else{
+                toast.error(responseData.message)
+            }
+
+
+        } catch (error) {
+            console.log("complaintContext::getcommets::",error)
+        }
+    };
+
+    const insertComment = async (dataObj)=>{
+        try {
+            const response = await fetch(`http://localhost:8000/api/v1/comments/${dataObj.complaintId}/insert-comment`,{
+                method:"POST",
+                headers:{
+                    Authorization:Token,
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(dataObj)
+            });
+
+            const responseData = await response.json();
+            if(response.ok){
+                getComments(dataObj.complaintId)
+            }else{
+                toast.error(responseData.message)
+            }
+
+        } catch (error) {
+            console.log("getcomments::",error)
+        }
+    }
+
+
+
+
     return (
         <complaintContext.Provider
             value={
                 {
+                    //complaint props
                     FetchedComplaintsById,
                     addNewComplaintInComplaintArray,
                     getComplaintsByIdAndType,
@@ -156,7 +196,12 @@ export const ComplaintContextProvider = ({ children }) => {
                     ComplaintToBeEdited,
                     Token,
                     deleteComplaint,
-                    complaintsnotPresent
+                    complaintsnotPresent,
+
+                    //comments props
+                    getComments,
+                    comments,
+                    insertComment
                 }
             }>
             {children}
@@ -169,4 +214,3 @@ export const useComplaintContext = () => {
 };
 
 
-   
