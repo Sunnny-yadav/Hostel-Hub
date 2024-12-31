@@ -6,7 +6,6 @@ import {
   get_Complaints_By_Id,
   get_Complaints_By_Id_Type,
   get_Complaints_By_Type,
-  insert_comment,
   register_Complaint,
 } from "../controllers/complaint.controller.js";
 
@@ -14,7 +13,6 @@ import { verifyJWT } from "../Middlewares/auth.middleware.js";
 import { upload } from "../Middlewares/multer.middleware.js";
 import { validateShema } from "../Middlewares/validator.middleware.js";
 import { raiseComplaintSchema } from "../Validators/complaint.Validator.js";
-import { commentSchema } from "../Validators/comment.validator.js";
 
 const router = Router();
 
@@ -27,9 +25,7 @@ router
     register_Complaint,
   );
   
-router
-  .route("/:complaintId/insert-comment")
-  .post(validateShema(commentSchema), verifyJWT, insert_comment);
+
   
 router
   .route("/:complaintId/edit-complaint")
@@ -53,6 +49,7 @@ router
 router
   .route("/:complaintId/delete-complaint")
   .delete(verifyJWT, delete_complaint);
+
   
 
 export default router;

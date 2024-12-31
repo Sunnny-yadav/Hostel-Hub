@@ -159,7 +159,7 @@ const MyComplaints = () => {
                     </div>
                     <div className="text-blue-600 text-sm sm:text-base cursor-pointer hover:text-blue-800 hover:bg-purple-300 p-1 pb-0 hover:rounded-md hover:transition-all hover:duration-300 hover:text-center ">
                       <span
-                        onClick={() => navigate("/student-dashboard/comments")}
+                        onClick={() => navigate(`/student-dashboard/${complaint._id}/comments`)}
                         className="material-symbols-outlined">
                         comment 
                       </span>
