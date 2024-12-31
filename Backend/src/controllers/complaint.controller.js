@@ -1,4 +1,3 @@
-import { Comment } from "../Models/comment.model.js";
 import { RaiseComplaint } from "../Models/complaint.model.js";
 import { User } from "../Models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -76,45 +75,6 @@ const register_Complaint = AsyncHandeller(async (req, res) => {
   //   );
 });
 
-const insert_comment = AsyncHandeller(async (req, res) => {
-  //fetch the comment msg from request body
-  //get the user(commenter) who had commented on msg
-  //get the id of complaint for which thsi comment is given
-  //store it in comment database
-  //get this comment and store its id in complaint comments array
-
-  const { text } = req.body;
-  const { _id } = req.userData;
-  const { complaintId } = req.params;
-
-  const created_Comment = await Comment.create({
-    commenter: _id,
-    complaintId,
-    text,
-  });
-
-  if (!created_Comment) {
-    return res.status(200).json({
-      message: "Something went wrong while creating comment",
-    });
-  }
-
-  const commentAddedInComplaintDoc = await RaiseComplaint.findOneAndUpdate(
-    { _id: complaintId },
-    { $push: { comments: created_Comment._id } },
-    { new: true },
-  );
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { created_Comment, commentAddedInComplaintDoc },
-        "comment added successfully",
-      ),
-    );
-});
 
 const edit_Complaint = AsyncHandeller(async (req, res) => {
   //fetched the data that to be updated
@@ -331,6 +291,8 @@ const get_Complaints_By_Id = AsyncHandeller(async (req, res) => {
     );
 });
 
+
+
 const delete_complaint = AsyncHandeller(async (req, res) => {
   const { complaintId } = req.params;
 
@@ -351,7 +313,6 @@ const delete_complaint = AsyncHandeller(async (req, res) => {
 
 export {
   register_Complaint,
-  insert_comment,
   edit_Complaint,
   edit_Complaint_State,
   get_Complaints_By_Id_Type,
