@@ -1,110 +1,120 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { hideAddMealForm } from '../../../Redux/slices/TermsConditionSlice'
-import { SubmitMeal } from '../../../Redux/slices/MealSlice'
+import React, { useState } from "react";
+import cookingVideo from '../../../assets/dashboard/cooking.mp4'
 
 const MealForm = () => {
+  const [mealOptions, setMealOptions] = useState({
+    Meal1: "",
+    Meal2: "",
+    Meal3: "",
+  });
 
-    const dispatch = useDispatch();
 
-    const [mealOptions, setMealOptions] = useState({
-        option1: '',
-        option2: '',
-        option3: ''
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMealOptions((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Reset the form
+    setMealOptions({
+      Meal1: "",
+      Meal2: "",
+      Meal3: "",
     });
 
-    const Remove_MealForm = ()=>{
-        dispatch(hideAddMealForm());
-    }
-    
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setMealOptions((prev) => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        dispatch(SubmitMeal(mealOptions));
+  const handleCancel = () => {
+    setMealOptions({
+      Meal1: "",
+      Meal2: "",
+      Meal3: "",
+    });
+  };
 
-        // Reset the form
-        setMealOptions({
-            option1: '',
-            option2: '',
-            option3: ''
-        });
+  return (
+    <div className="relative min-h-screen flex items-center justify-center bg-gray-50 py-10">
+      {/* Background Video */}
+      <video
+        autoPlay
+        loop
+        muted
+        className="absolute top-0 left-0 w-full h-full object-cover"
+      >
+        <source src={cookingVideo} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
-        dispatch(hideAddMealForm());
+      {/* Meal Form */}
+      <div className="relative z-10 max-w-lg w-full bg-white bg-opacity-50 p-8 rounded-2xl shadow-lg shadow-gray-700 backdrop-blur-lg">
+        <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-6">
+          Add Meal Options
+        </h2>
+        <p className="text-gray-700 text-center mb-8">
+          Please enter the details of the meals to be served.
+        </p>
 
-    };
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <input
+              type="text"
+              name="Meal1"
+              placeholder="Meal Option1 "
+              value={mealOptions.Meal1}
+              onChange={handleChange}
+              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray- Option 500 transition-all ease-in-out duration-200"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="Meal2"
+              placeholder="Meal Option2 "
+              value={mealOptions.Meal2}
+              onChange={handleChange}
+              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray- Option 500 transition-all ease-in-out duration-200"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              name="Meal3"
+              placeholder="Meal Option3 "
+              value={mealOptions.Meal3}
+              onChange={handleChange}
+              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray- Option 500 transition-all ease-in-out duration-200"
+              required
+            />
+          </div>
 
-    return (
-        <>
+          {/* Buttons */}
+          <div className="flex justify-between items-center mt-8">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+            >
+              Submit
+            </button>
 
-            <div className=' min-w-fit relative mt-28 p-6 bg-white rounded-lg shadow-lg'>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <h2 className="text-3xl font-semibold text-blue-700 text-center">Add Meal Options</h2>
-
-                    <div>
-                        <input
-                            type="text"
-                            name="option1"
-                            placeholder="Meal Option 1"
-                            autoComplete='off'
-                            value={mealOptions.option1}
-                            onChange={handleChange}
-                            className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder-gray-600"
-                            style={{ color: '#2c3e50' }}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="text"
-                            name="option2"
-                            placeholder="Meal Option 2"
-                            autoComplete='off'
-                            value={mealOptions.option2}
-                            onChange={handleChange}
-                            className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder-gray-600"
-                            style={{ color: '#2c3e50' }}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="text"
-                            name="option3"
-                            placeholder="Meal Option 3"
-                            autoComplete='off'
-                            value={mealOptions.option3}
-                            onChange={handleChange}
-                            className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder-gray-600"
-                            style={{ color: '#2c3e50' }}
-                            required
-                        />
-                    </div>
-                    <div className='flex justify-between items-center'>
-                        <button
-                            type="submit"
-                            className="bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-                        >
-                            Submit
-                        </button>
-                        <button
-                            className="bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-                            onClick={Remove_MealForm}
-                        >
-                            Back
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </>
-    );
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="w-full bg-gray-500 text-white py-3 rounded-lg shadow-md hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 ml-4"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default MealForm;
