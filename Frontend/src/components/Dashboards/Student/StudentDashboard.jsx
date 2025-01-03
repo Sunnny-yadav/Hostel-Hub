@@ -24,15 +24,16 @@ function StudentDashboard() {
       {/* Left Sidebar */}
       <div
         className={`${showSideBarAtResponsivePhase ? "block absolute z-50" : "hidden"
-          } lg:block bg-gradient-to-b from-blue-600 to-blue-400 text-white  flex-col h-screen transition-all duration-500 ease-in-out ${isSidebarExpanded || isHovered
-            ? "md:w-64 md:p-5 w-44 p-2.5"
+          } lg:flex bg-gradient-to-b from-blue-600 to-blue-400 text-white  flex-col justify-between h-screen transition-all duration-500 ease-in-out ${isSidebarExpanded || isHovered
+            ? "md:w-72 md:p-5 w-44 p-2.5"
             : "md:w-16 md:p-2"
           }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Logo Section */}
-        <div className="flex items-center gap-4 ">
+       <div>
+         {/* Logo Section */}
+         <div className="flex items-center gap-4 ">
           <img
             src={logo}
             className={`${isSidebarExpanded || isHovered
@@ -128,32 +129,43 @@ function StudentDashboard() {
                   </div>
                 ) : (
                   <NavLink
-                    to={item.link}
-                    className={({ isActive }) =>
-                      isActive
-                        ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:shadow-md"
-                        : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md"
-                    }
+                  to={item.link}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-3 rounded-md cursor-pointer transition hover:shadow-md whitespace-nowrap"
+                      : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-3 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md whitespace-nowrap"
+                  }
+                >
+                  <span
+                    className={`material-symbols-outlined text-lg ${isSidebarExpanded || isHovered
+                      ? "text-sm sm:text-md md:text-lg lg:text-2xl"
+                      : ""
+                      }`}
                   >
-                    <span
-                      className={`material-symbols-outlined text-lg ${isSidebarExpanded || isHovered
-                        ? "text-sm sm:text-md md:text-lg lg:text-2xl"
-                        : ""
-                        }`}
-                    >
-                      {item.icon}
-                    </span>
-                    <span
-                      className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"
-                        }`}
-                    >
-                      {item.label}
-                    </span>
-                  </NavLink>
+                    {item.icon}
+                  </span>
+                  <span
+                    className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"
+                      }`}
+                  >
+                    {item.label}
+                  </span>
+                </NavLink>
                 )}
               </li>
             ))}
           </ul>
+        </div>
+       </div>
+
+        {/* Logout section  */}
+        <div className="flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 text-lg font-serif rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md">
+          <span class="material-symbols-outlined">
+            logout
+          </span>
+          <span 
+                        className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"}`}
+          >Logout</span>
         </div>
 
       </div>
