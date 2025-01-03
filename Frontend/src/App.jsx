@@ -16,12 +16,16 @@ import WardenDashboard from './components/Dashboards/Warden/WardenDashboard'
 import Dashboard from './components/Dashboards/Student/Dashboard'
 import MatchPartner from './components/Dashboards/Student/MatchPartner'
 import EditComplaint from './components/Dashboards/Student/Complaint/EditComplaint'
-import WarComments from './components/Dashboards/Warden/WarComments'
+import WarComments from './components/Dashboards/Warden/Complaint/WarComments'
 import Comments from './components/Dashboards/Student/Complaint/Comments'
 import WardenStart from './components/Dashboards/Warden/WardenStart'
-import ViewComplaint from './components/Dashboards/Warden/ViewComplaint'
-import ComplaintDetails from './components/Dashboards/Warden/ComplaintDetails'
+import ViewComplaint from './components/Dashboards/Warden/Complaint/ViewComplaint'
+import ComplaintDetails from './components/Dashboards/Warden/Complaint/ComplaintDetails'
 import MealForm from './components/Dashboards/Warden/MealForm'
+import NoticeBoard from './components/Dashboards/Warden/NoticeBoard'
+import AllStudentData from './components/Dashboards/Warden/StudentPages/AllStudentData'
+import StudentDetails from './components/Dashboards/Warden/StudentPages/StudentDetails'
+import OneStudentComplaint from './components/Dashboards/Warden/StudentPages/OneStudentComplaint'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -52,6 +56,10 @@ const router = createBrowserRouter(
         <Route path='' element={<WardenStart />} />
         <Route path='/warden-dashboard/view-complaints' element={<ViewComplaint />} />
         <Route path='/warden-dashboard/add-meal' element={<MealForm/>}/>
+        <Route path='/warden-dashboard/give-notice' element={<NoticeBoard/>} />
+        <Route path='/warden-dashboard/get-Allstudentdata' element={<AllStudentData/>} />
+        <Route path='/warden-dashboard/get-studentdetail' element={<StudentDetails/>} />
+        <Route path='/warden-dashboard/get-studentcomplaint' element={<OneStudentComplaint/>} />
         <Route path='/warden-dashboard/complaintDetails' element={<ComplaintDetails />}>
           <Route path='/warden-dashboard/complaintDetails/comments' element={<WarComments />} />
         </Route>
