@@ -75,12 +75,12 @@ function WardenDashboard() {
               {
                 icon: "Notifications",
                 label: "Give Notice",
-                link: "/student-dashboard/give-notice",
+                link: "/warden-dashboard/give-notice",
               },
               {
                 icon: "Monitoring",
                 label: "Student Records",
-                link: "/student-dashboard/student-record",
+                link: "/warden-dashboard/get-Allstudentdata",
               },
             ].map((item, index) => (
               <li key={index}>
