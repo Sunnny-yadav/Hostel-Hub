@@ -75,7 +75,7 @@ const userSchema = new mongoose.Schema(
     },
 
     currentYear: {
-      type: Number,
+      type: String,
       trim: true,
       required: function () {
         return this.role === "student";
