@@ -22,18 +22,18 @@ const MealForm = () => {
 
     // Reset the form
     setMealOptions({
-      Meal: "",
-      Meal: "",
-      Meal: "",
+      Meal1: "",
+      Meal2: "",
+      Meal3: "",
     });
 
   };
 
   const handleCancel = () => {
     setMealOptions({
-      Meal: "",
-      Meal: "",
-      Meal: "",
+      Meal1: "",
+      Meal2: "",
+      Meal3: "",
     });
   };
 
