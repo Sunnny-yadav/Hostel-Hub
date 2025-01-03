@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import logo from "../../../assets/Intopage/logo.png";
 import { useUserContext } from "../../../Context/userContext";
 
 function StudentDashboard() {
   const { userData } = useUserContext();
+  const navigate = useNavigate()
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [showSideBarAtResponsivePhase, setshowSideBarAtResponsivePhase] =
@@ -202,6 +203,7 @@ function StudentDashboard() {
                 src={userData.avatar}
                 className="w-full h-full rounded-full object-cover border-2 border-slate-900 shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:shadow-xl"
                 alt="profile img"
+                onClick={()=> navigate('/student-dashboard/profile')}
               />
             </div>
           </div>
