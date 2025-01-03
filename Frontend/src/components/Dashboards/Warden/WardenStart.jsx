@@ -1,9 +1,6 @@
 import complaint from '../../../assets/dashboard/complaintLogo.png'
 import meal from '../../../assets/dashboard/meal_logo.jpeg'
 import match from '../../../assets/dashboard/match_logo.jpg'
-import pending from '../../../assets/dashboard/pending.png'
-import resolved from '../../../assets/dashboard/resolved.png'
-import inprogress from '../../../assets/dashboard/inprogress.png'
 import { useUserContext } from '../../../Context/userContext';
 import { Link } from 'react-router-dom'
 import { useComplaintContext } from '../../../Context/complaintContext'
@@ -79,19 +76,19 @@ function WardenStart() {
                     description="Tailor meals to your needs."
                   />
                 </Link>
-                <Link to="/warden-dashboard/find-match">
+                <Link to="/warden-dashboard/give-notice">
                   <Card
                     logo={match}
-                    title="Student"
-                    description="Find your perfect match easily."
+                    title="Notice"
+                    description="This is a dummy card for testing purposes."
                   />
                 </Link>
-                <Link to="/warden-dashboard/find-match">
+                <Link to="/warden-dashboard/get-Allstudentdata">
                 <div>
                   <Card
                     logo={match}  
-                    title="Notice"
-                    description="This is a dummy card for testing purposes."
+                    title="Students"
+                    description="Find your perfect match easily."
                   />
                 </div>
                 </Link>
