@@ -58,6 +58,7 @@ function Registration() {
 
     };
 
+ 
     const onSubmitRegistrationData = async (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -276,7 +277,7 @@ function Registration() {
                                 <div >
                                     <div className="space-y-4">
                                         <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
-                                            <input
+                                            {/* <input
                                                 autoComplete="off"
                                                 type="text"
                                                 name="branchName"
@@ -284,22 +285,40 @@ function Registration() {
                                                 value={registrationData.branchName}
                                                 onChange={handleRegistrationData}
                                                 className="w-full py-2 pl-12 text-lg text-blue-600 focus:outline-none bg-transparent placeholder:text-gray-500"
-                                            />
+                                            /> */}
+                                            <select
+                                                onChange={handleRegistrationData}
+                                                value={registrationData.branchName}
+                                                name="branchName"
+                                                className="w-full py-2 pl-12 text-lg text-blue-600 focus:outline-none bg-transparent placeholder:text-gray-500"
+                                            
+                                            >
+                                                <option value="">Select Your branch</option>
+                                                <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                                                <option value="Electronics and Communication Engineering">Electronics and Communication Engineering</option>
+                                                <option value="Electrical Engineering">Electrical Engineering</option>
+                                                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                                <option value="Civil Engineering">Civil Engineering</option>
+                                                <option value="Information Technology">Information Technology</option>
+                                            </select>
                                             <span className="material-symbols-outlined absolute left-3 top-2 text-gray-400">
                                                 business
                                             </span>
                                         </div>
 
                                         <div className="relative flex items-center border-b-2 border-gray-300 pb-2">
-                                            <input
-                                                autoComplete="off"
-                                                type="text"
+                                            <select 
                                                 name="currentYear"
-                                                placeholder="Current Year"
                                                 value={registrationData.currentYear}
                                                 onChange={handleRegistrationData}
                                                 className="w-full py-2 pl-12 text-lg text-blue-600 focus:outline-none bg-transparent placeholder:text-gray-500"
-                                            />
+                                                >
+                                                    <option value="">Select Year</option>
+                                              <option value="FE">FE</option>
+                                              <option value="SE">SE</option>
+                                              <option value="TE">TE</option>
+                                              <option value="BE">BE</option>
+                                            </select>
                                             <span className="material-symbols-outlined absolute left-3 top-2 text-gray-400">
                                                 calendar_today
                                             </span>
