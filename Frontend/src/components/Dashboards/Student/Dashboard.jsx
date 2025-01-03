@@ -5,7 +5,7 @@ import pending from '../../../assets/dashboard/pending.png'
 import resolved from '../../../assets/dashboard/resolved.png'
 import inprogress from '../../../assets/dashboard/inprogress.png'
 import { useUserContext } from '../../../Context/userContext';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useComplaintContext } from '../../../Context/complaintContext'
 
 
@@ -21,6 +21,7 @@ const Card = ({ logo, title, description }) => (
 
 function Dashboard() {
     const { userData } = useUserContext();
+    const navigate = useNavigate();
     const { FetchedComplaintsById } = useComplaintContext();
     
     return (
@@ -37,6 +38,7 @@ function Dashboard() {
                             <div className="xl:w-14 xl:h-14 lg:w-12 lg:h-12 md:w-10 md:h-10 flex justify-center items-center relative group cursor-pointer">
                                 <img
                                     src={userData.avatar}
+                                    onClick={()=> navigate('/student-dashboard/profile')}
                                     className="w-full h-full rounded-full object-cover border-2 border-slate-900 shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:shadow-xl"
                                     alt="profile img"
                                 />
