@@ -6,7 +6,6 @@ const complaintContext = createContext();
 
 export const ComplaintContextProvider = ({ children }) => {
     // complaint state
-    // const [complaintsnotPresent, setcomplaintnotPresent] = useState(false)
     const [loading, setLoading] = useState(true);
     const [FetchedComplaintsById, setFetchComplaintsById] = useState([])
     const [FetchedComplaintsByIdAndType, setFetchComplaintsByIdAndType] = useState({});
@@ -16,7 +15,6 @@ export const ComplaintContextProvider = ({ children }) => {
 
     // comments states
     const [comments, setComments] = useState([])
-
 
     const getUserComplaintsById = async () => {
         try {
@@ -127,14 +125,16 @@ export const ComplaintContextProvider = ({ children }) => {
     //---> useEffect of complaints <---
 
     useEffect(() => {
-        AccessToken && getUserComplaintsById();
-    }, [AccessToken])
+        if(AccessToken){
+            getUserComplaintsById();
+        };
+    }, [AccessToken]);
 
 
 
 
 
-    //---> context functions of comments are below this <-----
+    //--->  functions of comments are below this <-----
 
     const getComments = async (complaintId) => {
         setComments([])
@@ -201,6 +201,8 @@ export const ComplaintContextProvider = ({ children }) => {
                     deleteComplaint,
                     loading,
                     setLoading,
+
+
                     //comments props
                     getComments,
                     comments,
