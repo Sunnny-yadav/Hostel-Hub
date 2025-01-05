@@ -6,7 +6,7 @@ const complaintContext = createContext();
 
 export const ComplaintContextProvider = ({ children }) => {
     // complaint state
-    const [complaintsnotPresent, setcomplaintnotPresent] = useState(false)
+    const [loading, setLoading] = useState(true);
     const [FetchedComplaintsById, setFetchComplaintsById] = useState([])
     const [FetchedComplaintsByIdAndType, setFetchComplaintsByIdAndType] = useState({});
     const { Token, AccessToken } = useUserContext();
@@ -15,7 +15,6 @@ export const ComplaintContextProvider = ({ children }) => {
 
     // comments states
     const [comments, setComments] = useState([])
-
 
     const getUserComplaintsById = async () => {
         try {
@@ -39,6 +38,7 @@ export const ComplaintContextProvider = ({ children }) => {
     };
 
     const getComplaintsByIdAndType = async (Type) => {
+        setLoading(true)
         try {
             const response = await fetch(`http://localhost:8000/api/v1/complaints/${Type}/get-complaints-by-id-type`, {
                 method: "GET",
@@ -49,13 +49,14 @@ export const ComplaintContextProvider = ({ children }) => {
 
             const responseData = await response.json();
             if (response.ok) {
-                setFetchComplaintsByIdAndType(responseData.data);
                 setcomplaintsToBeDisplayed(responseData.data);
-                setcomplaintnotPresent(false)
+                setFetchComplaintsByIdAndType(responseData.data);
+                // setcomplaintnotPresent(false)
             } else {
-                setcomplaintnotPresent(true);
+                // setcomplaintnotPresent(!complaintsnotPresent);
                 setcomplaintsToBeDisplayed({ complaits: [], count: 0 })
                 setFetchComplaintsByIdAndType({ complaits: [], count: 0 })
+                setLoading(false)
                 toast.error(responseData.message)
             };
 
@@ -85,7 +86,7 @@ export const ComplaintContextProvider = ({ children }) => {
         }
     };
 
-    const FilterDashboardComplaintAfterComplaintDelete = (complaintId)=>{
+    const FilterDashboardComplaintAfterComplaintDelete = (complaintId) => {
         const updatedComplaints = FetchedComplaintsById.filter(complaint => complaint._id !== complaintId);
         setFetchComplaintsById(updatedComplaints);
     };
@@ -124,58 +125,60 @@ export const ComplaintContextProvider = ({ children }) => {
     //---> useEffect of complaints <---
 
     useEffect(() => {
-        AccessToken && getUserComplaintsById();
-    }, [AccessToken])
+        if(AccessToken){
+            getUserComplaintsById();
+        };
+    }, [AccessToken]);
 
 
 
 
 
-    //---> context functions of comments are below this <-----
+    //--->  functions of comments are below this <-----
 
-    const getComments = async (complaintId)=>{
+    const getComments = async (complaintId) => {
         setComments([])
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/comments/${complaintId}/get-comments`,{
-                method:"GET",
-                headers:{
-                    Authorization : Token
+            const response = await fetch(`http://localhost:8000/api/v1/comments/${complaintId}/get-comments`, {
+                method: "GET",
+                headers: {
+                    Authorization: Token
                 }
             });
 
             const responseData = await response.json();
-            if(response.ok){
+            if (response.ok) {
                 setComments(responseData.data)
-            }else{
+            } else {
                 toast.error(responseData.message)
             }
 
 
         } catch (error) {
-            console.log("complaintContext::getcommets::",error)
+            console.log("complaintContext::getcommets::", error)
         }
     };
 
-    const insertComment = async (dataObj)=>{
+    const insertComment = async (dataObj) => {
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/comments/${dataObj.complaintId}/insert-comment`,{
-                method:"POST",
-                headers:{
-                    Authorization:Token,
-                    "Content-Type":"application/json"
+            const response = await fetch(`http://localhost:8000/api/v1/comments/${dataObj.complaintId}/insert-comment`, {
+                method: "POST",
+                headers: {
+                    Authorization: Token,
+                    "Content-Type": "application/json"
                 },
-                body:JSON.stringify(dataObj)
+                body: JSON.stringify(dataObj)
             });
 
             const responseData = await response.json();
-            if(response.ok){
+            if (response.ok) {
                 getComments(dataObj.complaintId)
-            }else{
+            } else {
                 toast.error(responseData.message)
             }
 
         } catch (error) {
-            console.log("getcomments::",error)
+            console.log("getcomments::", error)
         }
     }
 
@@ -196,7 +199,9 @@ export const ComplaintContextProvider = ({ children }) => {
                     ComplaintToBeEdited,
                     Token,
                     deleteComplaint,
-                    complaintsnotPresent,
+                    loading,
+                    setLoading,
+
 
                     //comments props
                     getComments,

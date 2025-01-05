@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import logo from "../../../assets/Intopage/logo.png";
 import { useUserContext } from "../../../Context/userContext";
 
+
 function StudentDashboard() {
   const { userData } = useUserContext();
+  const navigate = useNavigate()
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [showSideBarAtResponsivePhase, setshowSideBarAtResponsivePhase] =
     useState(false);
   const [showComplaintoption, setshowComplaintOption] = useState(false)
+  const {Logout} = useUserContext();
 
   const handleSidebarToggle = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
@@ -31,67 +34,111 @@ function StudentDashboard() {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-       <div>
-         {/* Logo Section */}
-         <div className="flex items-center gap-4 ">
-          <img
-            src={logo}
-            className={`${isSidebarExpanded || isHovered
-              ? "md:w-14 md:h-14 w-10 h-10"
-              : "md:w-12 md:h-12 w-10 h-10"
-              } rounded-full shadow-lg`}
-            alt="clg logo"
-          />
-          <div
-            className={`flex items-center justify-between w-full ${isSidebarExpanded || isHovered ? "" : "hidden"
-              } `}
-          >
-            <h2 className="font-serif font-bold text-md md:text-lg lg:text-xl tracking-wide">
-              PHCET
-            </h2>
-            <span
-              onClick={handleSidebarToggle}
-              className="material-symbols-outlined font-semibold text-xl cursor-pointer hover:text-gray-300 hidden md:block"
+        <div>
+          {/* Logo Section */}
+          <div className="flex items-center gap-4 ">
+            <img
+              src={logo}
+              className={`${isSidebarExpanded || isHovered
+                ? "md:w-14 md:h-14 w-10 h-10"
+                : "md:w-12 md:h-12 w-10 h-10"
+                } rounded-full shadow-lg`}
+              alt="clg logo"
+            />
+            <div
+              className={`flex items-center justify-between w-full ${isSidebarExpanded || isHovered ? "" : "hidden"
+                } `}
             >
-              {isSidebarExpanded ? "chevron_left" : "close"}
-            </span>
+              <h2 className="font-serif font-bold text-md md:text-lg lg:text-xl tracking-wide">
+                PHCET
+              </h2>
+              <span
+                onClick={handleSidebarToggle}
+                className="material-symbols-outlined font-semibold text-xl cursor-pointer hover:text-gray-300 hidden md:block"
+              >
+                {isSidebarExpanded ? "chevron_left" : "close"}
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* Navigation Links */}
-        <div className="mt-8">
-          <ul className="flex flex-col gap-4">
-            {[
-              { icon: "dashboard", label: "Dashboard", link: "" },
-              {
-                icon: "back_hand",
-                label: "Complaint",
-                subItems: [
-                  {
-                    label: "Raise Complaint",
-                    link: "/student-dashboard/raise-complaint",
-                  },
-                  {
-                    label: "Review Complaints",
-                    link: "/student-dashboard/review-complaints",
-                  },
-                ],
-              },
-              {
-                icon: "restaurant",
-                label: "Meal Poll",
-                link: "/student-dashboard/vote",
-              },
-              {
-                icon: "join_inner",
-                label: "Match Partner",
-                link: "/student-dashboard/find-match",
-              },
-            ].map((item, index) => (
-              <li key={index}>
-                {item.subItems ? (
-                  <div>
-                    <div onMouseEnter={() => setshowComplaintOption(!showComplaintoption)} className="flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md">
+          {/* Navigation Links */}
+          <div className="mt-8">
+            <ul className="flex flex-col gap-4">
+              {[
+                { icon: "dashboard", label: "Dashboard", link: "" },
+                {
+                  icon: "back_hand",
+                  label: "Complaint",
+                  subItems: [
+                    {
+                      label: "Raise Complaint",
+                      link: "/student-dashboard/raise-complaint",
+                    },
+                    {
+                      label: "Review Complaints",
+                      link: "/student-dashboard/review-complaints",
+                    },
+                  ],
+                },
+                {
+                  icon: "restaurant",
+                  label: "Meal Poll",
+                  link: "/student-dashboard/vote",
+                },
+                {
+                  icon: "join_inner",
+                  label: "Match Partner",
+                  link: "/student-dashboard/find-match",
+                },
+              ].map((item, index) => (
+                <li key={index}>
+                  {item.subItems ? (
+                    <div>
+                      <div onMouseEnter={() => setshowComplaintOption(!showComplaintoption)} className="flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md">
+                        <span
+                          className={`material-symbols-outlined text-lg ${isSidebarExpanded || isHovered
+                            ? "text-sm sm:text-md md:text-lg lg:text-2xl"
+                            : ""
+                            }`}
+                        >
+                          {item.icon}
+                        </span>
+                        <span
+                          className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"
+                            }`}
+                        >
+                          {item.label}
+                        </span>
+                      </div>
+                      <ul onMouseLeave={() => setshowComplaintOption(!showComplaintoption)} className={`pl-6 mt-2 ${showComplaintoption ? "" : "hidden"}`}>
+                        {/* <ul className={`pl-6 mt-2 hidden`}> */}
+                        {item.subItems.map((subItem, subIndex) => (
+                          <li key={subIndex}>
+                            <NavLink
+                              to={subItem.link}
+                              className={({ isActive }) =>
+                                isActive
+                                  ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:shadow-md"
+                                  : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md"
+                              }
+                            >
+                              <span className="font-serif text-xs sm:text-base">
+                                {subItem.label}
+                              </span>
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <NavLink
+                      to={item.link}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-3 rounded-md cursor-pointer transition hover:shadow-md whitespace-nowrap"
+                          : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-3 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md whitespace-nowrap"
+                      }
+                    >
                       <span
                         className={`material-symbols-outlined text-lg ${isSidebarExpanded || isHovered
                           ? "text-sm sm:text-md md:text-lg lg:text-2xl"
@@ -106,65 +153,25 @@ function StudentDashboard() {
                       >
                         {item.label}
                       </span>
-                    </div>
-                    <ul onMouseLeave={() => setshowComplaintOption(!showComplaintoption)} className={`pl-6 mt-2 ${showComplaintoption ? "" : "hidden"}`}>
-                      {/* <ul className={`pl-6 mt-2 hidden`}> */}
-                      {item.subItems.map((subItem, subIndex) => (
-                        <li key={subIndex}>
-                          <NavLink
-                            to={subItem.link}
-                            className={({ isActive }) =>
-                              isActive
-                                ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:shadow-md"
-                                : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md"
-                            }
-                          >
-                            <span className="font-serif text-xs sm:text-base">
-                              {subItem.label}
-                            </span>
-                          </NavLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : (
-                  <NavLink
-                  to={item.link}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "bg-orange-200 hover:bg-orange-300 text-slate-500 flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-3 rounded-md cursor-pointer transition hover:shadow-md whitespace-nowrap"
-                      : "flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-3 rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md whitespace-nowrap"
-                  }
-                >
-                  <span
-                    className={`material-symbols-outlined text-lg ${isSidebarExpanded || isHovered
-                      ? "text-sm sm:text-md md:text-lg lg:text-2xl"
-                      : ""
-                      }`}
-                  >
-                    {item.icon}
-                  </span>
-                  <span
-                    className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"
-                      }`}
-                  >
-                    {item.label}
-                  </span>
-                </NavLink>
-                )}
-              </li>
-            ))}
-          </ul>
+                    </NavLink>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-       </div>
 
         {/* Logout section  */}
         <div className="flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 text-lg font-serif rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md">
-          <span class="material-symbols-outlined">
+          <span className="material-symbols-outlined">
             logout
           </span>
-          <span 
-                        className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"}`}
+          <span
+          onClick={()=>{
+            Logout()
+            navigate("/Login_SignIn/login")
+          }}
+            className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"}`}
           >Logout</span>
         </div>
 
@@ -202,6 +209,7 @@ function StudentDashboard() {
                 src={userData.avatar}
                 className="w-full h-full rounded-full object-cover border-2 border-slate-900 shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:shadow-xl"
                 alt="profile img"
+                onClick={() => navigate('/student-dashboard/profile')}
               />
             </div>
           </div>

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { RaiseComplaint } from "../Models/complaint.model.js";
 import { User } from "../Models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -7,6 +8,7 @@ import {
   upload_On_Cloudinary,
 } from "../utils/Cloudinary.js";
 
+// NOTE: Below functions are designed for Student
 const register_Complaint = AsyncHandeller(async (req, res) => {
   //get all the data from frontend
   //get user id from the req.userdata , inserted by verify jwt middlware
@@ -74,7 +76,6 @@ const register_Complaint = AsyncHandeller(async (req, res) => {
   //     ),
   //   );
 });
-
 
 const edit_Complaint = AsyncHandeller(async (req, res) => {
   //fetched the data that to be updated
@@ -147,6 +148,48 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
   }
 });
 
+// child-note: this complaint are shown on student dashboard
+const get_Complaints_By_Id = AsyncHandeller(async (req, res) => {
+  const { _id } = req.userData;
+
+  const AllComplaints = await RaiseComplaint.find(
+    { studentId: _id },
+    { studentId: 0, updatedAt: 0, Type: 0, comments: 0 },
+  ).sort({ createdAt: -1 });
+
+  if (!AllComplaints || AllComplaints.length === 0) {
+    return res.status(400).json({
+      message: "Fetching complaint Failed",
+    });
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, AllComplaints, "Fetching Complaint Successfull"),
+    );
+});
+
+// Todo: remove the complaints from user Comment Array along with delete operaion
+const delete_complaint = AsyncHandeller(async (req, res) => {
+  const { complaintId } = req.params;
+
+  const deletedComplaint = await RaiseComplaint.findByIdAndDelete({
+    _id: complaintId,
+  });
+
+  if (!deletedComplaint) {
+    return res.status(400).json({
+      message: "complaint do not exist",
+    });
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, deletedComplaint, "Delete Successfull"));
+});
+
+// NOTE: Below functions are designed for warden:
 const edit_Complaint_State = AsyncHandeller(async (req, res) => {
   // fetched the complaint id whose status is to be updated
   // fetched the updated value of state from body
@@ -186,13 +229,111 @@ const edit_Complaint_State = AsyncHandeller(async (req, res) => {
   }
 });
 
-// used by student as well as warden to see the complaints for the specific user
+const get_All_Users = AsyncHandeller(async (req, res) => {
+
+  const {gender} = req.userData
+
+  const AllFetchedUsers = await User.find(
+    { gender: `${gender}`, role: "student" },
+    { complaints: 0, password: 0, gender: 0, role: 0, hobbies: 0 },
+  );
+
+  if (!AllFetchedUsers) {
+    return res.status(400).json({
+      message: "Users not available",
+    });
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, AllFetchedUsers, "Fetch user Succesfull"));
+});
+
+// child-note: to see  complaints of all students depending on type
+const get_Complaints_By_Type = AsyncHandeller(async (req, res) => {
+  const { Type } = req.params;
+
+  if (!["personal", "public"].includes(Type)) {
+    return res.status(400).json({
+      message: "Invalid Type value",
+    });
+  }
+
+  const complaints_by_Type = await RaiseComplaint.aggregate([
+    {
+      $match:{
+        Type
+      }
+    },
+    {
+      $lookup:{
+        from: "users",
+        localField: "studentId",
+        foreignField:"_id",
+        as:"studentData",
+        pipeline:[
+          {
+            $project:{
+              fullName:1,
+              roomNumber:1,
+              phone:1
+            }
+          }
+        ]
+      }
+    },
+    {
+      $addFields:{
+        studentData:{
+          $first:"$studentData"
+        }
+      }
+    },
+    {
+      $project:{
+        comments:0
+      }
+    },
+    {
+      $sort:{
+        createdAt:-1
+      }
+    }
+  ]);
+
+  if (complaints_by_Type.length === 0) {
+    return res.status(400).json({
+      message: `No ${Type} complaints`,
+    });
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        complaints_by_Type,
+        "complaints fetched successfully",
+      ),
+    );
+});
+
+// NOTE: common for both:
 const get_Complaints_By_Id_Type = AsyncHandeller(async (req, res) => {
   //get the state of complaint that need is been accessed
   //get id of student whose complaint need to be fetched
   //give the response
 
-  const { _id } = req.userData;
+  const { role } = req.userData;
+  let studentId;
+
+  if (role === "student") {
+    studentId = req.userData._id;
+  } else {
+    studentId = req.params._id;
+    console.log(studentId);
+  }
+
   const { Type } = req.params;
 
   if (!["personal", "public"].includes(Type)) {
@@ -204,7 +345,7 @@ const get_Complaints_By_Id_Type = AsyncHandeller(async (req, res) => {
   const requested_Complaints = await RaiseComplaint.aggregate([
     {
       $match: {
-        studentId: _id,
+        studentId: new mongoose.Types.ObjectId(studentId),
         Type,
       },
     },
@@ -238,79 +379,6 @@ const get_Complaints_By_Id_Type = AsyncHandeller(async (req, res) => {
   );
 });
 
-// only used by warden to see all complaints depending on type
-const get_Complaints_By_Type = AsyncHandeller(async (req, res) => {
-  const { Type } = req.params;
-
-  if (!["personal", "public"].includes(Type)) {
-    return res.status(400).json({
-      message: "Invalid Type value",
-    });
-  }
-
-  const complaints_by_Type = await RaiseComplaint.find({
-    Type,
-  }).select("-comments");
-
-  if (complaints_by_Type.length === 0) {
-    return res.status(400).json({
-      message: `No ${Type} complaints`,
-    });
-  }
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { complaints: complaints_by_Type, count: complaints_by_Type.length },
-        "complaints fetched successfully",
-      ),
-    );
-});
-
-// this is used to fetch complaint on student dashboard
-const get_Complaints_By_Id = AsyncHandeller(async (req, res) => {
-  const { _id } = req.userData;
-
-  const AllComplaints = await RaiseComplaint.find(
-    { studentId: _id },
-    { studentId: 0, updatedAt: 0, Type: 0, comments: 0 },
-  ).sort({ createdAt: -1 });
-
-  if (!AllComplaints || AllComplaints.length === 0) {
-    return res.status(400).json({
-      message: "Fetching complaint Failed",
-    });
-  }
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(200, AllComplaints, "Fetching Complaint Successfull"),
-    );
-});
-
-
-
-const delete_complaint = AsyncHandeller(async (req, res) => {
-  const { complaintId } = req.params;
-
-  const deletedComplaint = await RaiseComplaint.findByIdAndDelete({
-    _id: complaintId,
-  });
-
-  if (!deletedComplaint) {
-    return res.status(400).json({
-      message: "complaint do not exist",
-    });
-  }
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, deletedComplaint, "Delete Successfull"));
-});
-
 export {
   register_Complaint,
   edit_Complaint,
@@ -319,4 +387,5 @@ export {
   get_Complaints_By_Type,
   get_Complaints_By_Id,
   delete_complaint,
+  get_All_Users,
 };

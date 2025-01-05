@@ -26,6 +26,7 @@ import NoticeBoard from './components/Dashboards/Warden/NoticeBoard'
 import AllStudentData from './components/Dashboards/Warden/StudentPages/AllStudentData'
 import StudentDetails from './components/Dashboards/Warden/StudentPages/StudentDetails'
 import OneStudentComplaint from './components/Dashboards/Warden/StudentPages/OneStudentComplaint'
+import Profile from './components/Dashboards/Student/Profile'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
         <Route path='/student-dashboard/vote' element={<Meal_Poll />} />
         <Route path='/student-dashboard/find-match' element={<MatchPartner />} />
         <Route path="/student-dashboard/review-complaints" element={<MyComplaints />} />
+        <Route path="/student-dashboard/profile" element={<Profile />} />
         <Route path="/student-dashboard/:complaintId/edit-complaint" element={<EditComplaint />} />
         <Route path="/student-dashboard/:complaintId/comments" element={<Comments />} />
       </Route>
@@ -60,9 +62,9 @@ const router = createBrowserRouter(
         <Route path='/warden-dashboard/get-Allstudentdata' element={<AllStudentData/>} />
         <Route path='/warden-dashboard/get-studentdetail' element={<StudentDetails/>} />
         <Route path='/warden-dashboard/get-studentcomplaint' element={<OneStudentComplaint/>} />
-        <Route path='/warden-dashboard/complaintDetails' element={<ComplaintDetails />}>
-          <Route path='/warden-dashboard/complaintDetails/comments' element={<WarComments />} />
-        </Route>
+        <Route path='/warden-dashboard/:complaintId?/complaintDetails' element={<ComplaintDetails />}/>
+          {/* <Route path='/warden-dashboard/:complaintId?/complaintDetails/comments' element={<WarComments />} />
+        </Route> */}
       </Route>
 
     </>

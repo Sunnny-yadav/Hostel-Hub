@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import logo from "../../../assets/Intopage/logo.png";
 import { useUserContext } from "../../../Context/userContext";
+import { useWardenComplaintContext } from "../../../Context/WardenComplaintContext";
 
 function WardenDashboard() {
-  const { userData } = useUserContext();
+  const { userData, Logout } = useUserContext();
+  const navigate = useNavigate()
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
-  const [showSideBarAtResponsivePhase, setshowSideBarAtResponsivePhase] =
-    useState(false);
-  // const [showComplaintoption, setshowComplaintOption] = useState(false)
+  const [showSideBarAtResponsivePhase, setshowSideBarAtResponsivePhase] = useState(false);
 
   const handleSidebarToggle = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
@@ -119,10 +119,14 @@ function WardenDashboard() {
 
         {/* Logout section  */}
         <div className="flex items-center gap-1.5 md:gap-3 px-1.5 py-1 md:px-3 md:py-2 text-lg font-serif rounded-md cursor-pointer transition hover:bg-blue-500 hover:shadow-md">
-          <span class="material-symbols-outlined">
+          <span className="material-symbols-outlined">
             logout
           </span>
           <span
+          onClick={()=>{
+            Logout()
+            navigate("/Login_SignIn/login")
+          }}
             className={`font-serif text-sm md:text-lg tracking-wide ${isSidebarExpanded || isHovered ? "" : "hidden"}`}
           >Logout</span>
         </div>

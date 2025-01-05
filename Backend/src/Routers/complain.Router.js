@@ -3,6 +3,7 @@ import {
   delete_complaint,
   edit_Complaint,
   edit_Complaint_State,
+  get_All_Users,
   get_Complaints_By_Id,
   get_Complaints_By_Id_Type,
   get_Complaints_By_Type,
@@ -16,6 +17,7 @@ import { raiseComplaintSchema } from "../Validators/complaint.Validator.js";
 
 const router = Router();
 
+// Note: routers for student
 router
   .route("/register-complaint")
   .post(
@@ -25,31 +27,37 @@ router
     register_Complaint,
   );
   
-
-  
 router
   .route("/:complaintId/edit-complaint")
   .patch(verifyJWT, upload.single("image"),validateShema(raiseComplaintSchema), edit_Complaint);
-  
+
+router
+  .route("/get-complaint-by-id")
+  .get(verifyJWT, get_Complaints_By_Id);
+
+router
+  .route("/:complaintId/delete-complaint")
+  .delete(verifyJWT, delete_complaint);
+
+
+// Note: routers for the warden
 router
   .route("/:complaintId/edit-complaint-state")
   .patch(verifyJWT, edit_Complaint_State);
-  
-router
-  .route("/:Type/get-complaints-by-id-type")
-  .get(verifyJWT, get_Complaints_By_Id_Type);
-  
+
 router
   .route("/:Type/get-complaints-by-type")
   .get(verifyJWT, get_Complaints_By_Type);
 
 router
-  .route("/get-complaint-by-id")
-  .get(verifyJWT, get_Complaints_By_Id);
-router
-  .route("/:complaintId/delete-complaint")
-  .delete(verifyJWT, delete_complaint);
+  .route("/get-users")
+  .get(verifyJWT, get_All_Users)
 
-  
+
+// Note: routers common for both 
+router
+  .route("/:Type/:_id?/get-complaints-by-id-type")
+  .get(verifyJWT, get_Complaints_By_Id_Type);
+
 
 export default router;

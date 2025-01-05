@@ -6,8 +6,8 @@ import noComplaint from '../../../../assets/dashboard/noComplaint.png'
 const MyComplaints = () => {
   const navigate = useNavigate();
   const [complaintType, setComplaintType] = useState("personal");
-  const { getComplaintsByIdAndType, complaintsToBeDisplayed, filterFetchedComplaints, deleteComplaint, complaintsnotPresent } = useComplaintContext();
-  const [loading, setLoading] = useState(true);
+  const { getComplaintsByIdAndType, complaintsToBeDisplayed, filterFetchedComplaints, deleteComplaint,loading,setLoading  } = useComplaintContext();
+  // const [loading, setLoading] = useState(true);
   const [showDeleteBox, setshowDeleteBox] = useState(false)
   const [complaintId, setcomplaintId] = useState(null)
 
@@ -28,7 +28,7 @@ const MyComplaints = () => {
   }
 
   useEffect(() => {
-    setLoading(true);  // Set loading to true when starting to fetch
+                      // Set loading to true when starting to fetch
     getComplaintsByIdAndType(complaintType);  // Fetch complaints
   }, [complaintType]);
 
@@ -38,11 +38,11 @@ const MyComplaints = () => {
     }
   }, [complaintsToBeDisplayed]);
 
-  useEffect(()=>{
-    if(complaintsnotPresent){
-      setLoading(false)
-    }
-  },[complaintsnotPresent])
+  // useEffect(()=>{
+  //   if(complaintsnotPresent){
+  //     setLoading(false)
+  //   }
+  // },[complaintsnotPresent])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-50 py-10">
