@@ -3,7 +3,7 @@ import meal from '../../../assets/dashboard/meal_logo.jpeg'
 import match from '../../../assets/dashboard/match_logo.jpg'
 import { useUserContext } from '../../../Context/userContext';
 import { Link } from 'react-router-dom'
-import { useComplaintContext } from '../../../Context/complaintContext'
+import { useWardenComplaintContext } from '../../../Context/WardenComplaintContext';
 
 const Card = ({ logo, title }) => (
   <div className="relative p-2 md:p-4 md:h-32 sm:h-20  justify-around flex md:flex-col  items-center rounded-md shadow-md hover:shadow-lg transition-transform transform hover:scale-105 bg-white border border-gray-300">
@@ -14,14 +14,14 @@ const Card = ({ logo, title }) => (
       <div className='text-center'>
         <h2 className="text-xs text-gray-800 font-semibold">{title}</h2>
       </div>
-     </div>
+    </div>
   </div>
 );
 
 
 function WardenStart() {
   const { userData } = useUserContext();
-  // const { FetchedComplaintsById } = useComplaintContext();
+  const { UsersList } = useWardenComplaintContext()
 
   return (
     <>
@@ -84,13 +84,13 @@ function WardenStart() {
                   />
                 </Link>
                 <Link to="/warden-dashboard/get-Allstudentdata">
-                <div>
-                  <Card
-                    logo={match}  
-                    title="Students"
-                    description="Find your perfect match easily."
-                  />
-                </div>
+                  <div>
+                    <Card
+                      logo={match}
+                      title="Students"
+                      description="Find your perfect match easily."
+                    />
+                  </div>
                 </Link>
               </div>
 
@@ -156,7 +156,7 @@ function WardenStart() {
           <div className="xs:col-span-2 p-4 bg-orange-300 shadow-md rounded-xl m-1 border-2">
             <header className="flex justify-between items-center mb-4">
               <div className="text-sm lg:text-md xl:text-lg font-semibold text-gray-800">Users</div>
-             
+
             </header>
 
             {/* Table Design */}
@@ -173,37 +173,35 @@ function WardenStart() {
                     <th className="px-0.5 py-0.5 sm:py-2 text-xs sm:text-sm text-center  font-semibold  sm:uppercase tracking-wider border-b border-gray-200">
                       Phone
                     </th>
-                    <th className="px-0.5 py-0.5 sm:py-2 text-xs sm:text-sm  text-center font-semibold  sm:uppercase tracking-wider border-b border-gray-200">
-                      View
-                    </th>
+                    
                   </tr>
                 </thead>
               </table>
               <div className="overflow-y-auto max-h-[24vh]">
                 <table className="w-full bg-white">
-                  {/* <tbody className="divide-y text-xs sm:text-sm sm:text-md divide-gray-400">
+                  <tbody className="divide-y text-xs sm:text-sm sm:text-md divide-gray-400">
 
-                                        {
-                                            (FetchedComplaintsById.length !== 0) &&
-                                            FetchedComplaintsById.map((data) => (
-                                                <tr key={data._id} className="hover:bg-gray-100 transition duration-200 ">
-                                                    <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate max-w-[50px] sm:max-w-[100px]">
-                                                        {data.Title}
-                                                    </td>
-                                                    <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-600 truncate  max-w-[100px] sm:max-w-[210px]" >
-                                                        {data.Description}
-                                                    </td>
-                                                    <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate ">
-                                                        {data.createdAt.split("T")[0]}
-                                                    </td>
-                                                    <td className={`sm:px-4 sm:py-4 px-2 py-1  font-semibold ${data.state === "Pending" ? "text-yellow-600" : ""}  ${data.state === "Inprogress" ? "text-blue-600" : ""}  ${data.state === "Resolved" ? "text-green-600" : ""}  truncate text-center `}>
+                    {
+                      (UsersList?.length !== 0) &&
+                      UsersList?.map((data) => (
+                        <tr key={data._id} className="hover:bg-gray-100 transition duration-200 ">
+                          <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate max-w-[50px] sm:max-w-[100px]">
+                            {data.fullName}
+                          </td>
+                          <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-600 truncate  max-w-[100px] sm:max-w-[210px]" >
+                            {data.email}
+                          </td>
+                          <td className="sm:px-4 sm:py-4 px-2 py-1  text-gray-800 truncate ">
+                            {data.phone}
+                          </td>
+                          {/* <td className={`sm:px-4 sm:py-4 px-2 py-1  font-semibold ${data.state === "Pending" ? "text-yellow-600" : ""}  ${data.state === "Inprogress" ? "text-blue-600" : ""}  ${data.state === "Resolved" ? "text-green-600" : ""}  truncate text-center `}>
                                                         {data.state}
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        }
+                                                    </td> */}
+                        </tr>
+                      ))
+                    }
 
-                                    </tbody> */}
+                  </tbody>
                 </table>
               </div>
             </div>
