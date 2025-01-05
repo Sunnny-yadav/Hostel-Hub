@@ -62,9 +62,9 @@ const router = createBrowserRouter(
         <Route path='/warden-dashboard/get-Allstudentdata' element={<AllStudentData/>} />
         <Route path='/warden-dashboard/get-studentdetail' element={<StudentDetails/>} />
         <Route path='/warden-dashboard/get-studentcomplaint' element={<OneStudentComplaint/>} />
-        <Route path='/warden-dashboard/complaintDetails' element={<ComplaintDetails />}>
-          <Route path='/warden-dashboard/complaintDetails/comments' element={<WarComments />} />
-        </Route>
+        <Route path='/warden-dashboard/:complaintId?/complaintDetails' element={<ComplaintDetails />}/>
+          {/* <Route path='/warden-dashboard/:complaintId?/complaintDetails/comments' element={<WarComments />} />
+        </Route> */}
       </Route>
 
     </>
