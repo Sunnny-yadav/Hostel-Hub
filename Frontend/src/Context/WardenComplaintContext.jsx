@@ -14,7 +14,10 @@ export const WardenComplaintContextProvider = ({ children }) => {
     const [ComplaintToBeDisplayed, setComplaintToBeDisplayed] = useState([])
     const [ComplaintToVeiwed, setComplaintToVeiwed] = useState({});
 
-    
+    //Note: below states are related to the Meal
+    const [addedMealPoll, setaddedmealPoll] = useState({});
+
+
     const FetcheAllUsers = async () => {
         try {
             const response = await fetch("http://localhost:8000/api/v1/complaints/get-users", {
@@ -76,27 +79,113 @@ export const WardenComplaintContextProvider = ({ children }) => {
         }
     };
 
-    const saveTheUpdatedState = async (complaintObj)=>{
+    const replace_CurrentState_With_UpdatedState = (updatedComplaintState) => {
+        setComplaintToVeiwed((complaint) => (
+            {
+                ...complaint,
+                state: updatedComplaintState.state
+            }
+        ))
+    };
+    const replace_CurrentMealState_With_UpdatedMealState = (updatedMealState) => {
+        setaddedmealPoll((Meal) => (
+            {
+                ...Meal,
+                pollStatus: updatedMealState.pollStatus
+            }
+        ))
+    };
+
+    const saveTheUpdatedState = async (complaintObj) => {
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/complaints/${complaintObj.complaintId}/edit-complaint-state`,{
-                method:"PATCH",
-                headers:{
-                    Authorization:Token,
-                    "Content-Type":'application/json'
+            const response = await fetch(`http://localhost:8000/api/v1/complaints/${complaintObj.complaintId}/edit-complaint-state`, {
+                method: "PATCH",
+                headers: {
+                    Authorization: Token,
+                    "Content-Type": 'application/json'
                 },
-                body:JSON.stringify(complaintObj)
+                body: JSON.stringify(complaintObj)
             })
             const responseData = await response.json()
-            
-            if(response.ok){
+
+            if (response.ok) {
+                replace_CurrentState_With_UpdatedState(responseData.data)
                 toast.success(responseData.message)
             }
         } catch (error) {
             toast.error(responseData.message)
-            console.log("wardencontext :: saveTheUpdatedState ::",error.message)
+            console.log("wardencontext :: saveTheUpdatedState ::", error.message)
         }
-    }
+    };
 
+    // Note: The below functions are related to Meal 
+
+    const addMealPoll = async (mealPollData) => {
+        try {
+            const response = await fetch("http://localhost:8000/api/v1/meals/add-meal", {
+                method: "POST",
+                headers: {
+                    Authorization: Token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(mealPollData)
+            });
+
+            const responseData = await response.json();
+            console.log(responseData.data);
+            if (response.ok) {
+                setaddedmealPoll(responseData.data)
+                toast.success(responseData.message)
+            } else {
+                toast.error(responseData.message)
+            }
+        } catch (error) {
+            console.log("wardenContext :: addMealpoll::", error)
+        }
+    };
+
+    const getMealPollById = async (pollId)=>{
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/meals/${pollId}/get-mealPoll-by-id`,{
+            method:"GET",
+            headers:{
+                Authorization:Token
+            }
+        })
+
+        const responseData = await response.json()
+        if(response.ok){
+            console.log(responseData.data)
+            setaddedmealPoll(responseData.data)
+        }else{
+            console.log("error in getmealPollByid")
+        }
+      } catch (error) {
+        console.log("getmealPollByid",error)
+      }  
+    };
+
+    const saveTheUpdatedMealStatus = async (MealObj) => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/v1/meals/${MealObj.mealId}/update-state`, {
+                method: "PATCH",
+                headers: {
+                    Authorization: Token,
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify(MealObj)
+            });
+            const responseData = await response.json()
+
+            if (response.ok) {
+                replace_CurrentMealState_With_UpdatedMealState(responseData.data)
+                toast.success(responseData.message)
+            }
+        } catch (error) {
+            toast.error(responseData.message)
+            console.log("wardencontext :: saveTheUpdatedMealStatus ::", error.message)
+        }
+    };
 
     useEffect(() => {
         if (AccessToken) {
@@ -107,16 +196,20 @@ export const WardenComplaintContextProvider = ({ children }) => {
 
     return (
         <complaintcontext.Provider value={{
-             UsersList,
-             getComplaintsByType,
-             ComplaintToBeDisplayed,
-             loading,
-             setLoading,
-             filterFetchedComplaints ,
-             getComplaintDetail,
-             ComplaintToVeiwed,
-             saveTheUpdatedState
-             }}>
+            UsersList,
+            getComplaintsByType,
+            ComplaintToBeDisplayed,
+            loading,
+            setLoading,
+            filterFetchedComplaints,
+            getComplaintDetail,
+            ComplaintToVeiwed,
+            saveTheUpdatedState,
+            addMealPoll,
+            addedMealPoll,
+            getMealPollById,
+            saveTheUpdatedMealStatus
+        }}>
 
 
             {children}
