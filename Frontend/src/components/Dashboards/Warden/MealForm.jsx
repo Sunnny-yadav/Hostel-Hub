@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import cookingVideo from '../../../assets/dashboard/cooking.mp4'
+import cookingVideo from "../../../assets/dashboard/cooking.mp4";
+import { useWardenComplaintContext } from "../../../Context/WardenComplaintContext";
 
 const MealForm = () => {
+  const {addMealPoll} = useWardenComplaintContext()
+  const [pollDeadline, setPollDeadline] = useState("");
+  const [isPollActive , setispollactive] = useState(false);
   const [mealOptions, setMealOptions] = useState({
     Meal1: "",
     Meal2: "",
     Meal3: "",
-  });
-
-
-  const handleChange = (e) => {
+  }); 
+  
+  const handleMealChange = (e) => {
     const { name, value } = e.target;
     setMealOptions((prev) => ({
       ...prev,
@@ -17,16 +20,26 @@ const MealForm = () => {
     }));
   };
 
+  const handleDeadlineChange = (e) => {
+    setPollDeadline(e.target.value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const mealData = {
+      meals : Object.values(mealOptions),
+      pollDeadline
+    };
 
-    // Reset the form
+    addMealPoll(mealData);
+
+    
     setMealOptions({
       Meal1: "",
       Meal2: "",
       Meal3: "",
     });
-
+    setPollDeadline("");
   };
 
   const handleCancel = () => {
@@ -35,6 +48,7 @@ const MealForm = () => {
       Meal2: "",
       Meal3: "",
     });
+    setPollDeadline("");
   };
 
   return (
@@ -52,6 +66,18 @@ const MealForm = () => {
 
       {/* Meal Form */}
       <div className="relative z-10 max-w-lg w-full bg-white bg-opacity-50 p-8 rounded-2xl shadow-lg shadow-gray-700 backdrop-blur-lg">
+        {/* Poll Status Indicator */}
+        <div className="absolute top-4 right-4 flex items-center space-x-2">
+          <div
+            className={`w-3 h-3 rounded-full ${
+              isPollActive ? "bg-green-500" : "bg-red-500"
+            }`}
+          ></div>
+          <span className="text-sm font-semibold text-gray-800">
+            {isPollActive ? "Active" : "Inactive"}
+          </span>
+        </div>
+
         <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-6">
           Add Meal Options
         </h2>
@@ -60,36 +86,56 @@ const MealForm = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Meal Options */}
           <div>
             <input
               type="text"
               name="Meal1"
-              placeholder="Meal Option1 "
+              placeholder="Meal Option 1"
               value={mealOptions.Meal1}
-              onChange={handleChange}
-              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray- Option 500 transition-all ease-in-out duration-200"
-              required
+              onChange={handleMealChange}
+              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition-all ease-in-out duration-200"
+              
             />
           </div>
           <div>
             <input
               type="text"
               name="Meal2"
-              placeholder="Meal Option2 "
+              placeholder="Meal Option 2"
               value={mealOptions.Meal2}
-              onChange={handleChange}
-              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray- Option 500 transition-all ease-in-out duration-200"
-              required
+              onChange={handleMealChange}
+              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition-all ease-in-out duration-200"
+              
             />
           </div>
           <div>
             <input
               type="text"
               name="Meal3"
-              placeholder="Meal Option3 "
+              placeholder="Meal Option 3"
               value={mealOptions.Meal3}
-              onChange={handleChange}
-              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray- Option 500 transition-all ease-in-out duration-200"
+              onChange={handleMealChange}
+              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition-all ease-in-out duration-200"
+              
+            />
+          </div>
+
+          {/* Poll Deadline */}
+          <div>
+            <label
+              htmlFor="pollDeadline"
+              className="block text-gray-800 font-medium mb-2"
+            >
+              Poll Deadline
+            </label>
+            <input
+              type="datetime-local"
+              id="pollDeadline"
+              name="pollDeadline"
+              value={pollDeadline}
+              onChange={handleDeadlineChange}
+              className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition-all ease-in-out duration-200"
               required
             />
           </div>

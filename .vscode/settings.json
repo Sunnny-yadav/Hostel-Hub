@@ -1,6 +1,7 @@
 {
     "better-comments.tags": [
 
+
         {
             "tag": "!",
             "color": "#FF2D00",
@@ -48,10 +49,10 @@
         },
         {
             "tag": "Note",
-            "color": "#FFFF00",
+            "color": "#80FFEA",
             "strikethrough": false,
             "underline": false,
-            "backgroundColor": "transparent",
+            "backgroundColor": "#1F1F1F",
             "bold": false,
             "italic": false
         }, 

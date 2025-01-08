@@ -156,6 +156,44 @@ const ComplaintDetails = () => {
                 <div className="font-bold">Status:</div>
                 <p>{ComplaintToVeiwed?.state}</p>
               </div>
+              <div>
+              {ComplaintToVeiwed?.state !== "Resolved" && (
+                    <div className="flex items-center space-x-4">
+                      {
+                        showUpdateStateValue ? <button
+                          onClick={() => {
+                            saveTheUpdatedState({
+                              complaintId,
+                              state: updatedStateref.current.value,
+                            });
+
+                            setShowupdateStateValue(!showUpdateStateValue);
+                          }}
+                          className="px-4 py-2 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 transition">
+                          Save
+                        </button> :
+                          <button
+                            onClick={() => setShowupdateStateValue(!showUpdateStateValue)}
+                            className="px-4 py-2 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 transition">
+                            Update State
+                          </button>
+                      }
+                      <label className={`${showUpdateStateValue ? "flex items-center" : "hidden"}`}>
+                        <input
+                          ref={updatedStateref}
+                          type="radio"
+                          className="form-radio text-blue-600"
+                          value={ComplaintToVeiwed?.state === "Pending" ? "Inprogress" : "Resolved"}
+                          checked
+                          readOnly
+                        />
+                        <span className="ml-2">
+                          {ComplaintToVeiwed?.state === "Pending" ? "InProgress" : "Resolved"}
+                        </span>
+                      </label>
+                    </div>
+                  )}
+              </div>
             </div>
           </div>
 
@@ -249,7 +287,7 @@ const ComplaintDetails = () => {
                   <p className="text-gray-700">{ComplaintToVeiwed?.Description}</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   <div>
                     <p className="text-gray-600 font-medium">Raised By:</p>
                     <p className="text-gray-900 font-semibold">{ComplaintToVeiwed?.studentData?.fullName}</p>
@@ -261,6 +299,10 @@ const ComplaintDetails = () => {
                   <div>
                     <p className="text-gray-600 font-medium">Contact:</p>
                     <p className="text-gray-900 font-semibold">{ComplaintToVeiwed?.studentData?.phone}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-medium">State:</p>
+                    <p className="text-gray-900 font-semibold">{ComplaintToVeiwed?.state}</p>
                   </div>
                   <div>
                     <p className="text-gray-600 font-medium">Time:</p>

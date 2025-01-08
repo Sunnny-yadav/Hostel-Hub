@@ -19,9 +19,11 @@ app.use(cors(corsOption))
 import userRoute from './Routers/user.Router.js'
 import complaintRoute from './Routers/complain.Router.js'
 import commentRoute from './Routers/comment.Router.js'
+import mealRoute from './Routers/meal.Router.js'
 
 app.use("/api/v1/users",userRoute)
 app.use("/api/v1/complaints",complaintRoute)
 app.use("/api/v1/comments",commentRoute)
+app.use("/api/v1/meals",mealRoute)
 
 export default app;

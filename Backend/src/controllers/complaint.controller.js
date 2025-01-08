@@ -66,15 +66,6 @@ const register_Complaint = AsyncHandeller(async (req, res) => {
         "Complain Registration Successfull",
       ),
     );
-  // return res
-  //   .status(200)
-  //   .json(
-  //     new ApiResponse(
-  //       200,
-  //       { createdComplain, updatedUserDocument },
-  //       "Complain Registration Successfull",
-  //     ),
-  //   );
 });
 
 const edit_Complaint = AsyncHandeller(async (req, res) => {
@@ -173,6 +164,7 @@ const get_Complaints_By_Id = AsyncHandeller(async (req, res) => {
 // Todo: remove the complaints from user Comment Array along with delete operaion
 const delete_complaint = AsyncHandeller(async (req, res) => {
   const { complaintId } = req.params;
+  const {_id} = req.userData;
 
   const deletedComplaint = await RaiseComplaint.findByIdAndDelete({
     _id: complaintId,
