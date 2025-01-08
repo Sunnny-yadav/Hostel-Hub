@@ -134,8 +134,10 @@ export const WardenComplaintContextProvider = ({ children }) => {
             const responseData = await response.json();
             console.log(responseData.data);
             if (response.ok) {
+                localStorage.setItem("MealPollId",JSON.stringify(responseData.data._id));
                 setaddedmealPoll(responseData.data)
                 toast.success(responseData.message)
+                
             } else {
                 toast.error(responseData.message)
             }
