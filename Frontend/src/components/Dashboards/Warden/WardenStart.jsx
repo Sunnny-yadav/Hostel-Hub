@@ -53,11 +53,6 @@ function WardenStart() {
     }
   }, [mealId])
 
-  useEffect(()=>{
-    return ()=>{
-      localStorage.removeItem("MealPollId")
-    }
-  })
 
   return (
     <>
