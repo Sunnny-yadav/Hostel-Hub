@@ -1,44 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NoMatch from "../../../assets/dashboard/NoMatch.jpg";
+import {useUserContext} from '../../../Context/userContext'
 
 const MatchPartner = () => {
-  const students = [
-    {
-      image: "https://randomuser.me/api/portraits/men/10.jpg",
-      name: "Aryan Mehta",
-      roomNumber: "B-102",
-      branch: "CSE",
-      year: "3rd Year",
-    },
-    {
-      image: "https://randomuser.me/api/portraits/women/0.jpg",
-      name: "Priya Sharma",
-      roomNumber: "C-205",
-      branch: "ECS",
-      year: "2nd Year",
-    },
-    {
-      image: "https://randomuser.me/api/portraits/men/30.jpg",
-      name: "Rohan Gupta",
-      roomNumber: "D-310",
-      branch: "ME",
-      year: "1st Year",
-    },
-    {
-      image: "https://randomuser.me/api/portraits/women/40.jpg",
-      name: "Simran Kaur",
-      roomNumber: "A-120",
-      branch: "IT",
-      year: "4th Year",
-    },
-    {
-      image: "https://randomuser.me/api/portraits/men/50.jpg",
-      name: "Kunal Patel",
-      roomNumber: "E-101",
-      branch: "CE",
-      year: "2nd Year",
-    },
-  ];
+const [students, setStudents] = useState()
+const {Token} = useUserContext()
+  // const students = [
+  //   {
+  //     image: "https://randomuser.me/api/portraits/men/10.jpg",
+  //     name: "Aryan Mehta",
+  //     roomNumber: "B-102",
+  //     branch: "CSE",
+  //     year: "3rd Year",
+  //   },
+  //   {
+  //     image: "https://randomuser.me/api/portraits/women/0.jpg",
+  //     name: "Priya Sharma",
+  //     roomNumber: "C-205",
+  //     branch: "ECS",
+  //     year: "2nd Year",
+  //   },
+  //   {
+  //     image: "https://randomuser.me/api/portraits/men/30.jpg",
+  //     name: "Rohan Gupta",
+  //     roomNumber: "D-310",
+  //     branch: "ME",
+  //     year: "1st Year",
+  //   },
+  //   {
+  //     image: "https://randomuser.me/api/portraits/women/40.jpg",
+  //     name: "Simran Kaur",
+  //     roomNumber: "A-120",
+  //     branch: "IT",
+  //     year: "4th Year",
+  //   },
+  //   {
+  //     image: "https://randomuser.me/api/portraits/men/50.jpg",
+  //     name: "Kunal Patel",
+  //     roomNumber: "E-101",
+  //     branch: "CE",
+  //     year: "2nd Year",
+  //   },
+  // ];
+
+  useEffect(()=>{
+    async function getMatchedPartner(){
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/users/get-matched-profiles",{
+          method:"GET",
+          headers:{
+            Authorization: Token
+          }
+        });
+
+        const responseData = await response.json();
+console.log(responseData.data)
+        if(response.ok){
+          setStudents(responseData.data)
+        }else{
+          console.log(responseData.message)
+        }
+      } catch (error) {
+        console.log("error while fetching matched partner",error)
+      }
+    }
+
+    getMatchedPartner()
+
+  },[])
+
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-300 py-8 px-4 sm:px-8">
@@ -64,15 +95,15 @@ const MatchPartner = () => {
             >
               {/* Student Image */}
               <img
-                src={student.image || "https://via.placeholder.com/150"}
-                alt={`${student.name}'s profile`}
+                src={student.avatar}
+                alt={`${student.fullName}'s profile`}
                 className="w-32 h-32 rounded-full object-cover shadow-lg"
               />
 
               {/* Student Details - Name */}
               <div className="text-center">
                 <h2 className="text-xl font-semibold text-gray-800">
-                  {student.name}
+                  {student.fullName}
                 </h2>
               </div>
 
@@ -85,12 +116,12 @@ const MatchPartner = () => {
 
                 <div className="flex justify-between">
                   <strong className="text-teal-600">Branch:</strong>
-                  <span>{student.branch}</span>
+                  <span>{student.branchName}</span>
                 </div>
 
                 <div className="flex justify-between">
                   <strong className="text-teal-600">Year:</strong>
-                  <span>{student.year}</span>
+                  <span>{student.currentYear}</span>
                 </div>
               </div>
             </div>
