@@ -150,8 +150,8 @@ const getLatestMealPoll = AsyncHandeller(async (req, res)=>{
 
      const recentMealPoll = await MealPoll.find({createdAt:{$gte:today}}).sort({createdAt:-1}).limit(1)
     console.log(recentMealPoll)
-     if (!recentMealPoll) {
-      return res.status(404).json({ message: 'No recent meal poll found' });
+     if (recentMealPoll.length === 0) {
+      return res.status(404).json({ message: 'No  meal poll added Today ' });
     }
 
     return res.status(200).json(new ApiResponse(200, recentMealPoll[0],"Latest poll fetch successful"))
