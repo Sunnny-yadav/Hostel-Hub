@@ -114,6 +114,15 @@ userSchema.pre("save", function (next) {
 
   next();
 });
+
+//Note: Middleware to convert hobbies to lowercase before saving
+userSchema.pre('save', function(next) {
+  if (this.hobbies && this.hobbies.length > 0) {
+    this.hobbies = this.hobbies.map(hobby => hobby.toLowerCase());
+  }
+  next();
+}); 
+
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 

@@ -88,6 +88,15 @@ const voteForMenu = AsyncHandeller(async (req, res) => {
   const { pollId, menuId } = req.params;
   const { _id } = req.userData;
 
+  const userAlreadyVoted = await User.findById(_id);
+
+  if(userAlreadyVoted.mealPollIds.includes(pollId)){
+    return res.status(400).json({
+      message: "Vote Already Submitted"
+    })
+  };
+
+
   const updatedPoll = await MealPoll.findOneAndUpdate(
     { _id: pollId, "meals._id": menuId },
     { $inc: { "meals.$.count": 1 } },
@@ -140,12 +149,12 @@ const getLatestMealPoll = AsyncHandeller(async (req, res)=>{
     today.setHours(0, 0, 0, 0);
 
      const recentMealPoll = await MealPoll.find({createdAt:{$gte:today}}).sort({createdAt:-1}).limit(1)
-
-     if (!recentMealPoll) {
-      return res.status(404).json({ message: 'No recent meal poll found' });
+    console.log(recentMealPoll)
+     if (recentMealPoll.length === 0) {
+      return res.status(404).json({ message: 'No  meal poll added Today ' });
     }
 
-    return res.status(200).json(new ApiResponse(200, recentMealPoll,"Latest poll fetch successful"))
+    return res.status(200).json(new ApiResponse(200, recentMealPoll[0],"Latest poll fetch successful"))
 })
 
 export { addMeal, updateState, voteForMenu, getMealPollById, getLatestMealPoll };

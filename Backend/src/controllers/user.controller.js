@@ -2,29 +2,39 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { AsyncHandeller } from "../utils/AsyncHandeller.js";
 import { User } from "../Models/user.model.js";
 import { upload_On_Cloudinary } from "../utils/Cloudinary.js";
-import mongoose  from "mongoose";
 
 const register_User = AsyncHandeller(async (req, res) => {
+  let {
+    fullName,
+    branchName,
+    currentYear,
+    email,
+    password,
+    gender,
+    phone,
+    role,
+    hobbies,
+    roomNumber,
+  } = req.body;
 
-  let { fullName, branchName, currentYear, email, password, gender, phone, role, hobbies,roomNumber } = req.body;
-
-  if (hobbies && typeof hobbies === 'string') {
+  if (hobbies && typeof hobbies === "string") {
     // hobbies = JSON.parse(hobbies) this is working when we are using postman , but from forntend the data is pure string and not as array of string so, below one is used
-    hobbies =  hobbies.split(",")
+    hobbies = hobbies.split(",");
   }
-  
+
   const existedUser = await User.findOne({
     $or: [{ fullName }, { email }, { phone }],
   });
 
   if (existedUser) {
-    let message = ""
-    if(existedUser.fullName === fullName) message=`${fullName} already exist`
-    if(existedUser.email === email) message=`${email} already exist`
-    if(existedUser.phone === phone) message=`${phone} contact already exist`
+    let message = "";
+    if (existedUser.fullName === fullName)
+      message = `${fullName} already exist`;
+    if (existedUser.email === email) message = `${email} already exist`;
+    if (existedUser.phone === phone) message = `${phone} contact already exist`;
 
     return res.status(400).json({
-      message
+      message,
     });
   }
 
@@ -32,12 +42,10 @@ const register_User = AsyncHandeller(async (req, res) => {
     const count = await User.countDocuments({ role: "warden" });
     if (count >= 2) {
       return res.status(400).json({
-        message: "warden already exist ! Registration rejected"
-      })
+        message: "warden already exist ! Registration rejected",
+      });
     }
   }
-
-
 
   const avatarLocalPath = req.file?.path;
 
@@ -48,7 +56,7 @@ const register_User = AsyncHandeller(async (req, res) => {
   }
 
   const avatar = await upload_On_Cloudinary(avatarLocalPath);
- 
+
   if (!avatar) {
     return res.status(400).json({
       message: "url not fetched from cloudinary",
@@ -66,22 +74,27 @@ const register_User = AsyncHandeller(async (req, res) => {
     branchName,
     roomNumber,
     currentYear,
-    hobbies
+    hobbies,
   });
-
 
   if (!user) {
     return res.status(500).json({
       message: "error occured while creating a user",
     });
-  } 
+  }
   const createdUser = await User.findById(user._id).select("-password");
-  const AccessToken = createdUser.generateAccessToken()
-  const role_Value = createdUser.role
+  const AccessToken = createdUser.generateAccessToken();
+  const role_Value = createdUser.role;
 
   return res
     .status(200)
-    .json(new ApiResponse(200, {AccessToken, role_Value}, "Registration succesfull"));
+    .json(
+      new ApiResponse(
+        200,
+        { AccessToken, role_Value },
+        "Registration succesfull",
+      ),
+    );
 });
 
 const login_User = AsyncHandeller(async (req, res) => {
@@ -91,7 +104,7 @@ const login_User = AsyncHandeller(async (req, res) => {
   //generate the JWT  token and send it as response
 
   const { email, password } = req.body;
- 
+
   if (!email) {
     return res.status(400).json({
       message: "email and password fields are requried for login",
@@ -102,7 +115,6 @@ const login_User = AsyncHandeller(async (req, res) => {
     email,
   });
 
- 
   if (!user) {
     return res.status(400).json({
       message: "User not found",
@@ -128,15 +140,51 @@ const login_User = AsyncHandeller(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, { AccessToken,role_Value  }, "User Login Successfull"),
+      new ApiResponse(
+        200,
+        { AccessToken, role_Value },
+        "User Login Successfull",
+      ),
     );
 });
 
 const getLogedInUserData = AsyncHandeller(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.userData, "user data fetched successfully"));
+});
+
+const getMatchedProfileStudents = AsyncHandeller(async (req, res) => {
+  const { _id } = req.userData;
+
+  const user = await User.findById(_id);
+
+  if (!user?.hobbies?.length === 0) {
+    return res.status(404).json({
+      message: "User has not entered hobbies",
+    });
+  }
+
+  const MatchedPairs = await User.find({
+    _id: { $ne: _id },
+    hobbies: { $in: user.hobbies },
+  }).select("fullName roomNumber branchName currentYear avatar");
+
+  if (MatchedPairs.length === 0) {
+    return res.status(400).json({
+      message:
+        "No Match found, try to update or add some other hobbies to get the matched partner",
+    });
+  }
 
   return res
     .status(200)
-    .json(new ApiResponse(200,req.userData, "user data fetched successfully"));
+    .json(new ApiResponse(200, MatchedPairs, "Pairs Matching Successful"));
 });
 
-export { register_User, login_User, getLogedInUserData };
+export {
+  register_User,
+  login_User,
+  getLogedInUserData,
+  getMatchedProfileStudents,
+};
