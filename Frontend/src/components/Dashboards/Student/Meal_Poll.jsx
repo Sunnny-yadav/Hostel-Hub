@@ -19,15 +19,16 @@ function Meal_Poll() {
                 });
 
                 const responseData = await response.json();
-
+                console.log(responseData)
                 if (response.ok) {
                     setMenuData(responseData.data);
-                    checkPollExpiry(responseData.data.pollDeadline);
                 } else {
                     toast.error(responseData.message);
                 };
+                checkPollExpiry(responseData?.data?.pollDeadline);
+
             } catch (error) {
-                console.log("Error in getLatestmealPoll function useEffect");
+                console.log("Error in getLatestmealPoll function useEffect", error);
             }
         }
 
@@ -41,7 +42,7 @@ function Meal_Poll() {
         };
 
         getLatestMealPoll();
-    }, [Token]);
+    }, []);
 
     const handleVote = async (menuId) => {
         try {
@@ -104,9 +105,14 @@ function Meal_Poll() {
 
                                 {/* Poll Status and Deadline */}
                                 <div className="text-center">
-                                    <p className={`font-semibold text-lg ${menuData?.pollStatus === 'inactive' ? 'text-red-500' : 'text-green-500'}`}>
-                                        Poll Status: {menuData?.pollStatus === 'inactive' ? 'Inactive' : 'Active'}
+                                    <p className={`font-semibold text-lg ${menuData ? (menuData?.pollStatus === 'inactive' ? 'text-red-500' : 'text-green-500') : ''
+                                        }`}>
+                                        {Object.keys(menuData).length > 0 ?
+                                            `Poll Status: ${menuData?.pollStatus === 'inactive' ? 'Inactive' : 'Active'}`
+                                            : 'No poll added'
+                                        }
                                     </p>
+
                                     <p className="font-semibold text-gray-600 mt-2">
                                         Deadline: {menuData?.pollDeadline ? new Date(menuData?.pollDeadline).toLocaleString() : "N/A"}
                                     </p>
