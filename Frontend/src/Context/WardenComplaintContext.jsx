@@ -7,7 +7,7 @@ const complaintcontext = createContext();
 
 
 export const WardenComplaintContextProvider = ({ children }) => {
-    const { userData, Token, AccessToken } = useUserContext([]);
+    const { Token, AccessToken } = useUserContext();
     const [loading, setLoading] = useState(true)
     const [UsersList, setUsersList] = useState();
     const [FetchedComplaint, setFetchedComplaint] = useState([])
@@ -16,6 +16,10 @@ export const WardenComplaintContextProvider = ({ children }) => {
 
     //Note: below states are related to the Meal
     const [addedMealPoll, setaddedmealPoll] = useState({});
+
+    //Note: below states are related to the noticeBoard
+    const [Fetchednotice, setFetchedNotice] = useState({});
+
 
 
     const FetcheAllUsers = async () => {
@@ -134,10 +138,10 @@ export const WardenComplaintContextProvider = ({ children }) => {
             const responseData = await response.json();
             console.log(responseData.data);
             if (response.ok) {
-                localStorage.setItem("MealPollId",JSON.stringify(responseData.data._id));
+                localStorage.setItem("MealPollId", JSON.stringify(responseData.data._id));
                 setaddedmealPoll(responseData.data)
                 toast.success(responseData.message)
-                
+
             } else {
                 toast.error(responseData.message)
             }
@@ -146,25 +150,25 @@ export const WardenComplaintContextProvider = ({ children }) => {
         }
     };
 
-    const getMealPollById = async (pollId)=>{
-      try {
-        const response = await fetch(`http://localhost:8000/api/v1/meals/${pollId}/get-mealPoll-by-id`,{
-            method:"GET",
-            headers:{
-                Authorization:Token
-            }
-        })
+    const getMealPollById = async (pollId) => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/v1/meals/${pollId}/get-mealPoll-by-id`, {
+                method: "GET",
+                headers: {
+                    Authorization: Token
+                }
+            })
 
-        const responseData = await response.json()
-        if(response.ok){
-            console.log(responseData.data)
-            setaddedmealPoll(responseData.data)
-        }else{
-            console.log("error in getmealPollByid")
+            const responseData = await response.json()
+            if (response.ok) {
+                console.log(responseData.data)
+                setaddedmealPoll(responseData.data)
+            } else {
+                console.log("error in getmealPollByid")
+            }
+        } catch (error) {
+            console.log("getmealPollByid", error)
         }
-      } catch (error) {
-        console.log("getmealPollByid",error)
-      }  
     };
 
     const saveTheUpdatedMealStatus = async (MealObj) => {
@@ -189,6 +193,30 @@ export const WardenComplaintContextProvider = ({ children }) => {
         }
     };
 
+
+    // Note: below functions are designed for the NoticeBoard
+    const getLatestNoticePosted = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/v1/notice/get-latest-notice", {
+                method: "GET",
+                headers: {
+                    Authorization: Token
+                }
+            });
+            const responseData = await response.json();
+
+            if (response.ok) {
+                setFetchedNotice(responseData.data)
+            } else {
+                toast.error(responseData.message)
+            };
+
+        } catch (error) {
+            console.log("error occured while fetching latest notice", error)
+        }
+    }
+
+
     useEffect(() => {
         if (AccessToken) {
             FetcheAllUsers();
@@ -198,6 +226,7 @@ export const WardenComplaintContextProvider = ({ children }) => {
 
     return (
         <complaintcontext.Provider value={{
+            Token,
             UsersList,
             getComplaintsByType,
             ComplaintToBeDisplayed,
@@ -207,10 +236,16 @@ export const WardenComplaintContextProvider = ({ children }) => {
             getComplaintDetail,
             ComplaintToVeiwed,
             saveTheUpdatedState,
+
             addMealPoll,
             addedMealPoll,
             getMealPollById,
-            saveTheUpdatedMealStatus
+            saveTheUpdatedMealStatus,
+
+            Fetchednotice,
+            setFetchedNotice,
+            getLatestNoticePosted,
+
         }}>
 
 

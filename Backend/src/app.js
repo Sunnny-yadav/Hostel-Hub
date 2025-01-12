@@ -6,7 +6,7 @@ const app = express();
 const corsOption = {
     origin: "http://localhost:5173",
     methods: "GET, POST,PUT, DELETE, PATCH, HEAD",
-    Credentials : true
+    credentials : true
 };
 
 app.use(express.json());
@@ -20,10 +20,12 @@ import userRoute from './Routers/user.Router.js'
 import complaintRoute from './Routers/complain.Router.js'
 import commentRoute from './Routers/comment.Router.js'
 import mealRoute from './Routers/meal.Router.js'
+import noticeBoardRoute from './Routers/noticeBoard.Router.js'
 
 app.use("/api/v1/users",userRoute)
 app.use("/api/v1/complaints",complaintRoute)
 app.use("/api/v1/comments",commentRoute)
 app.use("/api/v1/meals",mealRoute)
+app.use("/api/v1/notice",noticeBoardRoute)
 
 export default app;

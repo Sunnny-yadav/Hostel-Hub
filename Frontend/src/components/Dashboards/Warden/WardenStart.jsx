@@ -25,7 +25,7 @@ function WardenStart() {
   const [showUpdateStateValue, setshowUpdateStateValue] = useState(false);
   const [viewMealPoll, setViewMealPoll] = useState(false)
   const updatedStateref = useRef()
-  const { UsersList, addedMealPoll, getMealPollById, saveTheUpdatedMealStatus } = useWardenComplaintContext()
+  const { UsersList, addedMealPoll, getMealPollById, saveTheUpdatedMealStatus, getLatestNoticePosted,Fetchednotice } = useWardenComplaintContext()
   const [mealId, setmealId] = useState(JSON.parse(localStorage.getItem("MealPollId")) || null)
 
   const getIST_Time = (UTC_time) => {
@@ -39,6 +39,10 @@ function WardenStart() {
     const time = `${day}  ${hours}:${min.toString().padStart(2, "0")} ${am_pm}`;
     return time;
   };
+
+  useEffect(()=>{
+    getLatestNoticePosted()
+  },[Fetchednotice])
 
   useEffect(() => {
     if (addedMealPoll && Object.keys(addedMealPoll)?.length > 0) {
@@ -158,7 +162,7 @@ function WardenStart() {
                           </span>
                           {/* Display Vote Count */}
                           <span className="text-xs xs:text-sm sm:text-md font-medium text-teal-700">
-                            {meal.count}/{UsersList.length}
+                            {meal?.count}/{UsersList?.length}
                           </span>
                         </div>
                         <input
@@ -166,7 +170,7 @@ function WardenStart() {
                           name={meal.menu}
                           id={meal.menu}
                           min={0}
-                          max={UsersList.length}
+                          max={UsersList?.length}
                           value={meal.count}
                           className="mt-1 accent-teal-500 cursor-not-allowed"
                           readOnly
@@ -184,9 +188,21 @@ function WardenStart() {
           {/* Notice board */}
           <div className="md:col-span-1 ">
             <div className="p-4 pt-3 m-1 bg-gradient-to-b from-teal-100 to-teal-300 shadow-lg rounded-xl h-full  border-2 border-gray-200 ">
-              <h2 className='text-center text-sm lg:text-lg xl:text-xl font-bold text-gray-700 mb-5'>Notice Board</h2>
+              <h2 className='text-center text-sm lg:text-lg xl:text-xl font-bold text-gray-700 mb-5'>Today's Notice</h2>
               <div className="text-gray-600 max-h-48 mr-1 text-xs xs:text-sm md:text-md xl:text-lg flex justify-start font-semibold overflow-y-auto">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. In error, distinctio sapiente eius corporis possimus ipsam fugiat. Hic corrupti vero dolorem similique deleniti ducimus quibusdam temporibus. Quod delectus provident non consectetur odio eligendi, ullam ut error recusandae labore eos molestias numquam inventore velit facilis voluptas maxime eaque quis perspiciatis corporis dicta rem rerum. Ipsa ex, reprehenderit laboriosam et voluptatem expedita quo ab veritatis laudantium voluptatibus modi ullam, iste debitis, unde libero minima officiis perspiciatis dicta quidem enim placeat laborum repusandae, nemo quo sit at beatae maiores! Voluptatem nostrum iste doloribus perferendis dolor consequatur temporibus, numquam nulla rem labore voluptas distinctio ex tempore corrupti magni nisi consequuntur ipsum iure impedit inventore maxime fuga expedita ducimus! Corporis, iure. Ad ea sed esse ex autem nesciunt et optio aperiam accusantium! Corrupti error voluptatem, officia totam quam labore eos tenetur mollitia?
+                {Object.keys(Fetchednotice).length > 0 ? (
+                  <div>
+                    <p className="text-blue-700 flex md:flex-col justify-between text-md mb-4">
+                      <span>Date:{new Date(Fetchednotice.createdAt).toLocaleString().split(",")[0]}</span>
+                      <span>Time:{new Date(Fetchednotice.createdAt).toLocaleString().split(",")[1]}</span>
+                    </p>
+                    <p className="text-gray-800 text-base sm:text-lg lg:text-xl font-medium leading-relaxed">
+                      {Fetchednotice.notice}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-gray-500 italic text-center">No notice posted yet.</p>
+                )}
               </div>
             </div>
           </div>
@@ -250,104 +266,104 @@ function WardenStart() {
 
       {/* this is observed when the view btn is clicked in the meal poll section */}
       {
-  viewMealPoll && (
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="relative z-10 max-w-lg w-full bg-gradient-to-r from-blue-50 to-white p-8 rounded-2xl shadow-lg shadow-blue-500 backdrop-blur-lg">
-        
-        {/* Close Button (Cross) */}
-        <button
-          onClick={() => setViewMealPoll(false)}
-          className="absolute top-4 left-4 text-2xl font-bold text-gray-700 hover:text-gray-900 transition-all duration-300"
-        >
-          &times;
-        </button>
+        viewMealPoll && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="relative z-10 max-w-lg w-full bg-gradient-to-r from-blue-50 to-white p-8 rounded-2xl shadow-lg shadow-blue-500 backdrop-blur-lg">
 
-        {/* Poll Status Indicator */}
-        <div className="absolute top-4 right-4 flex items-center space-x-2">
-          <div
-            className={`w-3 h-3 rounded-full ${addedMealPoll?.pollStatus === "active" ? "bg-green-500" : "bg-red-400"}`}
-          ></div>
-          <span className="text-sm font-semibold text-gray-800">
-            {addedMealPoll?.pollStatus === "active" ? "Active" : "Inactive"}
-          </span>
-        </div>
+              {/* Close Button (Cross) */}
+              <button
+                onClick={() => setViewMealPoll(false)}
+                className="absolute top-4 left-4 text-2xl font-bold text-gray-700 hover:text-gray-900 transition-all duration-300"
+              >
+                &times;
+              </button>
 
-        <h2 className="text-3xl font-extrabold text-blue-800 text-center mb-6">
-          View Meal Options
-        </h2>
-          
-        {/* Meal Options */}
-        <form className="space-y-6">
-          {addedMealPoll?.meals?.length > 0 &&
-            addedMealPoll.meals.map((meal) => (
-              <div key={meal._id} className="space-y-2">
-                <input
-                  type="text"
-                  name={meal.menu}
-                  value={meal.menu}
-                  disabled
-                  className="w-full p-4 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition-all ease-in-out duration-200"
-                />
+              {/* Poll Status Indicator */}
+              <div className="absolute top-4 right-4 flex items-center space-x-2">
+                <div
+                  className={`w-3 h-3 rounded-full ${addedMealPoll?.pollStatus === "active" ? "bg-green-500" : "bg-red-400"}`}
+                ></div>
+                <span className="text-sm font-semibold text-gray-800">
+                  {addedMealPoll?.pollStatus === "active" ? "Active" : "Inactive"}
+                </span>
               </div>
-            ))}
 
-          {/* Poll Deadline */}
-          <div>
-            <label htmlFor="pollDeadline" className="block text-lg font-semibold text-blue-600 mb-2">
-              Poll Deadline
-            </label>
-            <input
-              type="text"
-              id="pollDeadline"
-              name="pollDeadline"
-              value={getIST_Time(addedMealPoll?.pollDeadline)}
-              className="w-full p-4 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition-all ease-in-out duration-200"
-            />
+              <h2 className="text-3xl font-extrabold text-blue-800 text-center mb-6">
+                View Meal Options
+              </h2>
+
+              {/* Meal Options */}
+              <form className="space-y-6">
+                {addedMealPoll?.meals?.length > 0 &&
+                  addedMealPoll.meals.map((meal) => (
+                    <div key={meal._id} className="space-y-2">
+                      <input
+                        type="text"
+                        name={meal.menu}
+                        value={meal.menu}
+                        disabled
+                        className="w-full p-4 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition-all ease-in-out duration-200"
+                      />
+                    </div>
+                  ))}
+
+                {/* Poll Deadline */}
+                <div>
+                  <label htmlFor="pollDeadline" className="block text-lg font-semibold text-blue-600 mb-2">
+                    Poll Deadline
+                  </label>
+                  <input
+                    type="text"
+                    id="pollDeadline"
+                    name="pollDeadline"
+                    value={getIST_Time(addedMealPoll?.pollDeadline)}
+                    className="w-full p-4 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition-all ease-in-out duration-200"
+                  />
+                </div>
+              </form>
+
+              {/* Buttons */}
+              <div className="flex justify-start gap-3 items-center mt-8">
+                {showUpdateStateValue ? (
+                  <button
+                    onClick={() => {
+                      saveTheUpdatedMealStatus({
+                        mealId,
+                        stateValue: updatedStateref.current.value
+                      });
+                      setshowUpdateStateValue(!showUpdateStateValue);
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 transition-all duration-300"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setshowUpdateStateValue(!showUpdateStateValue)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 transition-all duration-300"
+                  >
+                    Update status
+                  </button>
+                )}
+
+                <label className={`${showUpdateStateValue ? "flex items-center" : "hidden"}`}>
+                  <input
+                    ref={updatedStateref}
+                    type="radio"
+                    className="form-radio text-blue-600"
+                    value={addedMealPoll?.pollStatus === "active" ? "inactive" : "active"}
+                    checked
+                    readOnly
+                  />
+                  <span className="ml-2 text-gray-800">
+                    {addedMealPoll?.pollStatus === "active" ? "Inactive" : "Active"}
+                  </span>
+                </label>
+              </div>
+            </div>
           </div>
-        </form>
-
-        {/* Buttons */}
-        <div className="flex justify-start gap-3 items-center mt-8">
-          {showUpdateStateValue ? (
-            <button
-              onClick={() => {
-                saveTheUpdatedMealStatus({
-                  mealId,
-                  stateValue: updatedStateref.current.value
-                });
-                setshowUpdateStateValue(!showUpdateStateValue);
-              }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 transition-all duration-300"
-            >
-              Save
-            </button>
-          ) : (
-            <button
-              onClick={() => setshowUpdateStateValue(!showUpdateStateValue)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-lg hover:bg-blue-700 transition-all duration-300"
-            >
-              Update status
-            </button>
-          )}
-
-          <label className={`${showUpdateStateValue ? "flex items-center" : "hidden"}`}>
-            <input
-              ref={updatedStateref}
-              type="radio"
-              className="form-radio text-blue-600"
-              value={addedMealPoll?.pollStatus === "active" ? "inactive" : "active"}
-              checked
-              readOnly
-            />
-            <span className="ml-2 text-gray-800">
-              {addedMealPoll?.pollStatus === "active" ? "Inactive" : "Active"}
-            </span>
-          </label>
-        </div>
-      </div>
-    </div>
-  )
-}
+        )
+      }
 
 
 

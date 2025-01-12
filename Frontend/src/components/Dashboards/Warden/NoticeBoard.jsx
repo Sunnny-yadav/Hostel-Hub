@@ -1,16 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from 'react-toastify'
+import { useWardenComplaintContext } from "../../../Context/WardenComplaintContext";
 
 const NoticeBoard = () => {
   const [notice, setNotice] = useState("");
+  const { Fetchednotice, setFetchedNotice, Token, getLatestNoticePosted } = useWardenComplaintContext();
+
+  useEffect(() => {
+    if (Object.keys(Fetchednotice).length === 0) {
+      getLatestNoticePosted();
+    }
+  }, [Fetchednotice])
 
   const handleNoticeChange = (e) => {
     setNotice(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Notice submitted successfully!"); // You can replace this with backend API integration
-    setNotice("");
+    console.log(notice)
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/notice/store-notice", {
+        method: "POST",
+        headers: {
+          Authorization: Token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ notice })
+      });
+
+      const responseData = await response.json()
+      console.log(responseData)
+      if (response.ok) {
+        setFetchedNotice(responseData.data);
+        setNotice("")
+      } else {
+        toast.error(responseData.message)
+      }
+
+    } catch (error) {
+      console.log("Error while storing notice", error)
+    }
   };
 
   return (
@@ -52,14 +82,21 @@ const NoticeBoard = () => {
       <div className="mt-12 max-w-4xl mx-auto">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-blue-800 mb-6 text-center">Today's Notices</h2>
         <div className="bg-white shadow-lg rounded-xl p-6 border border-blue-200">
-          {notice ? (
-            <p className="text-gray-800 text-base sm:text-lg lg:text-xl font-medium leading-relaxed">
-              {notice}
-            </p>
+          {Object.keys(Fetchednotice).length > 0 ? (
+            <div>
+              <p className="text-blue-700 flex justify-between text-md mb-4">
+                <span>Date:{new Date(Fetchednotice.createdAt).toLocaleString().split(",")[0]}</span>
+                <span>Time:{new Date(Fetchednotice.createdAt).toLocaleString().split(",")[1]}</span>
+              </p>
+              <p className="text-gray-800 text-base sm:text-lg lg:text-xl font-medium leading-relaxed">
+                {Fetchednotice.notice}
+              </p>
+            </div>
           ) : (
             <p className="text-gray-500 italic text-center">No notice posted yet.</p>
           )}
         </div>
+
       </div>
 
       {/* Footer Section */}

@@ -1,10 +1,14 @@
 import mongoose from "mongoose"
 
 const noticeBoardSchema = new mongoose.Schema({
-    textmsg:{
-        Type:String,
+    notice:{
+        type:String,
+        trim:true,
         required:true,
-        trim:true
+    },
+    wardenId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
     }
 },{timestamps:true});
 
