@@ -108,7 +108,7 @@ function Meal_Poll() {
                                     <p className={`font-semibold text-lg ${menuData ? (menuData?.pollStatus === 'inactive' ? 'text-red-500' : 'text-green-500') : ''
                                         }`}>
                                         {Object.keys(menuData).length > 0 ?
-                                            `Poll Status: ${menuData?.pollStatus === 'inactive' ? 'Inactive' : 'Active'}`
+                                            `Poll Status: ${menuData?.pollStatus === 'inactive' || isPollExpired === true ? 'Inactive' : 'Active'}`
                                             : 'No poll added'
                                         }
                                     </p>
