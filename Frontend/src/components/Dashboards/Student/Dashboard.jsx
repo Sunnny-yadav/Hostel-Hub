@@ -7,6 +7,8 @@ import inprogress from '../../../assets/dashboard/inprogress.png'
 import { useUserContext } from '../../../Context/userContext';
 import { Link, useNavigate } from 'react-router-dom'
 import { useComplaintContext } from '../../../Context/complaintContext'
+import { useWardenComplaintContext } from '../../../Context/WardenComplaintContext'
+import { useEffect } from 'react'
 
 
 const Card = ({ logo, title, description }) => (
@@ -23,6 +25,11 @@ function Dashboard() {
     const { userData } = useUserContext();
     const navigate = useNavigate();
     const { FetchedComplaintsById } = useComplaintContext();
+    const {getLatestNoticePosted,Fetchednotice } = useWardenComplaintContext();
+
+    useEffect(()=>{
+        getLatestNoticePosted()
+      },[Fetchednotice])
     
     return (
         <>
@@ -135,7 +142,19 @@ function Dashboard() {
                         <div className="p-4 pt-3 m-1 bg-gradient-to-b from-teal-100 to-teal-300 shadow-lg rounded-xl h-full  border-2 border-gray-200 ">
                             <h2 className='text-center text-sm lg:text-lg xl:text-xl font-bold text-gray-700 mb-5'>Notice Board</h2>
                             <div className="text-gray-600 max-h-48 mr-1 text-xs xs:text-sm md:text-md xl:text-lg flex justify-start font-semibold overflow-y-auto">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. In error, distinctio sapiente eius corporis possimus ipsam fugiat. Hic corrupti vero dolorem similique deleniti ducimus quibusdam temporibus. Quod delectus provident non consectetur odio eligendi, ullam ut error recusandae labore eos molestias numquam inventore velit facilis voluptas maxime eaque quis perspiciatis corporis dicta rem rerum. Ipsa ex, reprehenderit laboriosam et voluptatem expedita quo ab veritatis laudantium voluptatibus modi ullam, iste debitis, unde libero minima officiis perspiciatis dicta quidem enim placeat laborum repusandae, nemo quo sit at beatae maiores! Voluptatem nostrum iste doloribus perferendis dolor consequatur temporibus, numquam nulla rem labore voluptas distinctio ex tempore corrupti magni nisi consequuntur ipsum iure impedit inventore maxime fuga expedita ducimus! Corporis, iure. Ad ea sed esse ex autem nesciunt et optio aperiam accusantium! Corrupti error voluptatem, officia totam quam labore eos tenetur mollitia?
+                            {Object.keys(Fetchednotice).length > 0 ? (
+                  <div>
+                    <p className="text-blue-700 flex md:flex-col justify-between text-md mb-4">
+                      <span>Date:{new Date(Fetchednotice.createdAt).toLocaleString().split(",")[0]}</span>
+                      <span>Time:{new Date(Fetchednotice.createdAt).toLocaleString().split(",")[1]}</span>
+                    </p>
+                    <p className="text-gray-800 text-base sm:text-lg lg:text-xl font-medium leading-relaxed">
+                      {Fetchednotice.notice}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-gray-500 italic text-center">No notice posted yet.</p>
+                )}
                             </div>
                         </div>
                     </div>
