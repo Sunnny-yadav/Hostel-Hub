@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { useUserContext } from './userContext';
 import { toast } from 'react-toastify'
 
+// Note: These context was created for student complaint but the file name is only complaintcontext instead of studentComplaintContext
 const complaintContext = createContext();
 
 export const ComplaintContextProvider = ({ children }) => {
