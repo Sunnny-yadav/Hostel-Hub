@@ -226,7 +226,10 @@ const get_All_Users = AsyncHandeller(async (req, res) => {
   const {gender} = req.userData
 
   const AllFetchedUsers = await User.find(
-    { gender: `${gender}`, role: "student" },
+    { 
+      $or: [{ gender: "O" }, { gender: gender }], 
+      role: "student" 
+    },
     { complaints: 0, password: 0, gender: 0, role: 0, hobbies: 0 },
   );
 
@@ -323,7 +326,6 @@ const get_Complaints_By_Id_Type = AsyncHandeller(async (req, res) => {
     studentId = req.userData._id;
   } else {
     studentId = req.params._id;
-    console.log(studentId);
   }
 
   const { Type } = req.params;
