@@ -19,7 +19,7 @@ function Meal_Poll() {
                 });
 
                 const responseData = await response.json();
-                console.log(responseData)
+                
                 if (response.ok) {
                     setMenuData(responseData.data);
                 } else {
