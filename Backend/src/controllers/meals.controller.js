@@ -155,6 +155,6 @@ const getLatestMealPoll = AsyncHandeller(async (req, res)=>{
     }
 
     return res.status(200).json(new ApiResponse(200, recentMealPoll[0],"Latest poll fetch successful"))
-})
+});
 
 export { addMeal, updateState, voteForMenu, getMealPollById, getLatestMealPoll };
