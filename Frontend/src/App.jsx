@@ -27,6 +27,7 @@ import AllStudentData from './components/Dashboards/Warden/StudentPages/AllStude
 import StudentDetails from './components/Dashboards/Warden/StudentPages/StudentDetails'
 import OneStudentComplaint from './components/Dashboards/Warden/StudentPages/OneStudentComplaint'
 import Profile from './components/Dashboards/Student/Profile'
+import VotedOnPolls from './components/Dashboards/Warden/StudentPages/VotedOnPolls'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -57,14 +58,13 @@ const router = createBrowserRouter(
       <Route path='/warden-dashboard' element={<WardenDashboard />} >
         <Route path='' element={<WardenStart />} />
         <Route path='/warden-dashboard/view-complaints' element={<ViewComplaint />} />
-        <Route path='/warden-dashboard/add-meal' element={<MealForm/>}/>
-        <Route path='/warden-dashboard/give-notice' element={<NoticeBoard/>} />
-        <Route path='/warden-dashboard/get-Allstudentdata' element={<AllStudentData/>} />
-        <Route path='/warden-dashboard/get-studentdetail' element={<StudentDetails/>} />
-        <Route path='/warden-dashboard/get-studentcomplaint' element={<OneStudentComplaint/>} />
-        <Route path='/warden-dashboard/:complaintId?/complaintDetails' element={<ComplaintDetails />}/>
-          {/* <Route path='/warden-dashboard/:complaintId?/complaintDetails/comments' element={<WarComments />} />
-        </Route> */}
+        <Route path='/warden-dashboard/add-meal' element={<MealForm />} />
+        <Route path='/warden-dashboard/give-notice' element={<NoticeBoard />} />
+        <Route path='/warden-dashboard/get-Allstudentdata' element={<AllStudentData />} />
+        <Route path='/warden-dashboard/get-Allstudentdata/:studentId/get-studentdetail' element={<StudentDetails />} />
+        <Route path='/warden-dashboard/get-Allstudentdata/:studentId/:complaintType/get-studentcomplaint' element={<OneStudentComplaint />} />
+        <Route path='/warden-dashboard/:complaintId?/complaintDetails' element={<ComplaintDetails />} />
+        <Route path='/warden-dashboard/get-Allstudentdata/get-Meals-record' element={<VotedOnPolls />} />
       </Route>
 
     </>
