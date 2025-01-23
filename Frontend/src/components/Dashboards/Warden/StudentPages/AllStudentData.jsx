@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWardenComplaintContext } from "../../../../Context/WardenComplaintContext";
+import { toast } from "react-toastify";
 
 const AllStudentData = () => {
   const navigate = useNavigate();
-  const { UsersList } = useWardenComplaintContext()
+  const { UsersList, sortedUsersList, getFilteredUserList, setsortedUsersList } = useWardenComplaintContext();
   const [requestSort, setRequestSort] = useState({
     department: "",
     studentEmailOrPhone: "",
   });
-
 
   const handelInputData = (e) => {
     const { name, value } = e.target;
@@ -21,8 +21,28 @@ const AllStudentData = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    alert(`Searching for ${requestSort.studentEmailOrPhone} in ${requestSort.department}`);
+    const { department, studentEmailOrPhone } = requestSort;
+
+    if (!department && !studentEmailOrPhone) {
+      toast.error("Filtering Fields are empty");
+      return;
+    }
+    getFilteredUserList(requestSort);
   };
+
+  const handleReset = () => {
+    setsortedUsersList(UsersList); // Reset the sorted list to the original UsersList
+    setRequestSort({
+      department: "",
+      studentEmailOrPhone: "",
+    }); // Clear the form fields
+  };
+
+  useEffect(() => {
+    return () => {
+      setsortedUsersList(UsersList);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 p-4 ">
@@ -58,10 +78,18 @@ const AllStudentData = () => {
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300 border-blue-300 text-gray-800 shadow-inner text-sm sm:text-base"
             >
               <option value="">All Departments</option>
-              <option value="Computer Science and Engineering">Computer Science and Engineering</option>
-              <option value="Electronics and Communication Engineering">Electronics and Communication Engineering</option>
-              <option value="Electrical Engineering">Electrical Engineering</option>
-              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Computer Science and Engineering">
+                Computer Science and Engineering
+              </option>
+              <option value="Electronics and Communication Engineering">
+                Electronics and Communication Engineering
+              </option>
+              <option value="Electrical Engineering">
+                Electrical Engineering
+              </option>
+              <option value="Mechanical Engineering">
+                Mechanical Engineering
+              </option>
               <option value="Civil Engineering">Civil Engineering</option>
               <option value="Information Technology">Information Technology</option>
             </select>
@@ -87,12 +115,20 @@ const AllStudentData = () => {
           </div>
 
           {/* Search Button */}
-          <div>
+          <div className="flex flex-col gap-4">
             <button
               type="submit"
-              className="mt-6 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-6 rounded-lg font-medium shadow-md transition-transform transform hover:scale-105 text-sm sm:text-base"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-6 rounded-lg font-medium shadow-md transition-transform transform hover:scale-105 text-sm sm:text-base"
             >
               Search
+            </button>
+            {/* Reset Button */}
+            <button
+              type="button"
+              onClick={handleReset}
+              className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 px-6 rounded-lg font-medium shadow-md transition-transform transform hover:scale-105 text-sm sm:text-base"
+            >
+              Reset
             </button>
           </div>
         </form>
@@ -101,7 +137,7 @@ const AllStudentData = () => {
       {/* Students Table */}
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-6 sm:p-8 border border-blue-200">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-blue-800 mb-6 text-center">
-          Students List{" "} <span >: {UsersList?.length}</span>
+          Students List{" "} <span>: {sortedUsersList?.length}</span>
         </h2>
         <div className="w-full overflow-x-auto">
           <table className="w-full border-collapse border border-blue-300 text-left text-sm sm:text-base">
@@ -121,36 +157,33 @@ const AllStudentData = () => {
           <div className="w-full overflow-x-auto">
             <table className="w-full border-collapse border border-blue-300 text-left text-sm sm:text-base">
               <tbody>
-                {
-                  UsersList?.length !== 0 && (
-                    UsersList?.map((student) => (
-                      <tr key={student.id} className="hover:bg-blue-50">
-                        <td className="border border-blue-300 px-4 py-2">
-                          {student.fullName}
-                        </td>
-                        <td className="border border-blue-300 px-4 py-2">
-                          {student.email}
-                        </td>
-                        <td className="border border-blue-300 px-4 py-2">
-                          {student.phone}
-                        </td>
-                        <td className="border border-blue-300 px-4 py-2">
-                          {student.branchName}
-                        </td>
-                        <td className="border border-blue-300 px-4 py-2">
-                          <button
-                            onClick={() =>
-                              navigate("/warden-dashboard/get-studentdetail")
-                            }
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium shadow-md transition-transform transform hover:scale-105 text-xs sm:text-sm md:text-base"
-                          >
-                            View Details
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )
-                }
+                {sortedUsersList?.length !== 0 &&
+                  sortedUsersList?.map((student) => (
+                    <tr key={student.id} className="hover:bg-blue-50">
+                      <td className="border border-blue-300 px-4 py-2">
+                        {student.fullName}
+                      </td>
+                      <td className="border border-blue-300 px-4 py-2">
+                        {student.email}
+                      </td>
+                      <td className="border border-blue-300 px-4 py-2">
+                        {student.phone}
+                      </td>
+                      <td className="border border-blue-300 px-4 py-2">
+                        {student.branchName}
+                      </td>
+                      <td className="border border-blue-300 px-4 py-2">
+                        <button
+                          onClick={() =>
+                            navigate(`/warden-dashboard/get-Allstudentdata/${student._id}/get-studentdetail`)
+                          }
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium shadow-md transition-transform transform hover:scale-105 text-xs sm:text-sm md:text-base"
+                        >
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
