@@ -1,13 +1,35 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useWardenComplaintContext } from "../../../../Context/WardenComplaintContext";
 
 const StudentDetails = () => {
   const navigate = useNavigate()
+  const { studentId } = useParams();
+  const [studentInfo, setStudentInfo] = useState({})
   const [showComplaints, setShowComplaints] = useState(false);
+  const { sortedUsersList } = useWardenComplaintContext()
+  const [complaintType, setcomplaintType] = useState("");
+
 
   const toggleComplaints = () => {
     setShowComplaints(true);
   };
+
+  const handleComplaintType = (e) => {
+    const { value } = e.target;
+    setcomplaintType(value)
+  };
+
+  const getStudentData = (studentId) => {
+    const studentData = sortedUsersList?.filter((data) => data._id === studentId)
+    setStudentInfo(studentData[0])
+  };
+
+  useEffect(() => {
+    if (studentId && sortedUsersList) {
+      getStudentData(studentId)
+    }
+  }, [studentId, sortedUsersList])
 
   return (
     <div className="bg-gradient-to-r from-blue-100 to-blue-200 min-h-screen">
@@ -23,7 +45,7 @@ const StudentDetails = () => {
           {/* Profile Image */}
           <div className="flex flex-col items-center mb-6">
             <img
-              src="https://t3.ftcdn.net/jpg/06/22/37/36/360_F_622373669_Fcf3wX7iKZB4A4zeDxEWfi7KsBpo6UFK.jpg"
+              src={studentInfo?.avatar}
               alt="Student Avatar"
               className="md:w-32 md:h-32 h-20 w-20 rounded-full mb-4 object-cover border-4 border-indigo-500 hover:scale-125 hover:transition-all duration-200 transition"
             />
@@ -36,7 +58,7 @@ const StudentDetails = () => {
               <label className="block text-gray-700 font-medium">Full Name</label>
               <input
                 type="text"
-                value="John Doe"
+                value={studentInfo?.fullName}
                 disabled
                 className="mt-1 block w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
               />
@@ -46,7 +68,7 @@ const StudentDetails = () => {
               <label className="block text-gray-700 font-medium">Email</label>
               <input
                 type="text"
-                value="john.doe@example.com"
+                value={studentInfo?.email}
                 disabled
                 className="mt-1 block w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
               />
@@ -56,17 +78,7 @@ const StudentDetails = () => {
               <label className="block text-gray-700 font-medium">Phone</label>
               <input
                 type="text"
-                value="9876543210"
-                disabled
-                className="mt-1 block w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-medium">Role</label>
-              <input
-                type="text"
-                value="Student"
+                value={studentInfo?.phone}
                 disabled
                 className="mt-1 block w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
               />
@@ -76,7 +88,7 @@ const StudentDetails = () => {
               <label className="block text-gray-700 font-medium">Branch Name</label>
               <input
                 type="text"
-                value="Computer Science"
+                value={studentInfo?.branchName}
                 disabled
                 className="mt-1 block w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
               />
@@ -86,7 +98,7 @@ const StudentDetails = () => {
               <label className="block text-gray-700 font-medium">Current Year</label>
               <input
                 type="text"
-                value="Second Year"
+                value={studentInfo?.currentYear}
                 disabled
                 className="mt-1 block w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
               />
@@ -96,7 +108,7 @@ const StudentDetails = () => {
               <label className="block text-gray-700 font-medium">Room Number</label>
               <input
                 type="text"
-                value="202"
+                value={studentInfo?.roomNumber}
                 disabled
                 className="mt-1 block w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-300"
               />
@@ -131,6 +143,7 @@ const StudentDetails = () => {
                         type="radio"
                         name="complaintType"
                         value="personal"
+                        onChange={handleComplaintType}
                         className="form-radio"
                       />
                       <span className="ml-2">Personal</span>
@@ -140,6 +153,7 @@ const StudentDetails = () => {
                         type="radio"
                         name="complaintType"
                         value="public"
+                        onChange={handleComplaintType}
                         className="form-radio"
                       />
                       <span className="ml-2">Public</span>
@@ -147,11 +161,11 @@ const StudentDetails = () => {
                   </div>
                 </div>
 
-                
+
 
                 <button
-                onClick={()=>{navigate("/warden-dashboard/get-studentcomplaint")}}
-                className="px-6 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg shadow-lg hover:from-green-500 hover:to-green-700 transition duration-300">
+                  onClick={() => { navigate(`/warden-dashboard/get-Allstudentdata/${studentId}/${complaintType}/get-studentcomplaint`) }}
+                  className="px-6 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg shadow-lg hover:from-green-500 hover:to-green-700 transition duration-300">
                   Search
                 </button>
               </div>
@@ -159,6 +173,7 @@ const StudentDetails = () => {
 
             <button
               id="view-meal-btn"
+              onClick={()=> navigate('/warden-dashboard/get-Allstudentdata/get-Meals-record')}
               className="block w-full md:w-auto px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-lg hover:from-purple-600 hover:to-pink-600 mt-4 transition duration-300"
             >
               View Meal Votes
