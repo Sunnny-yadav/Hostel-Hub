@@ -165,7 +165,8 @@ const StudentDetails = () => {
 
                 <button
                   onClick={() => { navigate(`/warden-dashboard/get-Allstudentdata/${studentId}/${complaintType}/get-studentcomplaint`) }}
-                  className="px-6 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg shadow-lg hover:from-green-500 hover:to-green-700 transition duration-300">
+                  disabled={complaintType === ""}
+                  className={`px-6 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg shadow-lg hover:from-green-500 hover:to-green-700 transition duration-300 ${complaintType ===  "" ? "cursor-not-allowed" : ""}`}>
                   Search
                 </button>
               </div>
@@ -173,7 +174,7 @@ const StudentDetails = () => {
 
             <button
               id="view-meal-btn"
-              onClick={()=> navigate('/warden-dashboard/get-Allstudentdata/get-Meals-record')}
+              onClick={()=> navigate(`/warden-dashboard/get-Allstudentdata/${studentId}/get-Meals-record`)}
               className="block w-full md:w-auto px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-lg hover:from-purple-600 hover:to-pink-600 mt-4 transition duration-300"
             >
               View Meal Votes
