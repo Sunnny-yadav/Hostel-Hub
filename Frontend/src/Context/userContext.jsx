@@ -48,7 +48,7 @@ export const UserContextProvider = ({ children }) => {
 
 
     return (
-        <User_context.Provider value={{ SetTokenInLocalStorage , userData, Logout, Token, AccessToken}}>
+        <User_context.Provider value={{ SetTokenInLocalStorage , userData, Logout, Token, AccessToken, setuserData}}>
             {children}
         </User_context.Provider>
     )
