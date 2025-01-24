@@ -2,6 +2,7 @@ import { MealPoll } from "../Models/meal.model.js";
 import { AsyncHandeller } from "../utils/AsyncHandeller.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../Models/user.model.js";
+import mongoose from "mongoose";
 
 const addMeal = AsyncHandeller(async (req, res) => {
   const { _id } = req.userData;
@@ -90,12 +91,11 @@ const voteForMenu = AsyncHandeller(async (req, res) => {
 
   const userAlreadyVoted = await User.findById(_id);
 
-  if(userAlreadyVoted.mealPollIds.includes(pollId)){
+  if (userAlreadyVoted.mealPollIds.includes(pollId)) {
     return res.status(400).json({
-      message: "Vote Already Submitted"
-    })
-  };
-
+      message: "Vote Already Submitted",
+    });
+  }
 
   const updatedPoll = await MealPoll.findOneAndUpdate(
     { _id: pollId, "meals._id": menuId },
@@ -138,23 +138,86 @@ const getMealPollById = AsyncHandeller(async (req, res) => {
   }
 
   return res
-      .status(200)
-      .json(
-        new ApiResponse(200, mealPollData, "meal poll fetched successfull"),
-      );
+    .status(200)
+    .json(new ApiResponse(200, mealPollData, "meal poll fetched successfull"));
 });
 
-const getLatestMealPoll = AsyncHandeller(async (req, res)=>{
+const getLatestMealPoll = AsyncHandeller(async (req, res) => {
   const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
 
-     const recentMealPoll = await MealPoll.find({createdAt:{$gte:today}}).sort({createdAt:-1}).limit(1)
-    console.log(recentMealPoll)
-     if (recentMealPoll.length === 0) {
-      return res.status(404).json({ message: 'No  meal poll added Today ' });
-    }
+  const recentMealPoll = await MealPoll.find({ createdAt: { $gte: today } })
+    .sort({ createdAt: -1 })
+    .limit(1);
+  console.log(recentMealPoll);
+  if (recentMealPoll.length === 0) {
+    return res.status(404).json({ message: "No  meal poll added Today " });
+  }
 
-    return res.status(200).json(new ApiResponse(200, recentMealPoll[0],"Latest poll fetch successful"))
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, recentMealPoll[0], "Latest poll fetch successful"),
+    );
 });
 
-export { addMeal, updateState, voteForMenu, getMealPollById, getLatestMealPoll };
+const getStudentMealPollData = AsyncHandeller(async (req, res, next) => {
+  const { studentId } = req.params;
+
+  const MealPollData = await User.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(studentId),
+      },
+    },
+    {
+      $lookup: {
+        from: "mealpolls",
+        localField: "mealPollIds",
+        foreignField: "_id",
+        as: "mealPollIds",
+        pipeline: [
+          {
+            $project: {
+              updatedAt: 1,
+            }
+          }
+        ]
+      }
+    },
+    {
+      $project: {
+        mealPollIds: 1,
+        _id:0
+      },
+    },
+  ]);
+
+
+  if (MealPollData.length === 0) {
+    return next({
+      status:400,
+      message: "Student had not voted on any day",
+    });
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        MealPollData[0],
+        "Voted Meal Dates fetched successfully",
+      ),
+    );
+});
+
+
+export {
+  addMeal,
+  updateState,
+  voteForMenu,
+  getMealPollById,
+  getLatestMealPoll,
+  getStudentMealPollData,
+};
