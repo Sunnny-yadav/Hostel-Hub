@@ -39,7 +39,7 @@ const OneStudentComplaint = () => {
       });
 
       const responseData = await response.json();
-      console.log(responseData)
+     
       if (response.ok) {
         setFetchedComplaints(responseData.data.complaints);
         setDisplayedComplaint(responseData.data.complaints);
