@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import NoMatch from "../../../assets/dashboard/NoMatch.jpg";
-import {useUserContext} from '../../../Context/userContext'
+import { useUserContext } from '../../../Context/userContext'
 
 const MatchPartner = () => {
-const [students, setStudents] = useState()
-const {Token} = useUserContext()
+  const [students, setStudents] = useState()
+  const { Token } = useUserContext()
   // const students = [
   //   {
   //     image: "https://randomuser.me/api/portraits/men/10.jpg",
@@ -43,33 +43,33 @@ const {Token} = useUserContext()
   //   },
   // ];
 
-  useEffect(()=>{
-    async function getMatchedPartner(){
+  useEffect(() => {
+    async function getMatchedPartner() {
       try {
-        const response = await fetch("http://localhost:8000/api/v1/users/get-matched-profiles",{
-          method:"GET",
-          headers:{
+        const response = await fetch("http://localhost:8000/api/v1/users/get-matched-profiles", {
+          method: "GET",
+          headers: {
             Authorization: Token
           }
         });
 
         const responseData = await response.json();
-console.log(responseData.data)
-        if(response.ok){
+        console.log(responseData.data)
+        if (response.ok) {
           setStudents(responseData.data)
-        }else{
+        } else {
           console.log(responseData.message)
         }
       } catch (error) {
-        console.log("error while fetching matched partner",error)
+        console.log("error while fetching matched partner", error)
       }
     }
 
     getMatchedPartner()
 
-  },[])
+  }, [])
 
-  
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-300 py-8 px-4 sm:px-8">
