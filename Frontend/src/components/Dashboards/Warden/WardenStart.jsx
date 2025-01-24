@@ -2,7 +2,7 @@ import complaint from '../../../assets/dashboard/complaintLogo.png'
 import meal from '../../../assets/dashboard/meal_logo.jpeg'
 import match from '../../../assets/dashboard/match_logo.jpg'
 import { useUserContext } from '../../../Context/userContext';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useWardenComplaintContext } from '../../../Context/WardenComplaintContext';
 import { useEffect, useRef, useState } from 'react';
 
@@ -21,6 +21,7 @@ const Card = ({ logo, title }) => (
 
 
 function WardenStart() {
+  const navigate = useNavigate()
   const { userData } = useUserContext();
   const [showUpdateStateValue, setshowUpdateStateValue] = useState(false);
   const [viewMealPoll, setViewMealPoll] = useState(false)
@@ -71,6 +72,7 @@ function WardenStart() {
               </div>
               <div className="xl:w-14 xl:h-14 lg:w-12 lg:h-12 md:w-10 md:h-10 flex justify-center items-center relative group cursor-pointer">
                 <img
+                  onClick={()=> navigate('/warden-dashboard/profile')}
                   src={userData.avatar}
                   className="w-full h-full rounded-full object-cover border-2 border-slate-900 shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:shadow-xl"
                   alt="profile img"
