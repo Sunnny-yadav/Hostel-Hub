@@ -26,7 +26,7 @@ import NoticeBoard from './components/Dashboards/Warden/NoticeBoard'
 import AllStudentData from './components/Dashboards/Warden/StudentPages/AllStudentData'
 import StudentDetails from './components/Dashboards/Warden/StudentPages/StudentDetails'
 import OneStudentComplaint from './components/Dashboards/Warden/StudentPages/OneStudentComplaint'
-import Profile from './components/Dashboards/Student/Profile'
+import Profile from './components/ProfilePages/Profile'
 import VotedOnPolls from './components/Dashboards/Warden/StudentPages/VotedOnPolls'
 
 const router = createBrowserRouter(
@@ -57,6 +57,7 @@ const router = createBrowserRouter(
       {/* routes for the warden page  */}
       <Route path='/warden-dashboard' element={<WardenDashboard />} >
         <Route path='' element={<WardenStart />} />
+        <Route path="/warden-dashboard/profile" element={<Profile />} />
         <Route path='/warden-dashboard/view-complaints' element={<ViewComplaint />} />
         <Route path='/warden-dashboard/add-meal' element={<MealForm />} />
         <Route path='/warden-dashboard/give-notice' element={<NoticeBoard />} />

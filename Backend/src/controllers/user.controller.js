@@ -19,7 +19,7 @@ const register_User = AsyncHandeller(async (req, res) => {
 
   if (hobbies && typeof hobbies === "string") {
     // hobbies = JSON.parse(hobbies) this is working when we are using postman , but from forntend the data is pure string and not as array of string so, below one is used
-    hobbies = hobbies.split(",");
+    hobbies = hobbies.split(",").map((data) => data.toLowerCase());
   }
 
   const existedUser = await User.findOne({
@@ -182,9 +182,84 @@ const getMatchedProfileStudents = AsyncHandeller(async (req, res) => {
     .json(new ApiResponse(200, MatchedPairs, "Pairs Matching Successful"));
 });
 
+const UpdateUserProfile = AsyncHandeller(async (req, res, next) => { 
+  // Note: to update the image create another API separately, that is a professional approach
+
+  const { _id } = req.userData;
+  const dataTobeUpdated = req.body;
+
+  
+
+  // Validate empty fields
+  if (dataTobeUpdated) {
+    const emptyFiled = Object.entries(dataTobeUpdated).filter(
+      ([key, value]) => {
+        if (Array.isArray(value) && value[0]?.length === 0) return true;
+        else if (value === "" || value === null || value === undefined) return true;
+        else return false;
+      }
+    );
+
+    if (emptyFiled.length > 0) {
+      const filedNames = emptyFiled.map(([key, value]) => key);
+      return next({
+        message: `${filedNames.join(", ")} is empty`
+      });
+    }
+  }
+
+  const currentData = await User.findById(_id);
+
+  if (!currentData) {
+    return next({
+      status: 400,
+      message: "Unexpected error occurred"
+    });
+  }
+
+  let updatedFields = {};
+
+  for (const key in dataTobeUpdated) {
+    if (Array.isArray(dataTobeUpdated[key])) {
+      if (JSON.stringify(dataTobeUpdated[key].sort()) === JSON.stringify(currentData[key].sort())) {
+        continue;
+      }
+    }
+
+    if (dataTobeUpdated[key] !== currentData[key]) {
+      updatedFields[key] = dataTobeUpdated[key];
+    }
+  }
+
+  if (Object.keys(updatedFields).length === 0) {
+    return next({
+      status: 400,
+      message: "No profile change detected"
+    });
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    { $set: updatedFields },
+    { new: true, runValidators: true }
+  );
+
+  if (Object.keys(updatedUser).length === 0) {
+    return next({
+      message: "Data updation failed"
+    });
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedUser, "Data updation successful"));
+});
+
+
 export {
   register_User,
   login_User,
   getLogedInUserData,
   getMatchedProfileStudents,
+  UpdateUserProfile,
 };
