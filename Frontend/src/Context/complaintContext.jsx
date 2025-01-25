@@ -71,6 +71,10 @@ export const ComplaintContextProvider = ({ children }) => {
     };
 
     const filterFetchedComplaints = (state) => {
+        if(state === "All"){
+            setcomplaintsToBeDisplayed(FetchedComplaintsByIdAndType);
+            return;
+        }
         const complaints = FetchedComplaintsByIdAndType?.complaints.filter((complaint) => complaint.state === state);
         const count = complaints.length
         setcomplaintsToBeDisplayed({
