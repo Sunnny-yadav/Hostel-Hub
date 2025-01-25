@@ -9,7 +9,6 @@ const EditComplaint = () => {
   const [localStorageType, setLocalStorageType] = useState(JSON.parse(localStorage.getItem("ComplaintType")) || null);
   const [updatedComplaintData, setUpdatedComplaintData] = useState({
     Title: "Existing Complaint Title",
-    image: null,
     Type: "personal",
     Description: "Existing complaint description...",
   });
@@ -52,30 +51,28 @@ const EditComplaint = () => {
 
 
   const updateComplaintData = (event) => {
-    const { name, value, files } = event.target;
+    const { name, value } = event.target;
     setUpdatedComplaintData((prevData) => ({
       ...prevData,
-      [name]: name === "image" ? files[0] : value,
+      [name]:value,
     }));
   };
 
   const onComplaintEditSubmit = async (event) => {
     event.preventDefault();
-    
-    const formdata = new FormData()
-    for (const key in updatedComplaintData) {
-     formdata.append(key, updatedComplaintData[key])
-    }
+
     try {
       const response = await fetch(`http://localhost:8000/api/v1/complaints/${complaintId}/edit-complaint`,{
         method:"PATCH",
         headers:{
-          Authorization:Token
+          Authorization:Token,
+          "Content-Type" : "application/json"
         },
-        body:formdata
+        body:JSON.stringify(updatedComplaintData)
       });
 
       const responseData = await response.json();
+      console.log(responseData)
       if(response.ok){
         toast.success(responseData.message)
         navigate("/student-dashboard/review-complaints")
@@ -120,7 +117,7 @@ const EditComplaint = () => {
           </div>
 
           {/* Complaint Image */}
-          <div>
+          {/* <div>
             <label
               htmlFor="image"
               className="block text-sm font-medium text-blue-700 mb-1"
@@ -136,7 +133,7 @@ const EditComplaint = () => {
             <p className="text-xs text-blue-500 mt-2">
               Leave blank if no changes are required.
             </p>
-          </div>
+          </div> */}
 
           {/* Complaint Type */}
           <div>
