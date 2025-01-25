@@ -77,8 +77,16 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
 
   const updatedData = req.body;
   const { complaintId } = req.params;
-  const imgPath = req.file?.path;
-  let imgUrl;
+
+  if(updatedData){
+    const emptyFileds = Object.entries(updatedData).filter(([key, value])=> value === "" || value === null || value === undefined);
+    if(emptyFileds.length > 0){
+      const filednames = emptyFileds.map(([key, value])=> key);
+      return res.status(400).json({
+        message:`${filednames.join(", ")} is empty`
+      });
+    }
+  };
 
   const complaintData = await RaiseComplaint.findById(complaintId);
 
@@ -96,13 +104,6 @@ const edit_Complaint = AsyncHandeller(async (req, res) => {
     }
   }
 
-  if (imgPath) {
-    imgUrl = await upload_On_Cloudinary(imgPath);
-    fieldsToBeUpdated["image"] = imgUrl;
-    await delete_from_Cloudinary(complaintData.image); // delete the old image if there's a new one
-  } else {
-    imgUrl = complaintData.image;
-  }
 
   if (Object.keys(fieldsToBeUpdated).length === 0) {
     return res.status(400).json({
