@@ -1,7 +1,10 @@
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { AsyncHandeller } from "../utils/AsyncHandeller.js";
 import { User } from "../Models/user.model.js";
-import { upload_On_Cloudinary } from "../utils/Cloudinary.js";
+import {
+  delete_from_Cloudinary,
+  upload_On_Cloudinary,
+} from "../utils/Cloudinary.js";
 
 const register_User = AsyncHandeller(async (req, res) => {
   let {
@@ -182,28 +185,27 @@ const getMatchedProfileStudents = AsyncHandeller(async (req, res) => {
     .json(new ApiResponse(200, MatchedPairs, "Pairs Matching Successful"));
 });
 
-const UpdateUserProfile = AsyncHandeller(async (req, res, next) => { 
+const UpdateUserProfile = AsyncHandeller(async (req, res, next) => {
   // Note: to update the image create another API separately, that is a professional approach
 
   const { _id } = req.userData;
   const dataTobeUpdated = req.body;
-
-  
 
   // Validate empty fields
   if (dataTobeUpdated) {
     const emptyFiled = Object.entries(dataTobeUpdated).filter(
       ([key, value]) => {
         if (Array.isArray(value) && value[0]?.length === 0) return true;
-        else if (value === "" || value === null || value === undefined) return true;
+        else if (value === "" || value === null || value === undefined)
+          return true;
         else return false;
-      }
+      },
     );
 
     if (emptyFiled.length > 0) {
       const filedNames = emptyFiled.map(([key, value]) => key);
       return next({
-        message: `${filedNames.join(", ")} is empty`
+        message: `${filedNames.join(", ")} is empty`,
       });
     }
   }
@@ -213,7 +215,7 @@ const UpdateUserProfile = AsyncHandeller(async (req, res, next) => {
   if (!currentData) {
     return next({
       status: 400,
-      message: "Unexpected error occurred"
+      message: "Unexpected error occurred",
     });
   }
 
@@ -221,7 +223,10 @@ const UpdateUserProfile = AsyncHandeller(async (req, res, next) => {
 
   for (const key in dataTobeUpdated) {
     if (Array.isArray(dataTobeUpdated[key])) {
-      if (JSON.stringify(dataTobeUpdated[key].sort()) === JSON.stringify(currentData[key].sort())) {
+      if (
+        JSON.stringify(dataTobeUpdated[key].sort()) ===
+        JSON.stringify(currentData[key].sort())
+      ) {
         continue;
       }
     }
@@ -234,19 +239,19 @@ const UpdateUserProfile = AsyncHandeller(async (req, res, next) => {
   if (Object.keys(updatedFields).length === 0) {
     return next({
       status: 400,
-      message: "No profile change detected"
+      message: "No profile change detected",
     });
   }
 
   const updatedUser = await User.findByIdAndUpdate(
     _id,
     { $set: updatedFields },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (Object.keys(updatedUser).length === 0) {
     return next({
-      message: "Data updation failed"
+      message: "Data updation failed",
     });
   }
 
@@ -255,6 +260,50 @@ const UpdateUserProfile = AsyncHandeller(async (req, res, next) => {
     .json(new ApiResponse(200, updatedUser, "Data updation successful"));
 });
 
+const updateUserProfileImage = AsyncHandeller(async (req, res, next) => {
+  const { _id } = req.userData;
+  const avatarPath = req.file?.path;
+
+  const user = await User.findById(_id).select("avatar");
+
+  if (!avatarPath) {
+    return next({
+      message: "avatarPath not found",
+    });
+  }
+
+  const avatarUrl = await upload_On_Cloudinary(avatarPath);
+
+  if (!avatarUrl) {
+    return next({
+      message: "avatarUrl not found",
+    });
+  }
+
+  await delete_from_Cloudinary(user.avatar);
+
+  const updatedUserImage = await User.findByIdAndUpdate(
+    _id,
+    { $set: { avatar: avatarUrl } },
+    { new: true },
+  ).select("avatar");
+
+  if (!updatedUserImage) {
+    return next({
+      message: "Image Updation failed",
+    });
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        updatedUserImage,
+        "Profile image updation successful",
+      ),
+    );
+});
 
 export {
   register_User,
@@ -262,4 +311,5 @@ export {
   getLogedInUserData,
   getMatchedProfileStudents,
   UpdateUserProfile,
+  updateUserProfileImage,
 };
