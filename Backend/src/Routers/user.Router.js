@@ -1,6 +1,6 @@
 import Router from 'express'
 import {upload} from '../Middlewares/multer.middleware.js'
-import { getLogedInUserData, getMatchedProfileStudents, login_User, register_User, UpdateUserProfile } from '../controllers/user.controller.js';
+import { getLogedInUserData, getMatchedProfileStudents, login_User, register_User, UpdateUserProfile, updateUserProfileImage } from '../controllers/user.controller.js';
 import { verifyJWT } from '../Middlewares/auth.middleware.js';
 import { validateShema } from '../Middlewares/validator.middleware.js';
 import { loginSchema, RegistrationSchema } from '../Validators/auth.validator.js';
@@ -17,5 +17,7 @@ router
     .route("/get-matched-profiles").get(verifyJWT, getMatchedProfileStudents);
 router
     .route("/update-profile").patch(verifyJWT, UpdateUserProfile);
+router
+    .route("/update-profileImg").patch(upload.single("avatar") ,verifyJWT,updateUserProfileImage)
 
 export default router;
