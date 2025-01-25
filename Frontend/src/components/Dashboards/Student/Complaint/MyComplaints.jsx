@@ -6,7 +6,7 @@ import noComplaint from '../../../../assets/dashboard/noComplaint.png'
 const MyComplaints = () => {
   const navigate = useNavigate();
   const [complaintType, setComplaintType] = useState("personal");
-  const { getComplaintsByIdAndType, complaintsToBeDisplayed, filterFetchedComplaints, deleteComplaint,loading,setLoading  } = useComplaintContext();
+  const { getComplaintsByIdAndType, complaintsToBeDisplayed, filterFetchedComplaints, deleteComplaint, loading, setLoading } = useComplaintContext();
   // const [loading, setLoading] = useState(true);
   const [showDeleteBox, setshowDeleteBox] = useState(false)
   const [complaintId, setcomplaintId] = useState(null)
@@ -28,7 +28,7 @@ const MyComplaints = () => {
   }
 
   useEffect(() => {
-                      // Set loading to true when starting to fetch
+    // Set loading to true when starting to fetch
     getComplaintsByIdAndType(complaintType);  // Fetch complaints
   }, [complaintType]);
 
@@ -38,11 +38,6 @@ const MyComplaints = () => {
     }
   }, [complaintsToBeDisplayed]);
 
-  // useEffect(()=>{
-  //   if(complaintsnotPresent){
-  //     setLoading(false)
-  //   }
-  // },[complaintsnotPresent])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-50 py-10">
@@ -80,8 +75,10 @@ const MyComplaints = () => {
         <div className="w-full max-w-7xl mx-auto relative bg-white rounded-xl shadow-lg p-4 sm:p-6">
           {/* Filters */}
           <div className="flex sticky top-12 lg:top-0 flex-wrap justify-center gap-3 sm:gap-4 mb-8 bg-blue-100 p-2 lg:p-4 rounded-lg">
-            <button onClick={() => filterFetchedComplaints("Pending")
-            } className="bg-yellow-100 text-yellow-800 font-semibold py-2 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm md:text-base rounded-full shadow hover:bg-yellow-200 transition-all">
+            <button onClick={() => filterFetchedComplaints("All")} className="bg-red-100 text-red-800 font-semibold py-2 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm md:text-base rounded-full shadow hover:bg-red-200 transition-all">
+              All
+            </button>
+            <button onClick={() => filterFetchedComplaints("Pending")} className="bg-yellow-100 text-yellow-800 font-semibold py-2 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm md:text-base rounded-full shadow hover:bg-yellow-200 transition-all">
               Pending
             </button>
             <button onClick={() => filterFetchedComplaints("Inprogress")} className="bg-orange-100 text-orange-800 font-semibold py-2 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm md:text-base rounded-full shadow hover:bg-orange-200 transition-all">
@@ -147,7 +144,7 @@ const MyComplaints = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={() => GoToEditPage(complaint._id)}
-                        className="bg-green-500 text-white font-medium py-1 px-2 sm:py-2 sm:px-3 text-xs sm:text-sm md:text-base rounded-md hover:bg-green-600 transition-all">
+                        className={`bg-green-500 text-white font-medium py-1 px-2 sm:py-2 sm:px-3 text-xs sm:text-sm md:text-base rounded-md hover:bg-green-600 transition-all ${complaint.state === "Inprogress" || complaint.state === "Resolved" ? "hidden" : ""}`}>
                         Edit
                       </button>
                       <button onClick={() => {
@@ -161,7 +158,7 @@ const MyComplaints = () => {
                       <span
                         onClick={() => navigate(`/student-dashboard/${complaint._id}/comments`)}
                         className="material-symbols-outlined">
-                        comment 
+                        comment
                       </span>
                     </div>
                   </div>
